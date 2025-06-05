@@ -1,0 +1,289 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Inter:wght@400;700&family=Helvetica+Neue:wght@300;400;700&family=Sometype+Mono:wght@400;700&display=swap">
+    <link rel="icon" type="image/svg+xml" href="images/Hey.svg">
+    <title>Global Missing Migrants</title>
+    <style>
+        html {
+            scroll-behavior: smooth;
+        }
+        body {
+            margin: 0;
+            padding: 0;
+            font-family: 'Helvetica Neue', sans-serif;
+        }
+        .container {
+            position: relative;
+            width: 100%;
+            min-height: 100vh;
+            background-color: #FFF;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .logo {
+            position: absolute;
+            left: 55px;
+            top: 24px;
+        }
+        .content {
+            width: 100%;
+            max-width: 1440px;
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            padding-top: 160px;
+            padding-left: 20px;
+            padding-right: 20px;
+        }
+        .header {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 10px;
+            margin-bottom: 100px;
+        }
+        .title {
+            color: #000;
+            font-family: 'Sometype Mono', monospace;
+            font-size: 36px;
+            font-weight: 700;
+            text-align: center;
+        }
+        .subtitle {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 8px;
+        }
+        .date {
+            color: #DE2D2D;
+            font-family: 'Sometype Mono', monospace;
+            font-size: 20px;
+        }
+        .banner {
+            width: 100%;
+            max-width: 1015px;
+            height: 402px;
+            background-color: #F5F5F5;
+            margin-bottom: 100px;
+        }
+        .section {
+            width: 100%;
+            max-width: 1000px;
+            display: flex;
+            flex-direction: column;
+            gap: 60px;
+        }
+        .introduction {
+            display: flex;
+            flex-direction: row;
+            gap: 40px;
+            margin-bottom: 40px;
+        }
+        .intro-left {
+            flex: 1;
+        }
+        .intro-right {
+            flex: 1;
+        }
+        .section-title {
+            color: #000;
+            font-family: Inter, sans-serif;
+            font-size: 36px;
+            font-weight: 400;
+            margin-bottom: 24px;
+        }
+        .description {
+            color: #000;
+            font-family: 'Helvetica Neue', sans-serif;
+            font-size: 14px;
+            font-weight: 300;
+            line-height: 1.6;
+        }
+        .visualization {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+            gap: 80px;
+        }
+        .vis-header {
+            display: flex;
+            flex-direction: column;
+            align-items: center;
+        }
+        .vis-title {
+            color: #000;
+            font-family: 'Helvetica Neue', sans-serif;
+            font-size: 48px;
+            font-weight: 700;
+            margin-bottom: 20px;
+        }
+        .section-title {
+            color: #000;
+            font-family: 'Helvetica Neue', sans-serif;
+            font-size: 24px;
+            font-weight: 700;
+            margin-bottom: 16px;
+        }
+        .preview {
+            max-width: 356px;
+        }
+        .grid {
+            display: flex;
+            flex-direction: column;
+            gap: 40px;
+        }
+        .color-mapping-content {
+            display: flex;
+            flex-direction: column;
+            gap: 20px;
+        }
+        .color-mapping-images {
+            display: flex;
+            gap: 20px;
+        }
+        .small-image {
+            width: 144px;
+            height: 122px;
+            border-radius: 10.416px;
+            border: 0.694px solid #000;
+            overflow: hidden;
+            transition: transform 0.3s ease;
+            cursor: pointer;
+        }
+        .small-image:hover {
+            transform: scale(1.05);
+        }
+        img {
+            transition: transform 0.3s ease;
+        }
+        img:hover {
+            transform: scale(1.02);
+        }
+        .banner img {
+            transition: transform 0.5s ease;
+        }
+        .banner:hover img {
+            transform: scale(1.03);
+        }
+        @media (max-width: 1024px) {
+            .vis-title {
+                font-size: 40px;
+            }
+            .banner {
+                height: 300px;
+            }
+        }
+        @media (max-width: 768px) {
+            .introduction {
+                flex-direction: column;
+            }
+            .vis-title {
+                font-size: 32px;
+            }
+            .banner {
+                height: 200px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="logo">
+            <svg width="99" height="110" viewBox="0 0 99 110" fill="none" xmlns="http://www.w3.org/2000/svg">
+                <path d="M1 37.3913V109H98V42.8696M1 37.3913C33.3333 37.3913 98 38.487 98 42.8696M1 37.3913L48.1255 1L98 42.8696" stroke="black"/>
+            </svg>
+        </div>
+        <div class="content">
+            <div class="header">
+                <div class="title">Global Missing Migrants</div>
+                <div class="subtitle">
+                    <svg width="288" height="6" viewBox="0 0 288 6" fill="none" xmlns="http://www.w3.org/2000/svg">
+                        <path d="M0 3H288" stroke="#CE1010" stroke-width="5"/>
+                    </svg>
+                    <div class="date">2014 - 2023</div>
+                </div>
+            </div>
+            <div class="banner">
+                <img src="Migrants/GlobeOverview.png" alt="Project Video Preview" style="width: 100%; height: 100%; object-fit: cover;">
+            </div>
+            <div class="section">
+                <div class="introduction">
+                    <div class="intro-left">
+                        <div class="section-title">Introduction</div>
+                        <div class="description preview">An interactive 3D globe that visualizes global migration routes, risk zones, and key patterns—bringing human stories behind the statistics to the surface.</div>
+                        <div class="description">We worked with the Missing Migrants dataset to uncover patterns in global migration crises. Some visuals confirmed our assumptions—others challenged them. Mapping the data onto a globe revealed surprising, often overlooked narratives. To build the experience, we used Three.js with HTML, CSS, and vanilla JavaScript. Users can filter incidents by cause of death or gender. We also added AI voiceovers (via Envato) to narrate key facts, adding an emotional and immersive layer. All visuals and interactions were custom-designed to ensure a cohesive, engaging experience that transforms raw data into meaningful insight.</div>
+                    </div>
+                    <div class="intro-right">
+                        <h2 class="section-title">Color Mapping & Representation</h2>
+                        <div class="description">We used a clear color system to distinguish data points: Gray marks inactive or unselected states. Active incidents are shown using a color gradient and varying dot sizes to convey severity and impact.</div>
+                        <div class="color-mapping-content">
+                            <div class="color-mapping-images">
+                                <div class="small-image">
+                                    <img src="Migrants/ColorNames.png" alt="Color Names" style="width: auto; height: 100%; object-fit: contain; padding: 0 10px;">
+                                </div>
+                                <div class="small-image">
+                                    <img src="Migrants/ColorMappingExample1.png" alt="Color Mapping Example 1" style="width: 100%; height: 100%; object-fit: cover;">
+                                </div>
+                                <div class="small-image">
+                                    <img src="Migrants/ColorMappingExample2.png" alt="Color Mapping Example 2" style="width: 100%; height: 100%; object-fit: cover;">
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="visualization">
+                    <div class="vis-header">
+                        <div class="vis-title">Visualisation</div>
+                        <div class="vis-title">Screens</div>
+                    </div>
+                    <div class="grid">
+                        <!-- ImageTextLeft -->
+                        <div class="grid-item">
+                            <div class="text-content">
+                                <div class="description">Globe Overview The 3D globe view displays all incidents with pins. A filter panel on the left lets users sort by fatality type and gender. Red dots scale in size and brightness to show intensity.</div>
+                            </div>
+                            <div class="image-container">
+                                <img src="Migrants/GlobeOverview.png" alt="Globe Overview" style="width: 100%; height: auto;">
+                            </div>
+                        </div>
+                        
+                        <!-- ImageTextRight -->
+                        <div class="grid-item" style="flex-direction: row-reverse">
+                            <div class="text-content">
+                                <div class="description">Infocard Expandable info cards give detailed context about each event. An integrated speaker button plays an AI-generated voice reading the text aloud.</div>
+                            </div>
+                            <div class="image-container">
+                                <img src="Migrants/InfoCardExample.png" alt="Info Card Example" style="width: 100%; height: auto;">
+                            </div>
+                        </div>
+                        
+                        <!-- ImageTextLeft -->
+                        <div class="grid-item">
+                            <div class="text-content">
+                                <div class="description">Time Slider Users can slide through time to track how incidents occurred across different periods—adding a temporal layer to the spatial data.</div>
+                            </div>
+                            <div class="image-container">
+                                <img src="Migrants/TimeSlider.png" alt="Time Slider" style="width: 100%; height: auto;">
+                            </div>
+                        </div>
+                        
+                        <!-- ImageTextRight -->
+                        <div class="grid-item" style="flex-direction: row-reverse">
+                            <div class="text-content">
+                                <div class="description">Filter Options Selected filters highlight relevant incidents, dimming the rest in gray. Pin visibility can be toggled for a cleaner view when exploring specific data layers.</div>
+                            </div>
+                            <div class="image-container">
+                                <img src="Migrants/FilterOptions.png" alt="Filter Options" style="width: 100%; height: auto;">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="description">Reflections & Insights This project was a deep dive into both the technical side of 3D visualization and the responsibility that comes with working on real-world data. Building with Three.js sharpened our skills in interactive design, while engaging with the dataset taught us how to extract and communicate meaningful insights. Using the globe and time slider, we uncovered migration hotspots like the Mexican border, the Darién Gap, and the Mediterranean Sea—regions where risk and tragedy converge. Some patterns aligned with what we expected; others surprised us and shifted our understanding. More than anything, this project reminded us that behind every data point is a human story. It reinforced the importance of visibility, empathy, and design's role in raising awareness around urgent global issues like forced migration.</div>
+            </div>
+        </div>
+    </div>
+</body>
+</html>

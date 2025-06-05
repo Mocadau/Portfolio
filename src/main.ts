@@ -1,0 +1,29 @@
+import App from './App.svelte';
+
+// Add type declaration for portfolioState
+declare global {
+  interface Window {
+    portfolioState: {
+      isScrolling: boolean;
+      isTopHalf: boolean;
+      isBottomHalf: boolean;
+      mousePosition: { y: number };
+    };
+  }
+}
+
+window.portfolioState = {
+  isScrolling: false,
+  isTopHalf: false,
+  isBottomHalf: false,
+  mousePosition: { y: 0 }
+};
+
+const app = new App({
+  target: document.getElementById('app') as HTMLElement,
+  props: {
+    url: window.location.pathname
+  }
+});
+
+export default app;
