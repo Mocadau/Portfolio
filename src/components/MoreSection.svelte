@@ -65,9 +65,11 @@
 
   export let className = '';
   export let currentSection = 'hello';
+  
   let currentPhotoIndex = 0;
   let canTakePhoto = false;
   let isComplete = false;
+  let hasClickedOnce = false; // Verfolgt ob bereits einmal geklickt wurde
   let photoAudio: HTMLAudioElement;
   let photos: HTMLImageElement[] = [];
   let isLoading = true;
@@ -153,6 +155,7 @@
     if (!canTakePhoto || isComplete) return;
     canTakePhoto = false;
     $isProcessing = true;
+    hasClickedOnce = true; // Stoppe die Wobble-Animation nach dem ersten Klick
     
     if (currentPhotoIndex < images.length) {
       // Markiere das neue Foto als gefallen nach der Animation
@@ -206,124 +209,115 @@
   class="py-12 {className} relative overflow-hidden bg-white"
   style="height: 100vh; opacity: {currentSection === 'more' ? 1 : 0}; visibility: {currentSection === 'more' ? 'visible' : 'hidden'}; transition: opacity 0.3s ease-out, visibility 0.3s ease-out;"
 >
-  <!-- Zwei-Spalten-Layout -->
-  <div class="w-full h-full grid grid-cols-1 lg:grid-cols-2 gap-8">
+  <!-- Zwei-Spalten-Layout für alle Bildschirmgrößen -->
+  <div class="w-full h-full grid grid-cols-2 gap-2 md:gap-4 lg:gap-8">
     
-    <!-- Linke Spalte: Kamera und Fotos -->
+    <!-- Linke Spalte: Kamera und Fotos Container -->
     <div 
-      class="camera-section relative flex flex-col items-center justify-center order-1 lg:order-1"
+      class="camera-section relative flex flex-col flex-shrink-0"
       on:click|preventDefault={handleSectionClick}
       on:keydown|preventDefault={handleSectionKeydown}
       role="presentation"
     >
-      <button
-        type="button"
-        class="w-full h-full relative"
-        class:cursor-pointer={!isComplete}
-        class:cursor-not-allowed={isComplete}
-        class:pointer-events-none={!canTakePhoto && !isComplete || currentSection !== 'more' || $isProcessing}
-        on:click={handleClick}
-        on:keydown|preventDefault={handleButtonKeydown}
-        disabled={isComplete || !canTakePhoto || currentSection !== 'more'}
-      >
-        {#if isLoading}
-          <div class="absolute inset-0 flex items-center justify-center">
-            <div class="loading-text hand-drawn-text text-lg">
-              Loading camera...
+      <!-- Kamera und Fotos in einem Container -->
+      <div class="camera-photos-container flex-1 relative">
+          {#if isLoading}
+            <div class="absolute inset-0 flex items-center justify-center">
+              <div class="loading-text hand-drawn-text text-lg">
+                Loading camera...
+              </div>
             </div>
-          </div>
-        {:else if loadError}
-          <div class="absolute inset-0 flex items-center justify-center">
-            <p class="text-red-500 hand-drawn-text text-lg">
-              Oops! Something went wrong: {loadError}
-            </p>
-          </div>
-        {/if}
-
-        <div class="w-full h-full pointer-events-none relative">
-          <!-- Kamera -->
-          <div class="camera-wrapper">
-            <div class="camera-container flex flex-col items-center" class:processing={$isProcessing}>
-              <p class="text-center mb-2 hand-drawn-text transition-opacity duration-300" class:text-gray-400={isComplete}>
-                {#if isComplete}
-                  No more photos
-                {:else}
-                  Click = Photo
-                {/if}
+          {:else if loadError}
+            <div class="absolute inset-0 flex items-center justify-center">
+              <p class="text-red-500 hand-drawn-text text-lg">
+                Oops! Something went wrong: {loadError}
               </p>
-              <img 
-                src={PolaroidCamera} 
-                alt="Polaroid Camera" 
-                class="transition-transform duration-300"
-                class:camera-disabled={isComplete}
-                style="width: clamp(85px, 15.3vw, 136px);"
-              />
             </div>
-          </div>
+          {/if}
 
-          <!-- Fotos -->
-          <div class="photos-container overflow-visible pointer-events-all">
-            <div class="photos-grid overflow-visible">
-              {#each images as image, i}
-                {#if i < currentPhotoIndex}
-                  <div 
-                    class="photo-position"
-                    class:selected={$selectedPhotoIndex === i}
-                    style="z-index: {images.length - i};"
-                    role="button"
-                    tabindex="0"
-                    on:click|stopPropagation={(event) => handlePhotoClick(i, event)}
-                    on:keydown|stopPropagation={event => handlePhotoKeydown(event, i)}
-                    on:mouseenter={() => hoveredPhotoIndex = i}
-                    on:mouseleave={() => hoveredPhotoIndex = -1}
-                  >
+          <div class="w-full h-full pointer-events-none relative">
+            <!-- Kamera am oberen Bereich -->
+            <div class="camera-wrapper">
+              <div class="camera-container flex flex-col items-center" class:processing={$isProcessing}>
+                <!-- Klickbarer Kamera-Button -->
+                <button
+                  type="button"
+                  class="camera-button relative"
+                  class:cursor-pointer={!isComplete}
+                  class:cursor-not-allowed={isComplete}
+                  class:pointer-events-none={!canTakePhoto && !isComplete || currentSection !== 'more' || $isProcessing}
+                  on:click={handleClick}
+                  on:keydown|preventDefault={handleButtonKeydown}
+                  disabled={isComplete || !canTakePhoto || currentSection !== 'more'}
+                >
+                  <img 
+                    src={PolaroidCamera} 
+                    alt="Polaroid Camera" 
+                    class="camera-image transition-transform duration-300"
+                    class:camera-disabled={isComplete}
+                    class:no-wobble={hasClickedOnce}
+                    style="width: clamp(85px, 15.3vw, 136px);"
+                  />
+                </button>
+              </div>
+            </div>
+
+            <!-- Fotos direkt unter der Kamera -->
+            <div class="photos-container overflow-visible pointer-events-all">
+              <div class="photos-grid overflow-visible">
+                {#each images as image, i}
+                  {#if i < currentPhotoIndex}
                     <div 
-                      class="photo-container"
-                      class:dropped={droppedPhotos.has(i)}
-                      style="--delay: {i * 0.2}s; --index: {i};"
+                      class="photo-position"
                       class:selected={$selectedPhotoIndex === i}
+                      style="z-index: {images.length - i};"
+                      role="button"
+                      tabindex="0"
+                      on:click|stopPropagation={(event) => handlePhotoClick(i, event)}
+                      on:keydown|stopPropagation={event => handlePhotoKeydown(event, i)}
+                      on:mouseenter={() => hoveredPhotoIndex = i}
+                      on:mouseleave={() => hoveredPhotoIndex = -1}
                     >
-                      <div class="polaroid-frame">
-                        <div class="photo-wrapper">
-                          <img 
-                            src={image.src} 
-                            alt={image.alt}
-                            class="w-full h-full"
-                            bind:this={photos[i]}
-                          />
+                      <div 
+                        class="photo-container"
+                        class:dropped={droppedPhotos.has(i)}
+                        style="--delay: {i * 0.2}s; --index: {i};"
+                        class:selected={$selectedPhotoIndex === i}
+                      >
+                        <div class="polaroid-frame">
+                          <div class="photo-wrapper">
+                            <img 
+                              src={image.src} 
+                              alt={image.alt}
+                              class="w-full h-full"
+                              bind:this={photos[i]}
+                            />
+                          </div>
                         </div>
                       </div>
                     </div>
-                  </div>
-                {/if}
-              {/each}
+                  {/if}
+                {/each}
+              </div>
             </div>
           </div>
-        </div>
-      </button>
+      </div>
     </div>
 
-    <!-- Rechte Spalte: Dynamischer Text -->
-    <div class="text-section flex flex-col justify-center px-8 lg:px-12 order-2 lg:order-2">
-      {#if currentDescription}
-        <div class="text-content max-w-lg">
-          <h2 class="hand-drawn-text text-4xl lg:text-5xl mb-6 text-black">
-            {currentDescription.title}
-          </h2>
-          <p class="text-lg lg:text-xl text-gray-700 leading-relaxed font-light">
-            {currentDescription.description}
-          </p>
-        </div>
-      {:else}
-        <div class="text-content max-w-lg opacity-50">
-          <h2 class="hand-drawn-text text-4xl lg:text-5xl mb-6 text-gray-400">
-            Take a photo...
-          </h2>
-          <p class="text-lg lg:text-xl text-gray-400 leading-relaxed font-light">
-            Click the camera to capture moments and see stories unfold.
-          </p>
-        </div>
-      {/if}
+    <!-- Rechte Spalte: Dynamischer Text - auf Kamera-Höhe ausgerichtet -->
+    <div class="text-section flex flex-col justify-start px-1 sm:px-2 md:px-4 lg:px-12">
+      <div class="text-content-wrapper">
+        {#if currentDescription}
+          <div class="text-content">
+            <h2 class="hand-drawn-text text-base sm:text-lg md:text-xl lg:text-5xl mb-1 sm:mb-2 md:mb-3 lg:mb-6 text-black">
+              {currentDescription.title}
+            </h2>
+            <p class="text-xs sm:text-sm md:text-base lg:text-xl text-gray-700 leading-relaxed font-light">
+              {currentDescription.description}
+            </p>
+          </div>
+        {/if}
+      </div>
     </div>
 
   </div>
@@ -341,31 +335,112 @@
     100% { opacity: 0.5; }
   }
 
-  .camera-wrapper {
-    position: absolute;
-    left: 50%;
-    top: 20%;
-    transform: translateX(-50%);
+  /* Camera section layout */
+  .camera-section {
+    height: 100%;
+    padding: 0.5rem;
+  }
+
+  @media (min-width: 1024px) {
+    .camera-section {
+      padding: 1rem;
+    }
+  }
+
+  /* Camera-Photos Container */
+  .camera-photos-container {
     display: flex;
+    flex-direction: column;
     align-items: center;
-    z-index: 10;
+    position: relative;
+    width: 100%;
+    height: 100%;
+  }
+
+  /* Text section styling - aligned to photos container */
+  .text-section {
+    height: 100%;
+    display: flex;
+    align-items: flex-start;
+    padding: 0.5rem;
+    padding-top: calc(1rem + 70px); /* Align with photos container position */
+  }
+
+  @media (min-width: 1024px) {
+    .text-section {
+      padding: 1rem;
+      padding-top: calc(1rem + 70px);
+    }
   }
 
   @media (max-width: 1024px) {
-    .camera-wrapper {
-      left: 50%;
-      top: 25%;
+    .text-section {
+      padding-top: calc(1rem + 55px);
     }
   }
 
   @media (max-width: 768px) {
-    .camera-wrapper {
-      left: 50%;
-      top: 30%;
+    .text-section {
+      padding-top: calc(0.5rem + 40px);
     }
+  }
 
+  @media (max-width: 480px) {
+    .text-section {
+      padding: 0.25rem;
+      padding-top: calc(0.5rem + 30px);
+    }
+  }
+
+  .text-content-wrapper {
+    width: 100%;
+    margin-top: 0;
+  }
+
+  .text-content {
+    width: 100%;
+    max-width: none;
+  }
+
+  .camera-wrapper {
+    position: absolute;
+    left: 50%;
+    top: 0;
+    transform: translateX(-50%);
+    display: flex;
+    align-items: flex-start;
+    justify-content: center;
+    z-index: 5; /* Lower than photos */
+    margin-top: 1rem;
+  }
+
+  @media (max-width: 768px) {
+    .camera-wrapper {
+      margin-top: 0.5rem;
+    }
+    
     img[src*="polaroid-camera"] {
-      width: clamp(110px, 19.8vw, 176px) !important;
+      width: clamp(60px, 12vw, 100px) !important;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .camera-wrapper {
+      top: 0.5%;
+    }
+    
+    img[src*="polaroid-camera"] {
+      width: clamp(50px, 10vw, 80px) !important;
+    }
+  }
+
+  @media (min-width: 769px) and (max-width: 1024px) {
+    .camera-wrapper {
+      top: 4%;
+    }
+    
+    img[src*="polaroid-camera"] {
+      width: clamp(100px, 12vw, 140px) !important;
     }
   }
 
@@ -373,12 +448,64 @@
     transform: scale(0.98);
   }
 
+  /* Kamera-Button Styling */
+  .camera-button {
+    background: transparent;
+    border: none;
+    padding: 0;
+    outline: none !important;
+    pointer-events: auto;
+    border-radius: 50%;
+    transition: all 0.2s ease;
+  }
+
+  .camera-button:focus {
+    outline: none !important;
+    box-shadow: none !important;
+  }
+
+  .camera-button:focus-visible {
+    outline: none !important;
+    box-shadow: none !important;
+  }
+
+  .camera-button:hover:not(:disabled) {
+    transform: scale(1.02);
+  }
+
+  /* Stärkere Wackel-Animation für die Kamera - wiederholt bis zum ersten Klick */
+  .camera-image:not(.camera-disabled):not(.no-wobble) {
+    animation: gentle-wobble 2s ease-in-out infinite;
+  }
+
   .camera-container:not(.camera-disabled):hover {
     animation: shake 0.8s cubic-bezier(.36,.07,.19,.97) infinite;
   }
 
+  .camera-container:not(.camera-disabled):hover .camera-image {
+    animation: none; /* Stoppe die sanfte Animation beim Hover */
+  }
+
   .camera-container.processing:not(.camera-disabled) {
     animation: shake 0.8s cubic-bezier(.36,.07,.19,.97) infinite;
+  }
+
+  @keyframes gentle-wobble {
+    0%, 100% {
+      transform: scale(0.98) rotate(0deg);
+    }
+    20% {
+      transform: scale(0.98) rotate(-2deg);
+    }
+    40% {
+      transform: scale(0.98) rotate(2deg);
+    }
+    60% {
+      transform: scale(0.98) rotate(-1.5deg);
+    }
+    80% {
+      transform: scale(0.98) rotate(1.5deg);
+    }
   }
 
   @keyframes shake {
@@ -413,6 +540,8 @@
     width: 100%;
     transition: all 0.2s ease;
     cursor: pointer;
+    opacity: 1; /* Ensure full opacity */
+    z-index: 1; /* Ensure it's above camera */
   }
 
   .photo-position:not(.selected) {
@@ -433,28 +562,40 @@
   .photos-container {
     position: absolute;
     left: 50%;
-    top: 45%;
+    top: calc(1rem + 120px);
     transform: translateX(-50%);
     width: min(400px, 80vw);
-    height: 50vh;
+    height: 70vh;
     overflow: visible;
     pointer-events: all;
     background: transparent;
+    z-index: 15; /* Ensure photos are above camera */
   }
 
   @media (max-width: 1024px) {
     .photos-container {
       left: 50%;
-      top: 50%;
+      top: calc(1rem + 110px);
       width: min(350px, 75vw);
+      height: 65vh;
     }
   }
 
   @media (max-width: 768px) {
     .photos-container {
       left: 50%;
-      top: 55%;
-      width: min(300px, 70vw);
+      top: calc(0.5rem + 50px);
+      width: min(280px, 70vw);
+      height: 60vh;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .photos-container {
+      left: 50%;
+      top: calc(0.5rem + 80px);
+      width: min(220px, 65vw);
+      height: 55vh;
     }
   }
 
@@ -494,7 +635,7 @@
   }
 
   .photo-container {
-    width: min(120px, calc(40vw - 2rem));
+    width: min(80px, calc(30vw - 1rem));
     position: relative;
     transform-origin: center;
     animation: photo-drop 1.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
@@ -502,12 +643,26 @@
     animation-fill-mode: forwards;
     transition: transform 0.3s ease;
     pointer-events: all;
+    opacity: 1; /* Ensure full opacity */
+    background: white; /* Solid background */
+  }
+
+  @media (min-width: 640px) {
+    .photo-container {
+      width: min(100px, calc(35vw - 1.5rem));
+    }
+  }
+
+  @media (min-width: 1024px) {
+    .photo-container {
+      width: min(120px, calc(40vw - 2rem));
+    }
   }
 
   /* Verhindere Animation nach dem ersten Drop */
   .photo-container.dropped {
     animation: none;
-    transform: translateY(calc(var(--index) * 80px)) rotate(0deg) scale(1);
+    transform: translateY(calc(var(--index) * 60px)) rotate(0deg) scale(1);
   }
 
   .photo-position.selected .photo-container {
@@ -539,22 +694,17 @@
     border-radius: 8px;
   }
 
-  @media (max-width: 768px) {
-    .photo-container {
-      width: min(100px, calc(35vw - 2rem));
-    }
-  }
-
   .photo-container.subsequent {
-    transform: translateY(calc(var(--index) * 140px + 400px)) !important;
+    transform: translateY(calc(var(--index) * 180px + 400px)) !important;
   }
 
   .caption-container {
     text-align: center;
     margin-top: 6px;
     color: rgba(0, 0, 0, 0.8);
-    font-family: 'Permanent Marker', cursive;
+    font-family: 'Helvetica Neue', sans-serif !important;
     font-size: 0.9rem;
+    font-weight: 300;
   }
 
   .photo-wrapper {
@@ -587,21 +737,21 @@
   
   @keyframes photo-drop {
     0% {
-      transform: translateY(-80px) rotate(0deg) scale(0.8);
-      opacity: 0;
+      transform: translateY(-30px) rotate(0deg) scale(0.8);
+      opacity: 1;
     }
     30% {
-      transform: translateY(calc(var(--index) * 80px - 30px)) rotate(-8deg) scale(1);
+      transform: translateY(calc(var(--index) * 60px - 5px)) rotate(-6deg) scale(1);
       opacity: 1;
     }
     60% {
-      transform: translateY(calc(var(--index) * 80px + 10px)) rotate(4deg) scale(1);
+      transform: translateY(calc(var(--index) * 60px + 3px)) rotate(3deg) scale(1);
     }
     80% {
-      transform: translateY(calc(var(--index) * 80px - 5px)) rotate(-2deg) scale(1);
+      transform: translateY(calc(var(--index) * 60px - 1px)) rotate(-1deg) scale(1);
     }
     100% {
-      transform: translateY(calc(var(--index) * 80px)) rotate(0deg) scale(1);
+      transform: translateY(calc(var(--index) * 60px)) rotate(0deg) scale(1);
     }
   }
 
@@ -609,6 +759,19 @@
   .text-section {
     background: transparent;
     position: relative;
+    min-height: auto;
+  }
+
+  .camera-section {
+    position: relative;
+    height: 100vh; /* Desktop default */
+  }
+
+  /* Desktop Layout */
+  @media (min-width: 1025px) {
+    .camera-section {
+      height: 100% !important;
+    }
   }
 
   .text-content {
@@ -617,45 +780,71 @@
   }
 
   .text-content h2 {
-    font-family: 'Helvetica Neue', sans-serif;
+    font-family: 'Helvetica Neue', sans-serif !important;
     font-weight: 300;
     line-height: 1.2;
     margin-bottom: 1.5rem;
   }
 
   .text-content p {
-    font-family: 'Helvetica Neue', sans-serif;
+    font-family: 'Helvetica Neue', sans-serif !important;
     font-weight: 300;
     line-height: 1.6;
   }
 
+  /* Mobile Layout Anpassungen */
   @media (max-width: 1024px) {
-    .text-section {
-      padding: 2rem 1.5rem;
-      text-align: center;
+    .camera-section {
+      height: 55vh !important;
+      max-height: 55vh;
+      flex-shrink: 0;
     }
     
-    .text-content h2 {
-      font-size: 2.5rem;
-    }
-    
-    .text-content p {
-      font-size: 1.125rem;
-    }
-  }
-
-  @media (max-width: 768px) {
     .text-section {
       padding: 1.5rem 1rem;
+      text-align: center;
+      min-height: auto;
+      flex: 1;
+      justify-content: flex-start !important;
+      padding-top: calc(1rem + 55px) !important;
     }
     
     .text-content h2 {
-      font-size: 2rem;
-      margin-bottom: 1rem;
+      font-size: 1.875rem;
+      margin-bottom: 0.75rem;
     }
     
     .text-content p {
       font-size: 1rem;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .camera-section {
+      height: 50vh !important;
+      max-height: 50vh;
+    }
+    
+    .text-section {
+      padding: 1rem 0.75rem;
+      margin-top: 0;
+      padding-top: calc(0.5rem + 40px) !important;
+    }
+    
+    .text-content h2 {
+      font-size: 1.5rem;
+      margin-bottom: 0.5rem;
+    }
+    
+    .text-content p {
+      font-size: 0.875rem;
+      line-height: 1.4;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .text-section {
+      padding-top: calc(0.5rem + 30px) !important;
     }
   }
 

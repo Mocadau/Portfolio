@@ -5,6 +5,7 @@
   import { onMount } from "svelte";
 
   let currentSection = "hello";
+  let showNavigation = false;
 
   // Project data
   const projects: ProjectData[] = [
@@ -29,7 +30,7 @@
   ];
 
   // Scroll to section
-  function scrollToSection(section: string) {
+  function scrollToSection(section: string, specificPosition?: number) {
     const container = document.querySelector(".scroll-container");
     if (!container) return;
     
@@ -37,22 +38,35 @@
     const maxScroll = container.scrollWidth - containerWidth;
     let targetPosition = 0;
     
-    switch (section) {
-      case "hello":
-        targetPosition = 0;
-        break;
-      case "works":
-        // Scroll to first project
-        targetPosition = containerWidth;
-        break;
-      case "more":
-        // Calculate position of More section (after all projects)
-        targetPosition = containerWidth * (projects.length + 1);
-        // Ensure we don't scroll past the maximum
-        targetPosition = Math.min(targetPosition, maxScroll);
-        break;
-      default:
-        targetPosition = 0;
+    // If a specific position is provided, use it (for restoring saved scroll position)
+    if (specificPosition !== undefined) {
+      targetPosition = Math.min(specificPosition, maxScroll);
+    } else {
+      switch (section) {
+        case "hello":
+          targetPosition = 0;
+          break;
+        case "works":
+          // Check if we have a saved scroll position to restore
+          const savedPosition = sessionStorage.getItem('projectsScrollPosition');
+          if (savedPosition) {
+            targetPosition = Math.min(parseInt(savedPosition), maxScroll);
+            // Remove the saved position after using it
+            sessionStorage.removeItem('projectsScrollPosition');
+          } else {
+            // Default: Scroll to first project
+            targetPosition = containerWidth;
+          }
+          break;
+        case "more":
+          // Calculate position of More section (after all projects)
+          targetPosition = containerWidth * (projects.length + 1);
+          // Ensure we don't scroll past the maximum
+          targetPosition = Math.min(targetPosition, maxScroll);
+          break;
+        default:
+          targetPosition = 0;
+      }
     }
 
     // Smooth scroll to target position
@@ -68,6 +82,17 @@
   // Handle section change
   function handleSectionChange(section: string) {
     currentSection = section;
+  }
+
+  // Handle typing animation completion
+  function handleTypingComplete() {
+    showNavigation = true;
+    // Mark that animation has been seen in this session
+    try {
+      sessionStorage.setItem('hasSeenAnimation', 'true');
+    } catch (e) {
+      console.error('Could not save to sessionStorage:', e);
+    }
   }
 
   // Mouse position tracking
@@ -89,6 +114,17 @@
       scrollToSection('works');
     }
 
+    // Check if this is the first visit in this session
+    // Use sessionStorage instead of localStorage for within-app navigation
+    try {
+      const hasSeenAnimationThisSession = sessionStorage.getItem('hasSeenAnimation') === 'true';
+      if (hasSeenAnimationThisSession) {
+        showNavigation = true;
+      }
+    } catch (e) {
+      console.error('Could not read from sessionStorage:', e);
+    }
+
     return () => {
       window.removeEventListener('mousemove', handleMouseMove);
     };
@@ -98,11 +134,14 @@
 <svelte:window on:mousemove={handleMouseMove} />
 
 <div class="flex flex-col w-full h-screen">
-  <SimpleNavigation />
+  {#if showNavigation}
+    <SimpleNavigation bind:currentSection />
+  {/if}
   
   <PortfolioViewport
     {projects}
     onSectionChange={handleSectionChange}
+    onTypingComplete={handleTypingComplete}
   />
 </div>
 

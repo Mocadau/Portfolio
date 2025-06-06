@@ -86,12 +86,17 @@ body {
 }
 
 /* Einheitliche Schriftart für das gesamte Projekt */
-html, body, button, input, textarea, select, .nav-item {
+*, html, body, button, input, textarea, select, .nav-item, h1, h2, h3, h4, h5, h6, p, span, div, a {
   font-family: 'Helvetica Neue', sans-serif !important;
 }
 
 .hand-drawn-text {
-  font-family: 'Helvetica Neue', sans-serif;
+  font-family: 'Helvetica Neue', sans-serif !important;
+  font-weight: 700;
+}
+
+.hand-drawn-title {
+  font-family: 'Helvetica Neue', sans-serif !important;
   font-weight: 700;
 }
 

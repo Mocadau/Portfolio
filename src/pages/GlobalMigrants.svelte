@@ -20,7 +20,6 @@
 <div class="page-container">
   <header class="header">
     <a href="/" class="logo" on:click|preventDefault={() => {
-      // Set flag to indicate we want to scroll to works section
       sessionStorage.setItem('scrollToWorks', 'true');
       window.location.href = '/';
     }}>

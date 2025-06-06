@@ -24,6 +24,24 @@
         return '/';
     }
   }
+
+  // Save current scroll position before navigating to project
+  function navigateToProject() {
+    // Save current scroll position
+    const container = document.querySelector(".scroll-container");
+    if (container) {
+      const currentScrollPosition = container.scrollLeft;
+      const containerWidth = window.innerWidth;
+      
+      // Only save if we're currently in the projects area (not at hello or more sections)
+      if (currentScrollPosition >= containerWidth && currentScrollPosition < containerWidth * 4) {
+        sessionStorage.setItem('projectsScrollPosition', currentScrollPosition.toString());
+      }
+    }
+    
+    // Navigate to the project page
+    navigate(getProjectRoute(index));
+  }
 </script>
 
 <section class="section-container bg-white flex items-center justify-center overflow-y-auto {className}">
@@ -43,8 +61,8 @@
                 class="relative w-full h-full"
                 role="button"
                 tabindex="0"
-                on:click={() => navigate(getProjectRoute(index))}
-                on:keydown={(e) => e.key === 'Enter' && navigate(getProjectRoute(index))}
+                on:click={navigateToProject}
+                on:keydown={(e) => e.key === 'Enter' && navigateToProject()}
               >
                 <div class="w-full h-full bg-white p-[10px] cursor-pointer overflow-hidden rounded-lg">
                   <img

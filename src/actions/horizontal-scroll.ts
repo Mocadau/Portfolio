@@ -14,6 +14,7 @@ declare global {
 interface ScrollOptions {
   onScroll: (scrollPosition: number, containerWidth: number) => void;
   scrollSensitivity: number;
+  scrollingEnabled?: boolean; // Neue Option zur Steuerung der Scroll-Aktivierung
 }
 
 export const horizontalScroll: Action<HTMLElement, ScrollOptions> = (node, options) => {
@@ -21,6 +22,9 @@ export const horizontalScroll: Action<HTMLElement, ScrollOptions> = (node, optio
   let scrollTimeout: number;
   let lastWheelTimestamp = 0;
   let scrollLocked = false;
+  
+  // Scroll initial deaktiviert, bis explizit aktiviert
+  let scrollingEnabled = options.scrollingEnabled ?? false;
   
   function handleScroll() {
     const { scrollLeft, clientWidth } = node;
@@ -50,6 +54,11 @@ export const horizontalScroll: Action<HTMLElement, ScrollOptions> = (node, optio
   
   function handleWheel(event: WheelEvent) {
     event.preventDefault();
+    
+    // Frühzeitige Rückkehr wenn Scrolling nicht aktiviert ist
+    if (!scrollingEnabled) {
+      return;
+    }
     
     const now = Date.now();
     if (scrollLocked || now - lastWheelTimestamp < 100) {
@@ -110,6 +119,10 @@ export const horizontalScroll: Action<HTMLElement, ScrollOptions> = (node, optio
   node.addEventListener('wheel', handleWheel, { passive: false });
   
   return {
+    update(newOptions: ScrollOptions) {
+      options = newOptions;
+      scrollingEnabled = newOptions.scrollingEnabled ?? false;
+    },
     destroy() {
       node.removeEventListener('scroll', handleScroll);
       node.removeEventListener('wheel', handleWheel);
