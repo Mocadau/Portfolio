@@ -143,10 +143,11 @@
     const startPosition = safeMargin;
     
     // Endposition (rechts mit sicherem Abstand zum Rand)
-    // Für mobile Geräte wählen wir eine kleinere Endposition, um Verzerrung zu vermeiden
+    // Größerer Puffer für MoreSection, um Verzerrung zu vermeiden
+    const additionalMargin = isMobile ? 60 : 100; // Mehr Platz für MoreSection
     const endPosition = isMobile 
-      ? width - gifWidth - safeMargin - 20 // zusätzlicher Puffer für mobile Ansicht
-      : width - gifWidth - safeMargin;
+      ? width - gifWidth - safeMargin - additionalMargin // Größerer Puffer für mobile Ansicht
+      : width - gifWidth - safeMargin - additionalMargin;
     
     // Berechne die gleichmäßige Schrittgröße zwischen den Seiten
     const stepSize = (endPosition - startPosition) / (totalSections - 1);
