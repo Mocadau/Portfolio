@@ -1,5 +1,5 @@
 <script lang="ts">
-  import Navigation from "../components/Navigation.svelte";
+  import SimpleNavigation from "../components/SimpleNavigation.svelte";
   import PortfolioViewport from "../components/PortfolioViewport.svelte";
   import type { ProjectData } from "../types/portfolio";
   import { onMount } from "svelte";
@@ -98,10 +98,7 @@
 <svelte:window on:mousemove={handleMouseMove} />
 
 <div class="flex flex-col w-full h-screen">
-  <Navigation 
-    {scrollToSection} 
-    {currentSection}
-  />
+  <SimpleNavigation />
   
   <PortfolioViewport
     {projects}

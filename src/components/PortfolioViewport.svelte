@@ -96,10 +96,11 @@
   }
 
   onMount(() => {
-    // Prüfen, ob wir diese Information im localStorage speichern können, um sie zwischen Sitzungen zu behalten
+    // Prüfen, ob die laufende Figur sofort angezeigt werden soll
     const savedAnimationState = localStorage.getItem('initialAnimationShown');
     if (savedAnimationState === 'true') {
       initialAnimationShown = true;
+      walkingFigureVisible = true; // Figur sofort anzeigen, aber Typing-Animation nicht blockieren
     }
     
     // Ensure More section is reachable

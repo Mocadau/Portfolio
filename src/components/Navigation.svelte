@@ -22,10 +22,26 @@
   function handleClick(section: string) {
     scrollToSection(section);
   }
+
+  // Determine navigation position based on current section
+  $: navigationPosition = getNavigationPosition(currentSection);
+
+  function getNavigationPosition(section: string) {
+    switch (section) {
+      case 'hello':
+        return 'top-8 right-16';
+      case 'works':
+        return 'top-8 right-16';
+      case 'more':
+        return 'top-8 right-16';
+      default:
+        return 'top-8 right-16';
+    }
+  }
 </script>
 
 <nav 
-  class="nav-menu fixed top-8 inset-x-0 z-50 flex items-center gap-8 text-black scale-75 md:scale-100 origin-top-center justify-center md:justify-end md:inset-x-auto md:right-16" 
+  class="nav-menu fixed {navigationPosition} z-50 flex items-center gap-8 text-black scale-75 md:scale-100 origin-top-center justify-center md:justify-end transition-all duration-300 ease-out" 
   on:mouseenter={handleMouseEnter} 
   on:mouseleave={handleMouseLeave}
 >

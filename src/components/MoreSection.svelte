@@ -15,9 +15,21 @@
     }
   }
 
-  function handlePhotoClick(index: number) {
-    console.log('Click on photo:', index);
+  function handlePhotoClick(index: number, event: MouseEvent) {
+    event.stopPropagation();
     $selectedPhotoIndex = $selectedPhotoIndex === index ? -1 : index;
+    lastClickedPhotoIndex = index; // Speichere das zuletzt angeklickte Foto
+  }
+
+  function closeFullscreen() {
+    $selectedPhotoIndex = -1;
+    // lastClickedPhotoIndex bleibt bestehen für persistenten Text
+  }
+
+  function handleContainerClick() {
+    if ($selectedPhotoIndex !== -1) {
+      closeFullscreen();
+    }
   }
 
   function handlePhotoKeydown(event: KeyboardEvent, index: number): void {
@@ -56,24 +68,35 @@
     { 
       src: HeyImage, 
       alt: 'Hey',
-      caption: 'Hey! I\'m Maurice.'
+      title: 'Hey! I\'m Maurice.',
+      description: 'Frontend Developer with a passion for creating intuitive digital experiences.'
     },
     { 
       src: AboutMeImage, 
       alt: 'About Me',
-      caption: 'Frontend Developer & Designer'
+      title: 'About Me',
+      description: 'I combine technical skills with design thinking to build solutions that users love.'
     },
     { 
       src: WhatDrivesImage, 
       alt: 'What Drives Me',
-      caption: 'Creating intuitive solutions'
+      title: 'What Drives Me',
+      description: 'Creating meaningful connections between technology and human needs.'
     },
     { 
       src: BeyondDesignImage, 
       alt: 'Beyond Design',
-      caption: 'Always learning, always growing'
+      title: 'Beyond Design',
+      description: 'Always exploring new technologies and pushing creative boundaries.'
     }
   ];
+
+  // Aktuelle Beschreibung basierend auf dem letzten aufgenommenen Foto oder gehovertem Bild
+  let hoveredPhotoIndex = -1;
+  let lastClickedPhotoIndex = -1; // Letztes angeklicktes Foto bleibt persistent
+  $: currentDescription = hoveredPhotoIndex >= 0 ? images[hoveredPhotoIndex] :
+                         (lastClickedPhotoIndex >= 0 ? images[lastClickedPhotoIndex] : 
+                         (currentPhotoIndex > 0 ? images[currentPhotoIndex - 1] : null));
 
   onMount(() => {
     const loadResources = async () => {
@@ -145,95 +168,126 @@
 <section 
   class="py-12 {className} relative overflow-hidden bg-white"
   style="height: 100vh; opacity: {currentSection === 'more' ? 1 : 0}; visibility: {currentSection === 'more' ? 'visible' : 'hidden'}; transition: opacity 0.3s ease-out, visibility 0.3s ease-out;"
->  <div
-    class="w-full h-full"
-    on:click|preventDefault={handleSectionClick}
-    on:keydown|preventDefault={handleSectionKeydown}
-    role="presentation"
-  >
-  <button
-    type="button"
-    class="w-full h-full"
-    class:cursor-pointer={!isComplete}
-    class:cursor-not-allowed={isComplete}
-    class:pointer-events-none={!canTakePhoto && !isComplete || currentSection !== 'more' || $isProcessing}
-    on:click={handleClick}
-    on:keydown|preventDefault={handleButtonKeydown}
-    disabled={isComplete || !canTakePhoto || currentSection !== 'more'}
-  >
-    {#if isLoading}
-      <div class="absolute inset-0 flex items-center justify-center">
-        <div class="loading-text hand-drawn-text text-lg">
-          Loading camera...
-        </div>
-      </div>
-    {:else if loadError}
-      <div class="absolute inset-0 flex items-center justify-center">
-        <p class="text-red-500 hand-drawn-text text-lg">
-          Oops! Something went wrong: {loadError}
-        </p>
-      </div>
-    {/if}
+>
+  <!-- Zwei-Spalten-Layout -->
+  <div class="w-full h-full grid grid-cols-1 lg:grid-cols-2 gap-8">
+    
+    <!-- Linke Spalte: Kamera und Fotos -->
+    <div 
+      class="camera-section relative flex flex-col items-center justify-center order-1 lg:order-1"
+      on:click|preventDefault={handleSectionClick}
+      on:keydown|preventDefault={handleSectionKeydown}
+      role="presentation"
+    >
+      <button
+        type="button"
+        class="w-full h-full relative"
+        class:cursor-pointer={!isComplete}
+        class:cursor-not-allowed={isComplete}
+        class:pointer-events-none={!canTakePhoto && !isComplete || currentSection !== 'more' || $isProcessing}
+        on:click={handleClick}
+        on:keydown|preventDefault={handleButtonKeydown}
+        disabled={isComplete || !canTakePhoto || currentSection !== 'more'}
+      >
+        {#if isLoading}
+          <div class="absolute inset-0 flex items-center justify-center">
+            <div class="loading-text hand-drawn-text text-lg">
+              Loading camera...
+            </div>
+          </div>
+        {:else if loadError}
+          <div class="absolute inset-0 flex items-center justify-center">
+            <p class="text-red-500 hand-drawn-text text-lg">
+              Oops! Something went wrong: {loadError}
+            </p>
+          </div>
+        {/if}
 
-    <div class="w-full h-full pointer-events-none">
-      <div class="camera-wrapper">
-        <div class="camera-container flex flex-col items-center" class:processing={$isProcessing}>
-          <p class="text-center mb-2 hand-drawn-text transition-opacity duration-300" class:text-gray-400={isComplete}>
-            {#if isComplete}
-              No more photos
-            {:else}
-              Click = Photo
-            {/if}
-          </p>
-          <img 
-            src={PolaroidCamera} 
-            alt="Polaroid Camera" 
-            class="transition-transform duration-300"
-            class:camera-disabled={isComplete}
-            style="width: clamp(85px, 15.3vw, 136px);"
-          />
-        </div>
-      </div>
+        <div class="w-full h-full pointer-events-none relative">
+          <!-- Kamera -->
+          <div class="camera-wrapper">
+            <div class="camera-container flex flex-col items-center" class:processing={$isProcessing}>
+              <p class="text-center mb-2 hand-drawn-text transition-opacity duration-300" class:text-gray-400={isComplete}>
+                {#if isComplete}
+                  No more photos
+                {:else}
+                  Click = Photo
+                {/if}
+              </p>
+              <img 
+                src={PolaroidCamera} 
+                alt="Polaroid Camera" 
+                class="transition-transform duration-300"
+                class:camera-disabled={isComplete}
+                style="width: clamp(85px, 15.3vw, 136px);"
+              />
+            </div>
+          </div>
 
-      <div class="photos-container overflow-visible pointer-events-all">
-        <div class="photos-grid overflow-visible">
-          {#each images as image, i}
-            {#if i < currentPhotoIndex}
-              <div 
-                class="photo-position"
-                class:selected={$selectedPhotoIndex === i}
-                style="z-index: {images.length - i};"
-                role="button"
-                tabindex="0"
-                on:click|stopPropagation={() => handlePhotoClick(i)}
-                on:keydown|stopPropagation={event => handlePhotoKeydown(event, i)}
-              >
-                <div 
-                  class="photo-container"
-                  style="--delay: {i * 0.2}s; --index: {i};"
-                  class:selected={$selectedPhotoIndex === i}
-                >
-                  <div class="polaroid-frame">
-                    <div class="photo-wrapper">
-                      <img 
-                        src={image.src} 
-                        alt={image.alt}
-                        class="w-full h-full"
-                        bind:this={photos[i]}
-                      />
-                    </div>
-                    <div class="caption-container" class:visible={$selectedPhotoIndex === i}>
-                      {image.caption}
+          <!-- Fotos -->
+          <div class="photos-container overflow-visible pointer-events-all">
+            <div class="photos-grid overflow-visible">
+              {#each images as image, i}
+                {#if i < currentPhotoIndex}
+                  <div 
+                    class="photo-position"
+                    class:selected={$selectedPhotoIndex === i}
+                    style="z-index: {images.length - i};"
+                    role="button"
+                    tabindex="0"
+                    on:click|stopPropagation={(event) => handlePhotoClick(i, event)}
+                    on:keydown|stopPropagation={event => handlePhotoKeydown(event, i)}
+                    on:mouseenter={() => hoveredPhotoIndex = i}
+                    on:mouseleave={() => hoveredPhotoIndex = -1}
+                  >
+                    <div 
+                      class="photo-container"
+                      style="--delay: {i * 0.2}s; --index: {i};"
+                      class:selected={$selectedPhotoIndex === i}
+                    >
+                      <div class="polaroid-frame">
+                        <div class="photo-wrapper">
+                          <img 
+                            src={image.src} 
+                            alt={image.alt}
+                            class="w-full h-full"
+                            bind:this={photos[i]}
+                          />
+                        </div>
+                      </div>
                     </div>
                   </div>
-                </div>
-              </div>
-            {/if}
-          {/each}
+                {/if}
+              {/each}
+            </div>
+          </div>
         </div>
-      </div>
+      </button>
     </div>
-  </button>
+
+    <!-- Rechte Spalte: Dynamischer Text -->
+    <div class="text-section flex flex-col justify-center px-8 lg:px-12 order-2 lg:order-2">
+      {#if currentDescription}
+        <div class="text-content max-w-lg">
+          <h2 class="hand-drawn-text text-4xl lg:text-5xl mb-6 text-black">
+            {currentDescription.title}
+          </h2>
+          <p class="text-lg lg:text-xl text-gray-700 leading-relaxed font-light">
+            {currentDescription.description}
+          </p>
+        </div>
+      {:else}
+        <div class="text-content max-w-lg opacity-50">
+          <h2 class="hand-drawn-text text-4xl lg:text-5xl mb-6 text-gray-400">
+            Take a photo...
+          </h2>
+          <p class="text-lg lg:text-xl text-gray-400 leading-relaxed font-light">
+            Click the camera to capture moments and see stories unfold.
+          </p>
+        </div>
+      {/if}
+    </div>
+
   </div>
 </section>
 
@@ -251,18 +305,25 @@
 
   .camera-wrapper {
     position: absolute;
-    left: 25%;
-    top: 15%;
+    left: 50%;
+    top: 20%;
     transform: translateX(-50%);
     display: flex;
     align-items: center;
     z-index: 10;
   }
 
+  @media (max-width: 1024px) {
+    .camera-wrapper {
+      left: 50%;
+      top: 25%;
+    }
+  }
+
   @media (max-width: 768px) {
     .camera-wrapper {
-      left: 20%;
-      top: 25%;
+      left: 50%;
+      top: 30%;
     }
 
     img[src*="polaroid-camera"] {
@@ -333,25 +394,34 @@
 
   .photos-container {
     position: absolute;
-    left: 25%;
-    top: 32%;
+    left: 50%;
+    top: 45%;
     transform: translateX(-50%);
-    width: min(800px, 90vw);
-    height: 60vh;
+    width: min(400px, 80vw);
+    height: 50vh;
     overflow: visible;
     pointer-events: all;
     background: transparent;
   }
 
+  @media (max-width: 1024px) {
+    .photos-container {
+      left: 50%;
+      top: 50%;
+      width: min(350px, 75vw);
+    }
+  }
+
   @media (max-width: 768px) {
     .photos-container {
-      left: 20%;
-      top: 38%;
+      left: 50%;
+      top: 55%;
+      width: min(300px, 70vw);
     }
   }
 
   .photos-grid {
-    width: min(800px, 90vw);
+    width: 100%;
   }
 
   .photo-position {
@@ -372,15 +442,18 @@
     position: fixed;
     left: 0;
     top: 0;
+    width: 100vw;
+    height: 100vh;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: rgba(0, 0, 0, 0.7);
-    backdrop-filter: blur(3px);
+    background: rgba(0, 0, 0, 0.8);
+    backdrop-filter: blur(8px);
     z-index: 9999 !important;
-    padding: 0;
+    padding: 2rem;
     margin: 0;
     transform: none;
+    cursor: pointer;
   }
 
   .photo-container {
@@ -398,6 +471,9 @@
     margin: 0;
     transform: none !important;
     animation: none;
+    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+    border-radius: 8px;
+    overflow: hidden;
   }
 
   .photo-container.selected {
@@ -406,8 +482,9 @@
 
   .photo-container.selected .polaroid-frame {
     background: white;
-    padding: 12px;
-    box-shadow: 0 6px 24px rgba(0, 0, 0, 0.2);
+    padding: 16px;
+    box-shadow: none;
+    border-radius: 8px;
   }
 
   @media (max-width: 768px) {
@@ -473,6 +550,60 @@
     }
     100% {
       transform: translateY(calc(var(--index) * 80px)) rotate(0deg) scale(1);
+    }
+  }
+
+  /* Text-Sektion Styles */
+  .text-section {
+    background: transparent;
+    position: relative;
+  }
+
+  .text-content {
+    transition: all 0.5s ease-in-out;
+    animation: fadeIn 0.8s ease-out;
+  }
+
+  .text-content h2 {
+    font-family: 'Helvetica Neue', sans-serif;
+    font-weight: 300;
+    line-height: 1.2;
+    margin-bottom: 1.5rem;
+  }
+
+  .text-content p {
+    font-family: 'Helvetica Neue', sans-serif;
+    font-weight: 300;
+    line-height: 1.6;
+  }
+
+  @media (max-width: 1024px) {
+    .text-section {
+      padding: 2rem 1.5rem;
+      text-align: center;
+    }
+    
+    .text-content h2 {
+      font-size: 2.5rem;
+    }
+    
+    .text-content p {
+      font-size: 1.125rem;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .text-section {
+      padding: 1.5rem 1rem;
+    }
+    
+    .text-content h2 {
+      font-size: 2rem;
+      margin-bottom: 1rem;
+    }
+    
+    .text-content p {
+      font-size: 1rem;
     }
   }
 </style>
