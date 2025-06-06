@@ -7,6 +7,7 @@
   import GlobalMigrants from './pages/GlobalMigrants.svelte';
   import Alignspace from './pages/Alignspace.svelte';
   import IpodShuffle from './pages/IpodShuffle.svelte';
+  import Imprint from './pages/Imprint.svelte';
   import FlashOverlay from './components/FlashOverlay.svelte';
   import './app.css';
 
@@ -48,6 +49,7 @@
     <Route path="/GlobalMigrants" component={GlobalMigrants} />
     <Route path="/Alignspace" component={Alignspace} />
     <Route path="/IpodShuffle" component={IpodShuffle} />
+    <Route path="/imprint" component={Imprint} />
     <Route path="*" component={NotFound} />
     <FlashOverlay />
   </main>

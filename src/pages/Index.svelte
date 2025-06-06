@@ -1,11 +1,13 @@
 <script lang="ts">
   import SimpleNavigation from "../components/SimpleNavigation.svelte";
   import PortfolioViewport from "../components/PortfolioViewport.svelte";
+  import PortfolioFooter from "../components/PortfolioFooter.svelte";
   import type { ProjectData } from "../types/portfolio";
   import { onMount } from "svelte";
 
   let currentSection = "hello";
   let showNavigation = false;
+  let portfolioViewportComponent: any; // Reference to the PortfolioViewport component
 
   // Project data
   const projects: ProjectData[] = [
@@ -95,6 +97,13 @@
     }
   }
 
+  // Handle email overlay event from footer
+  function handleShowEmailOverlay() {
+    if (portfolioViewportComponent?.handleEmailOverlay) {
+      portfolioViewportComponent.handleEmailOverlay();
+    }
+  }
+
   // Mouse position tracking
   let mouseY = 0;
 
@@ -139,10 +148,14 @@
   {/if}
   
   <PortfolioViewport
+    bind:this={portfolioViewportComponent}
     {projects}
     onSectionChange={handleSectionChange}
     onTypingComplete={handleTypingComplete}
   />
+  
+  <!-- Footer component -->
+  <PortfolioFooter on:showEmailOverlay={handleShowEmailOverlay} />
 </div>
 
 <style>

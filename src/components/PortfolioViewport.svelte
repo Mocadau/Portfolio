@@ -27,6 +27,10 @@
   let hasVisitedBefore = false;  // Prüft, ob der Nutzer schon mal da war
   let scrollingEnabled = false;  // Steuerung der Scroll-Funktionalität
   
+  // Email overlay state
+  let showEmailOverlay = false;
+  let emailCopied = false;
+  
   // Mouse tracking for walking figure eyes
   let mouseX = 0;
   let mouseY = 0;
@@ -84,6 +88,51 @@
       eyeRightX = (rightDeltaX / rightDistance) * rightLimitedDistance;
       eyeRightY = (rightDeltaY / rightDistance) * rightLimitedDistance;
     }
+  }
+
+  // Email overlay functions
+  function handleEmailOverlay() {
+    showEmailOverlay = true;
+    emailCopied = false;
+    
+    // Auto-hide after 5 seconds if not copied
+    setTimeout(() => {
+      if (showEmailOverlay && !emailCopied) {
+        hideEmailOverlay();
+      }
+    }, 5000);
+  }
+
+  // Export function for external access
+  export { handleEmailOverlay };
+
+  function copyEmail() {
+    const email = 'maurice.cadau@hfg-gmuend.de';
+    navigator.clipboard.writeText(email).then(() => {
+      emailCopied = true;
+      setTimeout(() => {
+        showEmailOverlay = false;
+        emailCopied = false;
+      }, 1500);
+    }).catch(() => {
+      // Fallback for older browsers
+      const textArea = document.createElement('textarea');
+      textArea.value = email;
+      document.body.appendChild(textArea);
+      textArea.select();
+      document.execCommand('copy');
+      document.body.removeChild(textArea);
+      emailCopied = true;
+      setTimeout(() => {
+        showEmailOverlay = false;
+        emailCopied = false;
+      }, 1500);
+    });
+  }
+
+  function hideEmailOverlay() {
+    showEmailOverlay = false;
+    emailCopied = false;
   }
 
   function handleTypingComplete() {
@@ -274,7 +323,7 @@
   <!-- Walking Figure -->
   {#if walkingFigureVisible}
     <div class="walking-figure fade-in-from-left {isMovingBackward ? 'moving-backward' : ''}" 
-      style="left: {walkingFigurePosition}px; bottom: {isMobile ? '15px' : '30px'}; 
+      style="left: {walkingFigurePosition}px; bottom: {isMobile ? '50px' : '70px'}; 
       transition: left 0.6s linear; position: fixed; z-index: 50; transform-origin: center;">
       <img src={stickFigureWalking} alt="Walking Stick Figure" 
            class="w-auto {isMobile ? 'h-[120px]' : 'h-[150px]'}"
@@ -291,6 +340,33 @@
         <div class="eye right-eye">
           <div class="eyeball" style="transform: translate({eyeRightX}px, {eyeRightY}px);"></div>
         </div>
+      </div>
+    </div>
+  {/if}
+
+  <!-- Email Overlay above Walking Figure -->
+  {#if showEmailOverlay && walkingFigureVisible}
+    <div class="email-overlay-backdrop" 
+         on:click={hideEmailOverlay}
+         on:keydown={(e) => e.key === 'Escape' && hideEmailOverlay()}
+         role="button"
+         tabindex="-1"
+         aria-label="Close email overlay"></div>
+    <div class="email-overlay" 
+         style="left: {walkingFigurePosition + (isMobile ? 5 : 15)}px; bottom: {isMobile ? '180px' : '230px'};">
+      <div class="email-container" on:click|stopPropagation>
+        <div class="copy-text" class:copied={emailCopied}>
+          {emailCopied ? 'Copied!' : 'Copy'}
+        </div>
+        <div class="email-address" 
+             on:click={copyEmail} 
+             on:keydown={(e) => e.key === 'Enter' && copyEmail()}
+             role="button" 
+             tabindex="0">
+          maurice.cadau@hfg-gmuend.de
+        </div>
+        <!-- Arrow pointing to walking figure -->
+        <div class="email-arrow"></div>
       </div>
     </div>
   {/if}
@@ -511,6 +587,96 @@
     .scroll-hint-text {
       font-size: 12px;
       padding: 6px 12px;
+    }
+  }
+
+  /* Email Overlay Styles */
+  .email-overlay-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 59;
+    background: transparent;
+    cursor: pointer;
+  }
+
+  .email-overlay {
+    position: fixed;
+    z-index: 80;
+    pointer-events: auto;
+    animation: fadeInUp 0.3s ease-out forwards;
+  }
+
+  .email-container {
+    background: rgba(255, 255, 255, 0.95);
+    border: 2px solid #000;
+    border-radius: 8px;
+    padding: 12px 16px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    backdrop-filter: blur(10px);
+    text-align: center;
+    min-width: 200px;
+  }
+
+  .copy-text {
+    font-family: 'Helvetica Neue', sans-serif;
+    font-size: 12px;
+    font-weight: 600;
+    color: #666;
+    margin-bottom: 4px;
+    text-transform: uppercase;
+    letter-spacing: 0.5px;
+    transition: color 0.3s ease;
+  }
+
+  .copy-text.copied {
+    color: #10b981;
+  }
+
+  .email-address {
+    font-family: 'Helvetica Neue', sans-serif;
+    font-size: 14px;
+    font-weight: 500;
+    color: #000;
+    cursor: pointer;
+    padding: 4px 8px;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+    word-break: break-all;
+  }
+
+  .email-address:hover {
+    background: rgba(0, 0, 0, 0.05);
+    transform: scale(1.02);
+  }
+
+  .email-arrow {
+    position: absolute;
+    bottom: -8px;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-top: 8px solid rgba(255, 255, 255, 0.95);
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+  }
+
+  @media (max-width: 768px) {
+    .email-container {
+      padding: 8px 12px;
+      min-width: 180px;
+    }
+    
+    .copy-text {
+      font-size: 10px;
+    }
+    
+    .email-address {
+      font-size: 12px;
     }
   }
 </style>
