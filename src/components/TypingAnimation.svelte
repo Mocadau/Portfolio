@@ -21,6 +21,7 @@
       } else {
         clearInterval(timer);
         isComplete = true;
+        console.log('📝 TypingAnimation completed for text:', text);
         dispatch('complete');
       }
     }, speed);

@@ -10,5 +10,5 @@
   <path d="M160 200 Q200 160 200 200 T240 200" fill="none" stroke="#333" stroke-width="8" stroke-linecap="round"/>
   
   <!-- Hey text -->
-  <text x="200" y="280" font-family="Caveat, cursive" font-size="72" fill="#333" text-anchor="middle">Hey!</text>
+  <text x="200" y="280" font-family="Helvetica Neue, sans-serif" font-size="72" fill="#333" text-anchor="middle">Hey!</text>
 </svg>

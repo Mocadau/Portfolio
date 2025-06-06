@@ -56,7 +56,7 @@
 <style>
   :global(body) {
     margin: 0;
-    font-family: system-ui, -apple-system, sans-serif;
+    font-family: 'Helvetica Neue', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
   }
 
   :global(.hand-drawn-text) {

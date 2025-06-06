@@ -1,7 +1,6 @@
 <script lang="ts">
   import Navigation from "../components/Navigation.svelte";
   import PortfolioViewport from "../components/PortfolioViewport.svelte";
-  import ProjectThree from "../components/projects/ProjectThree.svelte";
   import type { ProjectData } from "../types/portfolio";
   import { onMount } from "svelte";
 

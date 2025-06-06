@@ -11,5 +11,5 @@
   <path d="M120 300 C120,200 280,200 280,300" fill="#333"/>
   
   <!-- About me text -->
-  <text x="200" y="350" font-family="Caveat, cursive" font-size="24" fill="#333" text-anchor="middle">About Me</text>
+  <text x="200" y="350" font-family="Helvetica Neue, sans-serif" font-size="24" fill="#333" text-anchor="middle">About Me</text>
 </svg>

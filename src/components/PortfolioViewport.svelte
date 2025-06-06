@@ -242,12 +242,12 @@
   }
 
   :global(.hand-drawn-text) {
-    font-family: 'Helvetica Neue', sans-serif;
+    font-family: 'Indie Flower', cursive;
     letter-spacing: 0.02em;
   }
 
   :global(.hand-drawn-title) {
-    font-family: 'Helvetica Neue', sans-serif;
+    font-family: 'Indie Flower', cursive;
     letter-spacing: 0.05em;
     font-weight: bold;
   }

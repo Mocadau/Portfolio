@@ -31,13 +31,13 @@
 >
   {#each visibleItems as item}
     <div
-      class="nav-item cursor-pointer {currentSection === item ? 'active' : ''}"
+      class="nav-item hand-drawn-text cursor-pointer {currentSection === item ? 'active' : ''}"
       role="button"
       tabindex="0"
       on:click={() => handleClick(item)}
       on:keydown={e => e.key === 'Enter' && handleClick(item)}
     >
-      <span class="text-3xl">
+      <span class="text-3xl hand-drawn-text">
         {item.toUpperCase()}
         {#if currentSection === item}
           <div class="h-[3px] mt-1 border-b-[3px] border-dashed border-black"></div>

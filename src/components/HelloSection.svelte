@@ -1,12 +1,47 @@
 <script lang="ts">
   import { createEventDispatcher } from "svelte";
   import TypingAnimation from "./TypingAnimation.svelte";
-
   const dispatch = createEventDispatcher();
   let isTypingComplete = false;
+  let hideOriginalHello = false;
   
   function handleTypingComplete() {
+    console.log('🎯 HelloSection: handleTypingComplete called');
     isTypingComplete = true;
+    
+    // Warte kurz, damit der Benutzer das fertige getippte HELLO sehen kann
+    setTimeout(() => {
+      // Verstecke das originale Hello
+      hideOriginalHello = true;
+      
+      // Starte die Animation zur Navigation 200ms später
+      setTimeout(() => {
+        console.log('🔥 Dispatching typingAnimationComplete event');
+        console.log('🎯 Available window functions:', Object.keys(window).filter(key => key.includes('Animation')));
+        
+        // Methode 1: Window Event
+        window.dispatchEvent(new CustomEvent('typingAnimationComplete'));
+        
+        // Methode 2: Document Event
+        document.dispatchEvent(new CustomEvent('typingAnimationComplete'));
+        
+        // Methode 3: Direkter Aufruf an Navigation
+        const navElements = document.querySelectorAll('.navigation-container, .nav-menu');
+        navElements.forEach(el => {
+          el.dispatchEvent(new CustomEvent('startAnimation'));
+        });
+        
+        // Methode 4: Direkte Funktions-Aufruf
+        if ((window as any).startNavigationAnimation) {
+          console.log('🚀 Calling startNavigationAnimation directly');
+          (window as any).startNavigationAnimation();
+        } else {
+          console.error('❌ startNavigationAnimation function not found on window');
+        }
+        
+      }, 200);
+    }, 500);
+    
     dispatch('complete');
   }
 </script>
@@ -14,7 +49,7 @@
 <section class="section-container bg-white flex flex-col md:flex-row justify-between items-center relative overflow-x-hidden">
   <div class="w-full md:w-auto flex justify-start mt-20 md:mt-32 min-h-[350px] scale-75 md:scale-100 origin-top-center md:mx-auto"> <!-- Ausrichtung links statt zentriert -->
     <div class="px-4 md:px-6 ml-0 max-w-[90%] md:max-w-none text-left"> <!-- Konsistente Ausrichtung links -->
-    <h1 class="hidden md:block text-5xl font-bold mb-12 hand-drawn-title relative">
+    <h1 class="hidden md:block text-5xl font-bold mb-12 hand-drawn-title relative hello-element" class:hello-fade-out={hideOriginalHello}>
       <span class="relative inline-block">
         HELLO
         <div class="absolute -bottom-3 left-0 w-full h-[6px] overflow-hidden">
@@ -91,7 +126,7 @@
   
   {#if isTypingComplete}
     <div class="absolute bottom-6 right-4 md:bottom-20 md:right-32 hand-drawn-text font-bold text-xl md:text-3xl animate-fade-in text-right scale-75 md:scale-100 origin-bottom-right">
-      PROJECTS ⟶
+   
     </div>
   {/if}
 </section>
@@ -109,6 +144,26 @@
     transform: translateX(-101%) scaleX(0.5);
     animation: underlineSlide 1s cubic-bezier(0.23, 1, 0.32, 1) forwards;
     animation-delay: 0.5s;
+  }
+
+  .hello-fade-out {
+    animation: helloFadeOut 0.5s ease-out forwards;
+  }
+
+  @keyframes helloFadeOut {
+    0% { 
+      opacity: 1;
+      transform: scale(1);
+    }
+    100% { 
+      opacity: 0;
+      transform: scale(0.85);
+      visibility: hidden;
+    }
+  }
+  
+  .hello-element {
+    transition: all 0.3s ease-out;
   }
 
   @keyframes bounceRight {

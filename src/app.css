@@ -1,8 +1,16 @@
 /* Verwenden von Helvetica Neue für das gesamte Projekt */
 
+/* Animation-Styles importieren */
+@import './assets/animation.css';
+
 @tailwind base;
 @tailwind components;
 @tailwind utilities;
+
+/* Globale Schriftart */
+body {
+  font-family: 'Helvetica Neue', sans-serif;
+}
  
 @layer base {
   :root {
@@ -75,6 +83,11 @@
   body {
     @apply bg-background text-foreground;
   }
+}
+
+/* Einheitliche Schriftart für das gesamte Projekt */
+html, body, button, input, textarea, select, .nav-item {
+  font-family: 'Helvetica Neue', sans-serif !important;
 }
 
 .hand-drawn-text {

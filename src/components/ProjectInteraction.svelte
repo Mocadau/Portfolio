@@ -1,6 +1,6 @@
 <script lang="ts">
   import { onMount, onDestroy } from 'svelte';
-  import type { ProjectInteractionProps, InteractionChildProps } from '../types/project';
+  import type { ProjectInteractionProps } from '../types/project';
   
   // Props
   export let TopInteraction: ProjectInteractionProps['TopInteraction'];

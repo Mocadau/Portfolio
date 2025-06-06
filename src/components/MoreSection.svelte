@@ -424,7 +424,7 @@
     text-align: center;
     margin-top: 6px;
     color: rgba(0, 0, 0, 0.8);
-    font-family: 'Helvetica Neue', sans-serif;
+    font-family: 'Permanent Marker', cursive;
     font-size: 0.9rem;
   }
 
