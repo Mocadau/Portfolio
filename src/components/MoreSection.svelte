@@ -17,8 +17,17 @@
 
   function handlePhotoClick(index: number, event: MouseEvent) {
     event.stopPropagation();
-    $selectedPhotoIndex = $selectedPhotoIndex === index ? -1 : index;
-    lastClickedPhotoIndex = index; // Speichere das zuletzt angeklickte Foto
+    console.log('Photo clicked:', index, 'Current selected:', $selectedPhotoIndex);
+    
+    // Immer den Text für das angeklickte Bild anzeigen
+    lastClickedPhotoIndex = index;
+    
+    // Toggle fullscreen: Wenn das gleiche Foto bereits ausgewählt ist, minimiere es
+    if ($selectedPhotoIndex === index) {
+      $selectedPhotoIndex = -1;
+    } else {
+      $selectedPhotoIndex = index;
+    }
   }
 
   function closeFullscreen() {
@@ -94,9 +103,20 @@
   // Aktuelle Beschreibung basierend auf dem letzten aufgenommenen Foto oder gehovertem Bild
   let hoveredPhotoIndex = -1;
   let lastClickedPhotoIndex = -1; // Letztes angeklicktes Foto bleibt persistent
+  let droppedPhotos = new Set(); // Verfolgt welche Fotos bereits gefallen sind
   $: currentDescription = hoveredPhotoIndex >= 0 ? images[hoveredPhotoIndex] :
                          (lastClickedPhotoIndex >= 0 ? images[lastClickedPhotoIndex] : 
                          (currentPhotoIndex > 0 ? images[currentPhotoIndex - 1] : null));
+
+  // Debug: Verfolge Änderungen
+  $: {
+    console.log('Text state:', {
+      hoveredPhotoIndex,
+      lastClickedPhotoIndex,
+      currentPhotoIndex,
+      currentDescription: currentDescription?.title
+    });
+  }
 
   onMount(() => {
     const loadResources = async () => {
@@ -135,6 +155,12 @@
     $isProcessing = true;
     
     if (currentPhotoIndex < images.length) {
+      // Markiere das neue Foto als gefallen nach der Animation
+      setTimeout(() => {
+        droppedPhotos.add(currentPhotoIndex);
+        droppedPhotos = droppedPhotos; // Trigger reactivity
+      }, 1500 + (currentPhotoIndex * 200)); // Animation duration + delay
+      
       currentPhotoIndex++;
     }
 
@@ -164,6 +190,17 @@
   }
 </script>
 
+
+<!-- Fullscreen backdrop - transparent overlay für close on outside click -->
+{#if $selectedPhotoIndex !== -1}
+  <div 
+    class="fullscreen-backdrop"
+    on:click|stopPropagation={closeFullscreen}
+    on:keydown={e => e.key === 'Escape' && closeFullscreen()}
+    role="button"
+    tabindex="-1"
+  ></div>
+{/if}
 
 <section 
   class="py-12 {className} relative overflow-hidden bg-white"
@@ -242,6 +279,7 @@
                   >
                     <div 
                       class="photo-container"
+                      class:dropped={droppedPhotos.has(i)}
                       style="--delay: {i * 0.2}s; --index: {i};"
                       class:selected={$selectedPhotoIndex === i}
                     >
@@ -440,19 +478,18 @@
 
   .photo-position.selected {
     position: fixed;
-    left: 0;
-    top: 0;
-    width: 100vw;
-    height: 100vh;
+    left: 50%;
+    top: 50%;
+    transform: translate(-50%, -50%);
+    width: auto;
+    height: auto;
     display: flex;
     align-items: center;
     justify-content: center;
-    background: rgba(0, 0, 0, 0.8);
-    backdrop-filter: blur(8px);
+    background: transparent;
     z-index: 9999 !important;
-    padding: 2rem;
+    padding: 0;
     margin: 0;
-    transform: none;
     cursor: pointer;
   }
 
@@ -462,18 +499,33 @@
     transform-origin: center;
     animation: photo-drop 1.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
     animation-delay: var(--delay);
-    transition: all 0.3s ease;
+    animation-fill-mode: forwards;
+    transition: transform 0.3s ease;
     pointer-events: all;
   }
 
+  /* Verhindere Animation nach dem ersten Drop */
+  .photo-container.dropped {
+    animation: none;
+    transform: translateY(calc(var(--index) * 80px)) rotate(0deg) scale(1);
+  }
+
   .photo-position.selected .photo-container {
-    width: min(500px, 80vw);
+    width: min(400px, 70vw);
     margin: 0;
     transform: none !important;
     animation: none;
-    box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+    box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
     border-radius: 8px;
     overflow: hidden;
+    position: relative;
+    z-index: 10000;
+  }
+
+  @media (max-width: 768px) {
+    .photo-position.selected .photo-container {
+      width: min(320px, 85vw);
+    }
   }
 
   .photo-container.selected {
@@ -605,5 +657,17 @@
     .text-content p {
       font-size: 1rem;
     }
+  }
+
+  /* Fullscreen Backdrop */
+  .fullscreen-backdrop {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    background: transparent;
+    z-index: 9998;
+    cursor: pointer;
   }
 </style>
