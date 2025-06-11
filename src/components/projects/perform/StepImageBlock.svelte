@@ -25,7 +25,7 @@
     width: 250px;
     height: 150px;
     overflow: hidden;
-    border-radius: 8px;
+    border-radius: 0px;
   }
 
   img {

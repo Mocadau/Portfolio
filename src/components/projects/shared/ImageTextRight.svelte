@@ -34,22 +34,32 @@
   .grid-item {
     display: flex;
     flex-direction: column;
-    gap: 24px;
+    gap: 28px;
+    text-align: left;
   }
+  
+  .text-content {
+    text-align: left;
+  }
+  
   .section-title {
     color: #000;
-    font-family: 'Helvetica Neue', sans-serif;
-    font-size: 24px;
+    font-family: var(--font-family);
+    font-size: 28px;
     font-weight: 700;
-    margin-bottom: 16px;
+    margin-bottom: 20px;
+    text-align: left;
+    line-height: 1.2;
   }
+  
   .description {
     color: #000;
-    font-family: 'Helvetica Neue', sans-serif;
-    font-size: 14px;
+    font-family: var(--font-family);
+    font-size: 16px;
     font-weight: 300;
-    max-width: 503px;
-    line-height: 1.6;
+    max-width: 550px;
+    line-height: 1.7;
+    text-align: left;
   }
   .image-grid {
     display: flex;
@@ -80,13 +90,56 @@
       flex-direction: row;
       justify-content: space-between;
       align-items: flex-start;
-      gap: 40px;
+      gap: 48px;
     }
     .text-content {
       flex: 1;
+      text-align: left;
     }
     .image-container {
       flex: 1;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .grid-item {
+      gap: 24px;
+    }
+    
+    .section-title {
+      font-size: 24px;
+      margin-bottom: 16px;
+    }
+    
+    .description {
+      font-size: 15px;
+      max-width: 100%;
+    }
+    
+    .image-grid {
+      justify-content: center;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .section-title {
+      font-size: 22px;
+      margin-bottom: 14px;
+    }
+    
+    .description {
+      font-size: 14px;
+    }
+    
+    .image-grid {
+      flex-direction: column;
+      align-items: center;
+      gap: 16px;
+    }
+    
+    .small-image {
+      width: 120px;
+      height: 100px;
     }
   }
 </style>

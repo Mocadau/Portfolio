@@ -1,4 +1,5 @@
 <script lang="ts">
+  import { onMount } from 'svelte';
   import TextBlock from '../components/projects/migrants/Shared/TextBlock.svelte';
   import ImageBlock from '../components/projects/migrants/Shared/ImageBlock.svelte';
   import StepImageBlock from '../components/projects/perform/StepImageBlock.svelte';
@@ -8,6 +9,7 @@
   import AlternatingLayoutBlock from '../components/projects/migrants/Layout/AlternatingLayoutBlock.svelte';
   import ContentGrid from '../components/projects/migrants/Layout/ContentGrid.svelte';
   import ContentSection from '../components/projects/migrants/Layout/ContentSection.svelte';
+  import NextProjectNavigation from '../components/NextProjectNavigation.svelte';
   
   import Bild1 from '../assets/PerForm/intro.png';
   import Bild2 from '../assets/PerForm/process1.png';
@@ -37,7 +39,7 @@
       </svg>
     </a>
     
-    <h1 class="title">PerForm – VR Fitness Experience</h1>
+    <h1 class="title">PerForm</h1>
     <div class="subtitle">
       <svg width="288" height="6" viewBox="0 0 288 6" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M0 3H288" stroke="#CE1010" stroke-width="5"/>
@@ -51,27 +53,26 @@
       <div class="meta-section">
         <h3>Team</h3>
         <div class="meta-content">
-          <p>Team-Mitglied 1</p>
-          <p>Team-Mitglied 2</p>
-          <p>Team-Mitglied 3</p>
-          <p>Team-Mitglied 4</p>
+          <p>Helen Frank</p>
+          <p>Annalena Stein</p>
+          <p>Jasmina Kramer</p>
+          <p>Maurice Cadau</p>
         </div>
       </div>
 
       <div class="meta-section">
-        <h3>Verantwortlichkeiten</h3>
+        <h3>Role</h3>
         <div class="meta-content">
-          <p>Konzept & Research</p>
-          <p>UX/UI Design</p>
-          <p>Virtual Reality</p>
-          <p>Fitness Experience Design</p>
+          <p>Concept & Research</p>
+          <p>UI/UX Design</p>
+          <p>Video & Sound Design</p>
         </div>
       </div>
 
       <div class="meta-section">
-        <h3>Dauer</h3>
+        <h3>Duration</h3>
         <div class="meta-content">
-          <p>4 Wochen</p>
+          <p>One Semester</p>
         </div>
       </div>
     </section>
@@ -91,15 +92,23 @@
       </div>
       <div class="section-divider"></div>
       <div class="section-content">
-        <div class="left-column">
+        <div class="intro-text">
           <TextBlock
             description="The desire to increase the safety and effectiveness of fitness exercises. Beginners in particular often perform incorrect movements, which can lead to injuries or ineffective training."
           />
-          <ImageBlock
-            src={Bild1}
-            alt="VR Fitness Concept"
-            caption="The goal of our project is a VR fitness app that uses body tracking and real-time feedback to help users perform exercises precisely and correctly by visualizing postural errors and providing step-by-step instructions."
-          />
+        </div>
+        <div class="intro-layout">
+          <div class="intro-image">
+            <ImageBlock
+              src={Bild1}
+              alt="VR Fitness Concept"
+            />
+          </div>
+          <div class="intro-text-right">
+            <TextBlock
+              description="The goal of our project is a VR fitness app that uses body tracking and real-time feedback to help users perform exercises precisely and correctly by visualizing postural errors and providing step-by-step instructions."
+            />
+          </div>
         </div>
       </div>
     </section>
@@ -204,7 +213,7 @@
     </section>
 
     <!-- Results Section -->
-    <section class="content-section">
+    <section class="content-section results-section">
       <div class="section-titles">
         <h2>Result</h2>
       </div>
@@ -255,7 +264,7 @@
     </section>
 
     <!-- Analysis Section -->
-    <section class="content-section">
+    <section class="content-section analysis-section">
       <div class="section-titles">
         <h2>Analysis</h2>
       </div>
@@ -270,6 +279,9 @@
       </div>
     </section>
   </main>
+
+  <!-- Next Project Navigation -->
+  <NextProjectNavigation currentProject="PerForm" />
 </div>
 
 <style>
@@ -361,7 +373,7 @@
 
   .section-titles h2 {
     color: #000;
-    font-family: 'Helvetica Neue', sans-serif;
+    font-family: var(--font-family);
     font-size: 3.25rem;
     font-weight: 700;
     margin: 0;
@@ -395,7 +407,7 @@
     position: relative;
     display: flex;
     flex-direction: column;
-    gap: 120px;
+    gap: 180px;
   }
 
   .process-content {
@@ -476,10 +488,54 @@
     margin-left: auto;
   }
 
+  /* Introduction Section Layout */
+  .intro-text {
+    width: 65%;
+    margin-bottom: 2rem;
+  }
+
+  .intro-layout {
+    display: flex;
+    align-items: flex-start;
+    gap: 60px;
+  }
+
+  .intro-image {
+    flex: 1;
+    max-width: 50%;
+  }
+
+  .intro-text-right {
+    flex: 1;
+    max-width: 50%;
+    display: flex;
+    align-items: center;
+    min-height: 300px;
+  }
+
+  /* Results Section - Bilder auf 120% skaliert */
+  .results-section .section-content .right-column :global(.image-block),
+  .results-section .section-content .left-column :global(.image-block) {
+    transform: scale(1.2);
+    transform-origin: center;
+    margin: 2rem 0;
+  }
+
+  /* Analysis Section - Größeres Bild */
+  .analysis-section .section-content .centered-column :global(.image-block) {
+    transform: scale(1.4);
+    transform-origin: center;
+    margin: 3rem 0;
+  }
+
   @media (max-width: 1024px) {
     .project-meta {
       grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
       gap: 32px 24px;
+    }
+
+    .section-content {
+      gap: 120px;
     }
 
     .steps-grid {
@@ -511,6 +567,10 @@
       padding-top: 80px;
     }
 
+    .section-content {
+      gap: 100px;
+    }
+
     .process-images {
       flex-direction: column;
       align-items: center;
@@ -534,6 +594,20 @@
 
     .centered-column {
       width: 90%;
+    }
+
+    .intro-layout {
+      flex-direction: column;
+      gap: 2rem;
+    }
+
+    .intro-image,
+    .intro-text-right {
+      max-width: 100%;
+    }
+
+    .intro-text-right {
+      min-height: auto;
     }
   }
 

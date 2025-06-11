@@ -25,7 +25,7 @@
 
   .title {
     color: #000;
-    font-family: 'Helvetica Neue', sans-serif;
+    font-family: var(--font-family);
     font-size: 24px;
     font-weight: 700;
     margin: 0 0 16px 0;
@@ -34,17 +34,17 @@
 
   .subtitle {
     color: #000;
-    font-family: 'Helvetica Neue', sans-serif;
-    font-size: 16px;
-    font-weight: 500;
-    line-height: 1.6;
+    font-family: var(--font-family);
+    font-size: 1.375rem;  /* Match description text size */
+    font-weight: 400;
+    line-height: 1.8;
     margin: 0 0 24px 0;
     text-align: left;
   }
 
   .description {
     color: #222;
-    font-family: 'Helvetica Neue', sans-serif;
+    font-family: var(--font-family);
     font-size: 1.375rem;  /* Match reflection text size */
     font-weight: 400;
     line-height: 1.8;
@@ -55,13 +55,14 @@
   @media (max-width: 768px) {
     .title {
       font-size: 20px;
-      font-family: 'Helvetica Neue', sans-serif;
+      font-family: var(--font-family);
       font-weight: 700;
     }
 
     .subtitle {
-      font-size: 14px;
+      font-size: 16px;
       margin-bottom: 16px;
+      line-height: 1.7;
     }
 
     .description {

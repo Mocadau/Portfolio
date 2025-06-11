@@ -78,27 +78,39 @@
   const images = [
     { 
       src: HeyImage, 
-      alt: 'Hey',
-      title: 'Hey! I\'m Maurice.',
-      description: 'Frontend Developer with a passion for creating intuitive digital experiences.'
+      alt: 'About Me',
+      title: 'About Me',
+      description: 'Hi, I\'m Maurice – a 23-year-old interaction designer from Aalen, Germany, with a passion for pushing creative boundaries and exploring new possibilities.'
     },
     { 
       src: AboutMeImage, 
-      alt: 'About Me',
-      title: 'About Me',
-      description: 'I combine technical skills with design thinking to build solutions that users love.'
+      alt: 'Background',
+      title: 'Background',
+      description: 'After completing my banking apprenticeship and earning my university entrance qualification, I\'m currently in my 4th semester studying Interaction Design at HfG Schwäbisch Gmünd. My journey from finance to design reflects my curiosity and willingness to embrace new challenges.'
     },
     { 
       src: WhatDrivesImage, 
       alt: 'What Drives Me',
       title: 'What Drives Me',
-      description: 'Creating meaningful connections between technology and human needs.'
+      description: 'I\'m deeply passionate about invention design, AI, strategic design, and VR/AR technologies. There\'s something magical about creating solutions that don\'t just solve problems, but reimagine how we interact with the world around us.'
     },
     { 
       src: BeyondDesignImage, 
       alt: 'Beyond Design',
       title: 'Beyond Design',
-      description: 'Always exploring new technologies and pushing creative boundaries.'
+      description: 'When I\'m not buried in design projects, you\'ll either find me backpacking solo through remote villages on the other side of the globe, or hanging out with friends for spontaneous activities like volleyball, spikeball, or game nights.'
+    },
+    { 
+      src: HeyImage, // Platzhalter - kann durch neues Bild ersetzt werden
+      alt: 'My Approach',
+      title: 'My Approach',
+      description: 'I consider myself an idea generator and creative out-of-the-box thinker. My mind constantly buzzes with new concepts, and I love making connections others might miss. New inventions and tools with technical capabilities immediately capture my attention.'
+    },
+    { 
+      src: AboutMeImage, // Platzhalter - kann durch neues Bild ersetzt werden
+      alt: 'Philosophy',
+      title: 'Philosophy',
+      description: 'I believe the world is a playground of possibilities where every conversation is an opportunity to explore new concepts and challenge the status quo. I see potential where others might see problems, and I approach every challenge with enthusiasm and creativity.'
     }
   ];
 
@@ -162,7 +174,7 @@
       setTimeout(() => {
         droppedPhotos.add(currentPhotoIndex);
         droppedPhotos = droppedPhotos; // Trigger reactivity
-      }, 1500 + (currentPhotoIndex * 200)); // Animation duration + delay
+      }, 1200 + (currentPhotoIndex * 150)); // Animation duration + delay
       
       currentPhotoIndex++;
     }
@@ -207,10 +219,10 @@
 
 <section 
   class="py-12 {className} relative overflow-hidden bg-white"
-  style="height: 100vh; opacity: {currentSection === 'more' ? 1 : 0}; visibility: {currentSection === 'more' ? 'visible' : 'hidden'}; transition: opacity 0.3s ease-out, visibility 0.3s ease-out;"
+  style="height: 100vh; opacity: {currentSection === 'more' ? 1 : 0}; visibility: {currentSection === 'more' ? 'visible' : 'hidden'}; transition: opacity 0.3s ease-out, visibility 0.3s ease-out; padding-bottom: 4rem;"
 >
   <!-- Zwei-Spalten-Layout für alle Bildschirmgrößen -->
-  <div class="w-full h-full grid grid-cols-2 gap-2 md:gap-4 lg:gap-8">
+  <div class="w-full h-full grid grid-cols-2 gap-3 md:gap-6 lg:gap-8 pr-4 md:pr-6 lg:pr-8 pb-4 md:pb-6 lg:pb-8">
     
     <!-- Linke Spalte: Kamera und Fotos Container -->
     <div 
@@ -263,13 +275,14 @@
             </div>
 
             <!-- Fotos direkt unter der Kamera -->
-            <div class="photos-container overflow-visible pointer-events-all">
+            <div class="photos-container overflow-visible pointer-events-all" class:has-selection={$selectedPhotoIndex !== -1}>
               <div class="photos-grid overflow-visible">
                 {#each images as image, i}
                   {#if i < currentPhotoIndex}
                     <div 
                       class="photo-position"
                       class:selected={$selectedPhotoIndex === i}
+                      class:blur-others={$selectedPhotoIndex !== -1 && $selectedPhotoIndex !== i}
                       style="z-index: {images.length - i};"
                       role="button"
                       tabindex="0"
@@ -281,7 +294,7 @@
                       <div 
                         class="photo-container"
                         class:dropped={droppedPhotos.has(i)}
-                        style="--delay: {i * 0.2}s; --index: {i};"
+                        style="--delay: {i * 0.15}s; --index: {i};"
                         class:selected={$selectedPhotoIndex === i}
                       >
                         <div class="polaroid-frame">
@@ -305,14 +318,14 @@
     </div>
 
     <!-- Rechte Spalte: Dynamischer Text - auf Kamera-Höhe ausgerichtet -->
-    <div class="text-section flex flex-col justify-start px-1 sm:px-2 md:px-4 lg:px-12">
+    <div class="text-section flex flex-col justify-start pl-0 sm:pl-6 md:pl-6 lg:pl-10 xl:pl-14 pr-4 sm:pr-8 md:pr-10 lg:pr-12 xl:pr-16">
       <div class="text-content-wrapper">
         {#if currentDescription}
-          <div class="text-content">
-            <h2 class="hand-drawn-text text-base sm:text-lg md:text-xl lg:text-5xl mb-1 sm:mb-2 md:mb-3 lg:mb-6 text-black">
+          <div class="text-content text-left">
+            <h2 class="hand-drawn-text text-3xl sm:text-4xl md:text-3xl lg:text-4xl xl:text-5xl 2xl:text-6xl mb-6 sm:mb-7 md:mb-6 lg:mb-7 xl:mb-8 2xl:mb-10 text-black font-bold leading-tight">
               {currentDescription.title}
             </h2>
-            <p class="text-xs sm:text-sm md:text-base lg:text-xl text-gray-700 leading-relaxed font-light">
+            <p class="text-2xl sm:text-3xl md:text-2xl lg:text-3xl xl:text-4xl 2xl:text-5xl text-gray-700 leading-relaxed font-light max-w-none tracking-wide mb-8 sm:mb-10 md:mb-12 lg:mb-16 xl:mb-20">
               {currentDescription.description}
             </p>
           </div>
@@ -357,49 +370,126 @@
     height: 100%;
   }
 
-  /* Text section styling - aligned to photos container */
+  /* Text section styling - aligned to first photo position */
   .text-section {
     height: 100%;
     display: flex;
     align-items: flex-start;
     padding: 0.5rem;
-    padding-top: calc(1rem + 70px); /* Align with photos container position */
+    padding-top: calc(1rem + 110px); /* Align with first photo position */
+    text-align: left;
   }
 
   @media (min-width: 1024px) {
     .text-section {
       padding: 1rem;
-      padding-top: calc(1rem + 70px);
+      padding-top: calc(1rem + 110px);
+      padding-left: 2rem;
+      padding-right: 2rem;
     }
   }
 
   @media (max-width: 1024px) {
     .text-section {
-      padding-top: calc(1rem + 55px);
+      padding-top: calc(1rem + 100px);
+      padding-left: 1.5rem;
+      padding-right: 1.5rem;
     }
   }
 
   @media (max-width: 768px) {
     .text-section {
-      padding-top: calc(0.5rem + 40px);
+      padding-top: calc(1rem + 120px); /* Weiter nach unten */
+      padding-left: 0rem !important; /* Ganz nach links */
+      padding-right: 1.5rem; /* Mehr Abstand nach rechts */
+      padding-bottom: 3rem; /* Mehr Abstand nach unten */
     }
   }
 
   @media (max-width: 480px) {
     .text-section {
-      padding: 0.25rem;
-      padding-top: calc(0.5rem + 30px);
+      padding: 0rem !important; /* Ganz nach links */
+      padding-top: calc(0.75rem + 160px) !important; /* Noch weiter nach unten */
+      padding-left: 0rem !important;
+      padding-right: 1.25rem !important; /* Ausreichend Abstand nach rechts */
+      padding-bottom: 2.5rem !important; /* Mehr Abstand nach unten */
     }
   }
 
   .text-content-wrapper {
     width: 100%;
     margin-top: 0;
+    padding-bottom: 2rem; /* Zusätzlicher Abstand nach unten */
   }
 
   .text-content {
     width: 100%;
     max-width: none;
+    margin-right: 1rem; /* Zusätzlicher Abstand nach rechts */
+  }
+
+  /* Responsive Wrapper-Anpassungen */
+  @media (max-width: 768px) {
+    .text-content-wrapper {
+      padding-bottom: 3rem; /* Mehr Abstand auf mobilen Geräten */
+      padding-left: 0rem !important; /* Ganz nach links */
+    }
+    
+    .text-content {
+      margin-right: 0.75rem;
+      margin-left: 0rem !important; /* Ganz nach links */
+    }
+  }
+
+  @media (max-width: 480px) {
+    .text-content-wrapper {
+      padding-bottom: 2.5rem;
+      padding-left: 0rem !important; /* Ganz nach links */
+    }
+    
+    .text-content {
+      margin-right: 0.5rem;
+      margin-left: 0rem !important; /* Ganz nach links */
+    }
+  }
+
+  /* Mobile-spezifische Text-Überschreibungen */
+  @media (max-width: 768px) {
+    .text-content h2 {
+      font-size: 2.5rem !important; /* Überschreibt text-3xl */
+      margin-bottom: 2rem !important;
+      line-height: 1.1 !important;
+      margin-left: 0rem !important; /* Ganz nach links */
+      padding-left: 0rem !important; /* Ganz nach links */
+    }
+    
+    .text-content p {
+      font-size: 1.75rem !important; /* Überschreibt text-2xl */
+      line-height: 1.4 !important;
+      margin-bottom: 2.5rem !important; /* Zusätzlicher Abstand nach unten */
+      padding-right: 0.5rem !important; /* Zusätzlicher Abstand nach rechts */
+      margin-left: 0rem !important; /* Ganz nach links */
+      padding-left: 0rem !important; /* Ganz nach links */
+    }
+  }
+
+  @media (max-width: 480px) {
+    .text-content h2 {
+      font-size: 2.25rem !important; /* Noch größer für sehr kleine Bildschirme */
+      margin-bottom: 1.75rem !important;
+      line-height: 1.05 !important;
+      margin-left: 0rem !important; /* Ganz nach links */
+      padding-left: 0rem !important; /* Ganz nach links */
+    }
+    
+    .text-content p {
+      font-size: 1.5rem !important; /* Proportional angepasst */
+      line-height: 1.35 !important;
+      margin-bottom: 2rem !important; /* Ausreichend Abstand nach unten */
+      padding-right: 0.75rem !important; /* Ausreichend Abstand nach rechts */
+      margin-left: 0rem !important; /* Ganz nach links */
+      padding-left: 0rem !important; /* Ganz nach links */
+    }
   }
 
   .camera-wrapper {
@@ -416,21 +506,22 @@
 
   @media (max-width: 768px) {
     .camera-wrapper {
-      margin-top: 0.5rem;
+      margin-top: 0.75rem;
     }
     
     img[src*="polaroid-camera"] {
-      width: clamp(60px, 12vw, 100px) !important;
+      width: clamp(80px, 16vw, 120px) !important;
     }
   }
 
   @media (max-width: 480px) {
     .camera-wrapper {
-      top: 0.5%;
+      top: 1%;
+      margin-top: 0.5rem;
     }
     
     img[src*="polaroid-camera"] {
-      width: clamp(50px, 10vw, 80px) !important;
+      width: clamp(70px, 14vw, 100px) !important;
     }
   }
 
@@ -529,30 +620,41 @@
     transform: scale(0.98);
   }
 
+  /* Verbesserte Polaroid-Animationen */
   .polaroid-frame {
     all: unset;
     display: block;
-    background: white;
-    padding: 8px;
+    background: #ffffff;
+    padding: 12px;
     box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
     transform-origin: center top;
     position: relative;
     width: 100%;
     transition: all 0.2s ease;
     cursor: pointer;
-    opacity: 1; /* Ensure full opacity */
-    z-index: 1; /* Ensure it's above camera */
+    opacity: 1;
+    z-index: 1;
+    border: none;
+    box-sizing: border-box;
+  }
+
+  /* Mobile Polaroid-Frame mit größerem Padding */
+  @media (max-width: 768px) {
+    .polaroid-frame {
+      padding: 14px;
+      box-shadow: 0 5px 14px rgba(0, 0, 0, 0.18);
+    }
+  }
+
+  @media (max-width: 480px) {
+    .polaroid-frame {
+      padding: 13px;
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.16);
+    }
   }
 
   .photo-position:not(.selected) {
     transition: all 0.3s ease;
-  }
-
-  @media (max-width: 768px) {
-    .selected ~ .photo-position {
-      filter: blur(2px);
-      opacity: 0.7;
-    }
   }
 
   .polaroid-frame:hover {
@@ -562,7 +664,7 @@
   .photos-container {
     position: absolute;
     left: 50%;
-    top: calc(1rem + 120px);
+    top: calc(1rem + 110px);
     transform: translateX(-50%);
     width: min(400px, 80vw);
     height: 70vh;
@@ -570,32 +672,40 @@
     pointer-events: all;
     background: transparent;
     z-index: 15; /* Ensure photos are above camera */
+    margin: 0 auto;
+    box-sizing: border-box;
   }
 
   @media (max-width: 1024px) {
     .photos-container {
       left: 50%;
-      top: calc(1rem + 110px);
+      top: calc(1rem + 100px);
       width: min(350px, 75vw);
       height: 65vh;
+      margin: 0 auto;
+      box-sizing: border-box;
     }
   }
 
   @media (max-width: 768px) {
     .photos-container {
       left: 50%;
-      top: calc(0.5rem + 50px);
-      width: min(280px, 70vw);
-      height: 60vh;
+      top: calc(0.75rem + 80px);
+      width: min(320px, 75vw);
+      height: 65vh;
+      margin: 0 auto;
+      box-sizing: border-box;
     }
   }
 
   @media (max-width: 480px) {
     .photos-container {
       left: 50%;
-      top: calc(0.5rem + 80px);
-      width: min(220px, 65vw);
-      height: 55vh;
+      top: calc(0.5rem + 120px);
+      width: min(280px, 70vw);
+      height: 60vh;
+      margin: 0 auto;
+      box-sizing: border-box;
     }
   }
 
@@ -607,7 +717,7 @@
     position: absolute;
     left: 50%;
     top: 0;
-    transform: translateX(-50%) translateY(calc(var(--index, 0) * 20px));
+    transform: translateX(-50%) translateY(calc(var(--index, 0) * 45px));
     transform-style: preserve-3d;
     transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
     pointer-events: all;
@@ -615,6 +725,23 @@
     margin: -16px;
     background: transparent;
     isolation: isolate;
+  }
+
+  /* Mobile: Größere Abstände zwischen Polaroids */
+  @media (max-width: 768px) {
+    .photo-position {
+      transform: translateX(-50%) translateY(calc(var(--index, 0) * 55px));
+      padding: 18px;
+      margin: -18px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .photo-position {
+      transform: translateX(-50%) translateY(calc(var(--index, 0) * 50px));
+      padding: 16px;
+      margin: -16px;
+    }
   }
 
   .photo-position.selected {
@@ -634,17 +761,41 @@
     cursor: pointer;
   }
 
+  /* Mobile: Polaroid in untere linke Ecke (Position des roten Rechtecks) */
+  @media (max-width: 768px) {
+    .photo-position.selected {
+      position: fixed;
+      left: 20px;
+      top: auto;
+      right: auto;
+      bottom: 80px;
+      transform: none;
+      width: auto;
+      height: auto;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      background: transparent;
+      z-index: 9999 !important;
+      padding: 0;
+      margin: 0;
+      cursor: pointer;
+    }
+  }
+
+
+
   .photo-container {
     width: min(80px, calc(30vw - 1rem));
     position: relative;
     transform-origin: center;
-    animation: photo-drop 1.5s cubic-bezier(0.34, 1.56, 0.64, 1) forwards;
+    animation: polaroid-slide 1.2s ease-out forwards;
     animation-delay: var(--delay);
     animation-fill-mode: forwards;
     transition: transform 0.3s ease;
     pointer-events: all;
-    opacity: 1; /* Ensure full opacity */
-    background: white; /* Solid background */
+    opacity: 1;
+    background: white;
   }
 
   @media (min-width: 640px) {
@@ -659,10 +810,36 @@
     }
   }
 
+  /* Mobile Skalierung für größere Polaroids */
+  @media (max-width: 768px) {
+    .photo-container {
+      width: min(110px, calc(35vw - 1rem));
+    }
+  }
+
+  @media (max-width: 480px) {
+    .photo-container {
+      width: min(100px, calc(32vw - 0.5rem));
+    }
+  }
+
   /* Verhindere Animation nach dem ersten Drop */
   .photo-container.dropped {
     animation: none;
-    transform: translateY(calc(var(--index) * 60px)) rotate(0deg) scale(1);
+    transform: translateY(calc(var(--index) * 45px)) rotate(0deg) scale(1);
+  }
+
+  /* Mobile: Angepasste dropped Position */
+  @media (max-width: 768px) {
+    .photo-container.dropped {
+      transform: translateY(calc(var(--index) * 55px)) rotate(0deg) scale(1);
+    }
+  }
+
+  @media (max-width: 480px) {
+    .photo-container.dropped {
+      transform: translateY(calc(var(--index) * 50px)) rotate(0deg) scale(1);
+    }
   }
 
   .photo-position.selected .photo-container {
@@ -679,7 +856,27 @@
 
   @media (max-width: 768px) {
     .photo-position.selected .photo-container {
-      width: min(320px, 85vw);
+      width: 240px; /* Vergrößerte mobile Polaroid-Größe */
+      box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
+    }
+  }
+
+  /* Blur-Effekte nur wenn ein Bild ausgewählt ist */
+  /* Mobile */
+  @media (max-width: 768px) {
+    .photo-position.blur-others {
+      filter: blur(3px);
+      opacity: 0.6;
+      transition: all 0.3s ease;
+    }
+  }
+
+  /* Desktop */
+  @media (min-width: 769px) {
+    .photo-position.blur-others {
+      filter: blur(4px);
+      opacity: 0.5;
+      transition: all 0.3s ease;
     }
   }
 
@@ -702,14 +899,14 @@
     text-align: center;
     margin-top: 6px;
     color: rgba(0, 0, 0, 0.8);
-    font-family: 'Helvetica Neue', sans-serif !important;
+    font-family: var(--font-family) !important;
     font-size: 0.9rem;
     font-weight: 300;
   }
 
   .photo-wrapper {
     width: 100%;
-    aspect-ratio: 3/2;
+    aspect-ratio: 1/1;
     overflow: hidden;
     display: flex;
     align-items: center;
@@ -720,8 +917,7 @@
   .photo-wrapper img {
     width: 100%;
     height: 100%;
-    object-fit: contain;
-    padding: 2px;
+    object-fit: cover;
   }
 
   @keyframes fadeIn {
@@ -735,23 +931,65 @@
     }
   }
   
-  @keyframes photo-drop {
+  @keyframes polaroid-slide {
     0% {
-      transform: translateY(-30px) rotate(0deg) scale(0.8);
-      opacity: 1;
+      transform: translateY(-50px) scale(0.9);
+      opacity: 0;
     }
     30% {
-      transform: translateY(calc(var(--index) * 60px - 5px)) rotate(-6deg) scale(1);
-      opacity: 1;
+      transform: translateY(-20px) scale(0.95);
+      opacity: 0.6;
     }
     60% {
-      transform: translateY(calc(var(--index) * 60px + 3px)) rotate(3deg) scale(1);
-    }
-    80% {
-      transform: translateY(calc(var(--index) * 60px - 1px)) rotate(-1deg) scale(1);
+      transform: translateY(calc(var(--index) * 45px - 5px)) scale(1.02);
+      opacity: 0.9;
     }
     100% {
-      transform: translateY(calc(var(--index) * 60px)) rotate(0deg) scale(1);
+      transform: translateY(calc(var(--index) * 45px)) scale(1);
+      opacity: 1;
+    }
+  }
+
+  /* Mobile: Angepasste Animation für größere Abstände */
+  @media (max-width: 768px) {
+    @keyframes polaroid-slide {
+      0% {
+        transform: translateY(-60px) scale(0.9);
+        opacity: 0;
+      }
+      30% {
+        transform: translateY(-25px) scale(0.95);
+        opacity: 0.6;
+      }
+      60% {
+        transform: translateY(calc(var(--index) * 55px - 6px)) scale(1.02);
+        opacity: 0.9;
+      }
+      100% {
+        transform: translateY(calc(var(--index) * 55px)) scale(1);
+        opacity: 1;
+      }
+    }
+  }
+
+  @media (max-width: 480px) {
+    @keyframes polaroid-slide {
+      0% {
+        transform: translateY(-55px) scale(0.9);
+        opacity: 0;
+      }
+      30% {
+        transform: translateY(-22px) scale(0.95);
+        opacity: 0.6;
+      }
+      60% {
+        transform: translateY(calc(var(--index) * 50px - 5px)) scale(1.02);
+        opacity: 0.9;
+      }
+      100% {
+        transform: translateY(calc(var(--index) * 50px)) scale(1);
+        opacity: 1;
+      }
     }
   }
 
@@ -780,14 +1018,14 @@
   }
 
   .text-content h2 {
-    font-family: 'Helvetica Neue', sans-serif !important;
+    font-family: var(--font-family) !important;
     font-weight: 300;
     line-height: 1.2;
     margin-bottom: 1.5rem;
   }
 
   .text-content p {
-    font-family: 'Helvetica Neue', sans-serif !important;
+    font-family: var(--font-family) !important;
     font-weight: 300;
     line-height: 1.6;
   }
@@ -806,7 +1044,7 @@
       min-height: auto;
       flex: 1;
       justify-content: flex-start !important;
-      padding-top: calc(1rem + 55px) !important;
+      padding-top: calc(1rem + 100px) !important;
     }
     
     .text-content h2 {
@@ -828,7 +1066,7 @@
     .text-section {
       padding: 1rem 0.75rem;
       margin-top: 0;
-      padding-top: calc(0.5rem + 40px) !important;
+      padding-top: calc(0.5rem + 60px) !important;
     }
     
     .text-content h2 {
@@ -844,7 +1082,7 @@
 
   @media (max-width: 480px) {
     .text-section {
-      padding-top: calc(0.5rem + 30px) !important;
+      padding-top: calc(0.5rem + 100px) !important;
     }
   }
 
@@ -858,5 +1096,44 @@
     background: transparent;
     z-index: 9998;
     cursor: pointer;
+  }
+
+  /* Responsive Section-Container */
+  @media (max-width: 768px) {
+    section {
+      padding-bottom: 3rem !important;
+      height: auto !important;
+      min-height: 100vh !important;
+      padding-left: 0rem !important; /* Ganz nach links */
+    }
+    
+    .grid {
+      gap: 1rem !important;
+      padding-right: 1rem !important;
+      padding-bottom: 2rem !important;
+      padding-left: 0rem !important; /* Ganz nach links */
+    }
+  }
+
+  @media (max-width: 480px) {
+    section {
+      padding-bottom: 2.5rem !important;
+      padding-left: 0rem !important; /* Ganz nach links */
+    }
+    
+    .grid {
+      gap: 0.75rem !important;
+      padding-right: 0.75rem !important;
+      padding-bottom: 1.5rem !important;
+      padding-left: 0rem !important; /* Ganz nach links */
+    }
+  }
+
+  /* Overflow-Schutz für mobile Geräte */
+  @media (max-width: 768px) {
+    section {
+      overflow-x: hidden;
+      overflow-y: auto;
+    }
   }
 </style>

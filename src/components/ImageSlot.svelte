@@ -75,14 +75,14 @@
 <style>
   .polaroid-frame {
     width: 100%;
-    padding: 12px 12px 40px;
-    background: #fff;
-    box-shadow: 
-      0 4px 12px rgba(0,0,0,0.1),
-      0 1px 3px rgba(0,0,0,0.08);
+    padding: 12px;
+    background: #ffffff;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
     position: relative;
     transition: all 0.4s cubic-bezier(0.175, 0.885, 0.32, 1.275);
     transform: rotate(var(--rotation, 0deg));
+    border: none;
+    box-sizing: border-box;
   }
 
   .image-container {
@@ -121,7 +121,7 @@
   }
 
   .placeholder-text {
-    font-family: 'Helvetica Neue', sans-serif;
+    font-family: var(--font-family);
     color: #666;
     font-size: 1.2rem;
     transform: rotate(-2deg);
@@ -131,7 +131,7 @@
 
   .polaroid-caption {
     margin-top: 8px;
-    font-family: 'Helvetica Neue', sans-serif;
+    font-family: var(--font-family);
     text-align: center;
     color: #333;
     font-size: 0.9rem;

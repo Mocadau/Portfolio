@@ -89,11 +89,12 @@
   }
 
   .polaroid-content {
-    background: white;
-    padding: 20px 20px 40px;
-    box-shadow: 0 20px 60px -15px rgba(0, 0, 0, 0.3);
-    border: 1px solid #f0f0f0;
+    background: #ffffff;
+    padding: 12px;
+    box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+    border: none;
     position: relative;
+    box-sizing: border-box;
   }
 
   .polaroid-content::before {
@@ -134,7 +135,7 @@
   }
 
   .note-text {
-    font-family: 'Helvetica Neue', sans-serif;
+    font-family: var(--font-family);
     font-size: 1.25rem;
     color: #2c3e50;
     margin: 0;

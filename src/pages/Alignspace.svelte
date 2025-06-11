@@ -5,6 +5,7 @@
   import ProjectVideo from '../components/projects/shared/ProjectVideo.svelte';
   import ContentGrid from '../components/projects/migrants/Layout/ContentGrid.svelte';
   import ContentSection from '../components/projects/migrants/Layout/ContentSection.svelte';
+  import NextProjectNavigation from '../components/NextProjectNavigation.svelte';
   
   // Bild-Importe
   import Bild1 from '../assets/alignspace/intro.png';
@@ -32,7 +33,7 @@
       <svg width="288" height="6" viewBox="0 0 288 6" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M0 3H288" stroke="#3B82F6" stroke-width="5"/>
       </svg>
-      <div class="date">2023</div>
+      <div class="date">2024</div>
     </div>
   </header>
 
@@ -41,28 +42,34 @@
       <div class="meta-section">
         <h3>Team</h3>
         <div class="meta-content">
-          <p>Team-Mitglied 1</p>
-          <p>Team-Mitglied 2</p>
-          <p>Team-Mitglied 3</p>
+          <p>Moritz Beder</p>
+          <p>Maurice Cadau</p>
         </div>
       </div>
 
       <div class="meta-section">
-        <h3>Verantwortlichkeiten</h3>
+        <h3>Role</h3>
         <div class="meta-content">
-          <p>UX Research</p>
-          <p>Konzept & Wireframing</p>
-          <p>UI Design & Prototyping</p>
+          <p>UI/UX Design & Prototyping</p>
           <p>User Testing</p>
+          <p>Video & Sound Design</p>
         </div>
       </div>
 
       <div class="meta-section">
-        <h3>Dauer</h3>
+        <h3>Duration</h3>
         <div class="meta-content">
-          <p>8 Wochen</p>
+          <p>One Semester</p>
         </div>
       </div>
+    </section>
+
+    <!-- Video Section -->
+    <section class="video-section">
+      <ImageBlock
+        src={Bild1}
+        alt="Alignspace Concept"
+      />
     </section>
 
     <!-- Introduction Section -->
@@ -76,11 +83,6 @@
           <TextBlock
             description="Hybrid work is now part of everyday life – but finding and booking the right workspace is often still complicated. Users want flexibility, transparency, and proximity to their team. Current systems lack personalization, real-time updates, or even a clear view of where colleagues are sitting."
           />
-          <ImageBlock
-            src={Bild1}
-            alt="Alignspace Concept"
-            caption="With Alignspace, we set out to rethink the desk booking experience – from an anonymous system to a smart, social, and user-centered platform."
-          />
         </div>
       </div>
     </section>
@@ -92,7 +94,7 @@
       </div>
       <div class="section-divider"></div>
       <div class="section-content">
-        <div class="left-column">
+        <div class="right-column">
           <TextBlock
             description="We began with a mix of quantitative surveys and in-depth interviews with both users of co-working spaces and remote employees. These conversations revealed key pain points – from the need for social interaction and visibility of colleagues to the desire for spontaneous bookings and personalized workspaces."
           />
@@ -101,12 +103,6 @@
           />
           <TextBlock
             description="We translated these needs into high-level user flows, designed multiple interface versions, and created a consistent style guide to ensure a coherent look and feel. All this led to a fully interactive prototype – mobile and desktop – that covers key features like personalized booking, team visibility, service chat, and flexible workspace planning."
-          />
-        </div>
-        <div class="right-column">
-          <ImageBlock
-            src={Bild2}
-            alt="Design Process Visualization"
           />
         </div>
       </div>
@@ -119,16 +115,22 @@
       </div>
       <div class="section-divider"></div>
       <div class="section-content">
-        <div class="full-width-content">
-          <ImageBlock
-            src={Bild3}
-            alt="Design System"
-            caption="Beyond the booking colors, our primary and secondary tones are designed to enhance usability and make interactions more intuitive. They are clearly differentiated from the booking colors to avoid any visual confusion."
+        <div class="left-column">
+          <TextBlock
+            description="Beyond the booking colors, our primary and secondary tones are designed to enhance usability and make interactions more intuitive. They are clearly differentiated from the booking colors to avoid any visual confusion."
           />
         </div>
         <div class="right-column">
           <TextBlock
             description="At the heart of the app is the booking system, structured around three main elements — desks, meeting rooms, and parking spaces — each visually distinguished by its own unique color."
+          />
+        </div>
+      </div>
+      <div class="section-content">
+        <div class="full-width-content">
+          <ImageBlock
+            src={Bild3}
+            alt="Design System"
           />
         </div>
       </div>
@@ -141,14 +143,12 @@
       </div>
       <div class="section-divider"></div>
       
-      <!-- Overview Subsection -->
+      <!-- Overview Subsection - Links -->
       <div class="section-content">
         <div class="left-column">
           <TextBlock
             description="Alignspace is based on the concept that users can keep an eye on their current and upcoming bookings at all times. They are reminded of upcoming bookings and receive a recommendation to renew shortly before they expire."
           />
-        </div>
-        <div class="right-column">
           <ImageBlock
             src={Bild4}
             alt="Overview Interface"
@@ -156,14 +156,12 @@
         </div>
       </div>
 
-      <!-- Booking Subsection -->
+      <!-- Booking Subsection - Rechts -->
       <div class="section-content">
         <div class="right-column">
           <TextBlock
             description="The core function of Alignspace is the booking of workspaces, which can be reserved according to various filters and sorted by seat neighbors. The app also offers the option of booking meeting rooms and inviting employees to them. Parking spaces can also be reserved via the platform so that the entire working day can be organized efficiently."
           />
-        </div>
-        <div class="left-column">
           <ImageBlock
             src={Bild5}
             alt="Booking Interface"
@@ -171,14 +169,12 @@
         </div>
       </div>
 
-      <!-- Communication Subsection -->
+      <!-- Communication Subsection - Links -->
       <div class="section-content">
-        <div class="right-column">
+        <div class="left-column">
           <TextBlock
             description="Alignspace offers an integrated communication tool for communicating with employees and inviting them to meetings. This facilitates coordination within the team and ensures that all relevant people are informed about appointments and bookings in good time."
           />
-        </div>
-        <div class="left-column">
           <ImageBlock
             src={Bild6}
             alt="Communication Interface"
@@ -186,14 +182,12 @@
         </div>
       </div>
 
-      <!-- Service Subsection -->
+      <!-- Service Subsection - Rechts -->
       <div class="section-content">
-        <div class="left-column">
+        <div class="right-column">
           <TextBlock
             description="The service bot is available for all kinds of problems. It analyzes the request and creates a ticket for the person responsible, who then contacts the person seeking help via the communication tool."
           />
-        </div>
-        <div class="right-column">
           <ImageBlock
             src={Bild7}
             alt="Service Interface"
@@ -202,6 +196,8 @@
       </div>
     </section>
   </main>
+  
+  <NextProjectNavigation currentProject="Alignspace" />
 </div>
 
 <style>
@@ -293,7 +289,7 @@
 
   .section-titles h2 {
     color: #000;
-    font-family: 'Helvetica Neue', sans-serif;
+    font-family: var(--font-family);
     font-size: 3.25rem;
     font-weight: 700;
     margin: 0;
@@ -309,6 +305,7 @@
     margin-bottom: 60px;
   }
 
+  .video-section,
   .content-section {
     max-width: 1280px;
     margin: 0 auto 120px;
@@ -321,7 +318,7 @@
     flex-direction: row;
     justify-content: space-between;
     gap: 60px;
-    margin-bottom: 120px;
+    margin-bottom: 180px;
   }
 
   .section-content:last-child {
@@ -345,15 +342,33 @@
     margin-left: auto;
   }
 
+  /* Result Section - Größere Bilder */
+  .section-content :global(.image-block) {
+    transform: scale(1.4);
+    transform-origin: center;
+    margin: 3rem 0;
+  }
+
+  /* Design System Bild - kleiner mit margin wie rand */
+  .full-width-content :global(.image-block) {
+    transform: scale(1) !important;
+    margin: 0 40px !important;
+  }
+
   @media (max-width: 1024px) {
     .project-meta {
       grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
       gap: 32px 24px;
     }
 
+    .video-section,
+    .content-section {
+      padding: 0 20px;
+    }
+
     .section-content {
       gap: 40px;
-      margin-bottom: 80px;
+      margin-bottom: 120px;
     }
   }
 
@@ -380,7 +395,7 @@
     .section-content {
       flex-direction: column;
       gap: 40px;
-      margin-bottom: 60px;
+      margin-bottom: 100px;
     }
 
     .section-content .right-column,
@@ -407,6 +422,7 @@
       font-size: 1rem;
     }
 
+    .video-section,
     .content-section {
       padding: 0 20px;
       margin-bottom: 80px;
@@ -417,7 +433,7 @@
     }
 
     .section-content {
-      margin-bottom: 60px;
+      margin-bottom: 80px;
     }
   }
 </style>

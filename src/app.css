@@ -1,4 +1,4 @@
-/* Verwenden von Helvetica Neue für das gesamte Projekt */
+/* Globale Schriftart-Konfiguration für das gesamte Portfolio */
 
 /* Animation-Styles importieren */
 @import './assets/animation.css';
@@ -9,11 +9,28 @@
 
 /* Globale Schriftart */
 body {
-  font-family: 'Helvetica Neue', sans-serif;
+  font-family: var(--font-family);
 }
  
 @layer base {
   :root {
+    /* 
+    GLOBALE SCHRIFTART-KONFIGURATION
+    
+    Hier kannst du die Schriftart für das gesamte Portfolio ändern!
+    
+    Mögliche Werte:
+    - sans-serif (Standard System-Schriftart)
+    - serif (Standard Serif-Schriftart)
+    - monospace (Monospace-Schriftart)
+    - "Helvetica Neue", sans-serif (spezifische Schriftart mit Fallback)
+    - "Arial", sans-serif
+    - "Times New Roman", serif
+    - "Courier New", monospace
+    - Oder jede andere installierte/importierte Schriftart
+    */
+    --font-family: sans-serif;
+    
     --background: 0 0% 100%;
     --foreground: 240 10% 3.9%;
  
@@ -87,16 +104,30 @@ body {
 
 /* Einheitliche Schriftart für das gesamte Projekt */
 *, html, body, button, input, textarea, select, .nav-item, h1, h2, h3, h4, h5, h6, p, span, div, a {
-  font-family: 'Helvetica Neue', sans-serif !important;
+  font-family: var(--font-family) !important;
+}
+
+/* Globale Schriftart-Utility-Klassen */
+.font-global {
+  font-family: var(--font-family) !important;
 }
 
 .hand-drawn-text {
-  font-family: 'Helvetica Neue', sans-serif !important;
+  font-family: var(--font-family) !important;
+}
+
+/* Text-Komponenten verwenden globale Schriftart */
+h1, h2, h3, h4, h5, h6, p, span, div, button, input, textarea, label {
+  font-family: var(--font-family);
+}
+
+.hand-drawn-text {
+  font-family: var(--font-family) !important;
   font-weight: 700;
 }
 
 .hand-drawn-title {
-  font-family: 'Helvetica Neue', sans-serif !important;
+  font-family: var(--font-family) !important;
   font-weight: 700;
 }
 

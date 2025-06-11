@@ -59,16 +59,18 @@
     position: absolute;
     background: transparent;
     border: none;
-    font-family: 'Helvetica Neue', sans-serif;
+    font-family: var(--font-family);
     font-size: 16px;
     font-weight: 500;
     color: #000;
     cursor: pointer;
-    padding: 8px 0;
+    padding: 10px 0;
     transition: all 0.2s ease;
     text-decoration: none;
     pointer-events: auto;
     white-space: nowrap;
+    text-align: left;
+    line-height: 1.2;
   }
 
   .footer-link:hover {
@@ -95,22 +97,47 @@
   .bottom-left {
     bottom: 40px;
     left: 40px;
+    text-align: left;
   }
 
   .top-right {
     top: 40px;
     right: 40px;
+    text-align: right;
   }
 
   .bottom-right {
     bottom: 40px;
     right: 40px;
+    text-align: right;
   }
 
   /* Mobile Anpassungen */
   @media (max-width: 768px) {
     .footer-link {
       font-size: 14px;
+      padding: 8px 0;
+    }
+    
+    .bottom-left {
+      bottom: 25px;
+      left: 25px;
+    }
+
+    .top-right {
+      top: 25px;
+      right: 25px;
+    }
+
+    .bottom-right {
+      bottom: 25px;
+      right: 25px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .footer-link {
+      font-size: 13px;
     }
     
     .bottom-left {

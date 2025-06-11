@@ -35,7 +35,7 @@
   }
   .description {
     color: #000;
-    font-family: 'Helvetica Neue', sans-serif;
+    font-family: var(--font-family);
     font-size: 14px;
     font-weight: 300;
     line-height: 1.6;

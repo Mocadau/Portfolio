@@ -111,7 +111,7 @@
   }
 
   .note-text {
-    font-family: 'Helvetica Neue', sans-serif;
+    font-family: var(--font-family);
     font-size: 0.95rem;
     color: #2c3e50;
     margin: 0;

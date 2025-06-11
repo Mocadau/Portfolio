@@ -26,7 +26,7 @@
   .image-wrapper {
     width: 100%;
     overflow: hidden;
-    border-radius: 10px;
+    border-radius: 0px;
     margin: 0;
   }
 
@@ -39,7 +39,7 @@
 
   .caption {
     color: #666;
-    font-family: 'Helvetica Neue', sans-serif;
+    font-family: var(--font-family);
     font-size: 12px;
     font-weight: 400;
     line-height: 1.4;
@@ -54,7 +54,7 @@
     }
 
     .image-wrapper {
-      border-radius: 8px;
+      border-radius: 0px;
     }
 
     .caption {

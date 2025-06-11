@@ -71,7 +71,7 @@
 
   .title {
     color: #000;
-    font-family: 'Helvetica Neue', sans-serif;
+    font-family: var(--font-family);
     font-size: 48px;
     font-weight: 700;
     margin: 0;

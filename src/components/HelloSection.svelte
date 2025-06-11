@@ -7,6 +7,11 @@
   let showRestContent = false;
   let isTypingComplete = false;
   let skipAnimation = false;
+  let showCursorEffect = false;
+  let cursorX = 0;
+  let cursorY = 0;
+  let sectionElement: HTMLElement;
+  let globalMouseHandler: ((event: MouseEvent) => void) | null = null;
   
   function handleHelloComplete() {
     helloComplete = true;
@@ -20,6 +25,52 @@
   function handleAllTypingComplete() {
     isTypingComplete = true;
     dispatch('complete');
+    
+    // Aktiviere Cursor-Effekt nach einer kurzen Verzögerung
+    setTimeout(() => {
+      showCursorEffect = true;
+      setupGlobalMouseHandler();
+    }, 1000);
+  }
+
+  function setupGlobalMouseHandler() {
+    if (globalMouseHandler) {
+      document.removeEventListener('mousemove', globalMouseHandler);
+    }
+    
+    globalMouseHandler = (event: MouseEvent) => {
+      handleMouseMove(event);
+    };
+    
+    document.addEventListener('mousemove', globalMouseHandler);
+  }
+
+  function removeGlobalMouseHandler() {
+    if (globalMouseHandler) {
+      document.removeEventListener('mousemove', globalMouseHandler);
+      globalMouseHandler = null;
+    }
+    showCursorEffect = false;
+  }
+
+  // Export function to be called by parent component
+  export function disableCursorEffect() {
+    removeGlobalMouseHandler();
+  }
+
+  export function enableCursorEffect() {
+    if (isTypingComplete) {
+      showCursorEffect = true;
+      setupGlobalMouseHandler();
+    }
+  }
+  
+  function handleMouseMove(event: MouseEvent) {
+    if (showCursorEffect) {
+      // Global positioning relative to viewport
+      cursorX = event.clientX;
+      cursorY = event.clientY;
+    }
   }
   
   onMount(() => {
@@ -31,18 +82,37 @@
         helloComplete = true;
         showRestContent = true;
         isTypingComplete = true;
+        showCursorEffect = true;
         // Dispatch complete immediately for skip case
         setTimeout(() => {
           dispatch('complete');
+          setupGlobalMouseHandler();
         }, 100);
       }
     } catch (e) {
       console.error('Could not read from sessionStorage:', e);
     }
+
+    return () => {
+      if (globalMouseHandler) {
+        document.removeEventListener('mousemove', globalMouseHandler);
+      }
+    };
   });
 </script>
 
-<section class="section-container bg-white flex flex-col md:flex-row justify-between items-center relative overflow-x-hidden">
+<section 
+  class="section-container bg-white flex flex-col md:flex-row justify-between items-center relative overflow-x-hidden cursor-effect-container" 
+  bind:this={sectionElement}
+>
+  <!-- Global Cursor-Effekt nur auf Hello-Sektion -->
+  {#if showCursorEffect}
+    <div 
+      class="cursor-glow global-cursor" 
+      style="left: {cursorX}px; top: {cursorY}px;"
+    ></div>
+  {/if}
+
   <div class="w-full md:w-auto flex justify-start mt-20 md:mt-32 min-h-[350px] scale-75 md:scale-100 origin-top-center md:mx-auto">
     <div class="px-4 md:px-6 ml-0 max-w-[90%] md:max-w-none text-left">
       
@@ -68,7 +138,7 @@
       {#if showRestContent}
         <div class="text-3xl md:text-4xl mb-4 md:mb-8 leading-relaxed hand-drawn-text pl-0">
           {#if skipAnimation}
-            I AM AN PRODUCT DESIGNER.
+            I AM AN INTERACTION DESIGNER.
           {:else}
             <TypingAnimation 
               text="I AM AN PRODUCT DESIGNER." 
@@ -148,7 +218,7 @@
         
         <div class="text-3xl md:text-4xl leading-relaxed hand-drawn-text pl-0">
           {#if skipAnimation}
-            LOOKING 4 AN INTERNSHIP.
+            LOOKING 4 AN INTERNSHIP!
           {:else}
             <TypingAnimation 
               text="LOOKING 4 AN INTERNSHIP." 
@@ -188,6 +258,77 @@
   @media (max-width: 767px) {
     .md-only {
       display: none;
+    }
+  }
+
+  /* Cursor-Effekt Styling */
+  .cursor-effect-container {
+    position: relative;
+  }
+
+  .cursor-glow {
+    position: absolute;
+    width: 200px;
+    height: 200px;
+    pointer-events: none;
+    transform: translate(-50%, -50%);
+    background: linear-gradient(
+      135deg,
+      rgba(220, 220, 220, 0.3) 0%,
+      rgba(200, 200, 200, 0.2) 50%,
+      rgba(180, 180, 180, 0.1) 100%
+    );
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border: 1px solid rgba(150, 150, 150, 0.4);
+    border-radius: 50%;
+    box-shadow: 
+      0 6px 20px rgba(0, 0, 0, 0.08),
+      inset 0 2px 0 rgba(255, 255, 255, 0.5),
+      inset 0 -2px 0 rgba(0, 0, 0, 0.08);
+    transition: all 0.1s ease-out;
+    z-index: 100;
+    opacity: 0.9;
+  }
+
+  /* Global Cursor positioning */
+  .global-cursor {
+    position: fixed;
+    z-index: 1000;
+  }
+
+  /* Alternative für Browser ohne backdrop-filter Support */
+  @supports not (backdrop-filter: blur(15px)) {
+    .cursor-glow {
+      background: radial-gradient(
+        circle,
+        rgba(200, 200, 200, 0.4) 0%,
+        rgba(180, 180, 180, 0.25) 40%,
+        rgba(160, 160, 160, 0.15) 70%,
+        transparent 100%
+      );
+      filter: blur(8px);
+    }
+  }
+
+  /* Responsive Cursor-Effekt - nur auf Desktop */
+  @media (max-width: 768px) {
+    .cursor-glow {
+      display: none;
+    }
+  }
+
+  /* Smooth Cursor Movement auf modernen Browsern */
+  @media (prefers-reduced-motion: no-preference) {
+    .cursor-glow {
+      transition: all 0.06s ease-out;
+    }
+  }
+
+  /* Reduced Motion für Barrierefreiheit */
+  @media (prefers-reduced-motion: reduce) {
+    .cursor-glow {
+      transition: none;
     }
   }
 </style>

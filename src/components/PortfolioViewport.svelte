@@ -6,6 +6,7 @@
   import { horizontalScroll } from "../actions/horizontal-scroll";
   import type { ProjectData } from "../types/portfolio";
   import stickFigureWalking from "../assets/Home/stick-figure-walking.gif";
+  import stickFigureStatic from "../assets/Home/stick-figure-walking.png";
 
   export let projects: ProjectData[];
   export let onSectionChange: (section: string) => void;
@@ -38,11 +39,138 @@
   let eyeLeftY = 0;
   let eyeRightX = 0;
   let eyeRightY = 0;
+  let isWalkingFigureHovered = false; // Neuer Zustand für Hover
+  let showHelpBubble = false; // Zustand für Sprechblase
+  let isNearWalkingFigure = false; // Zustand für Snapping
+  let isMouseInCenterOfWalkingFigure = false; // Zustand für Maus im Zentrum
+  let helloSectionRef: any = null; // Referenz zur HelloSection
+  let currentBubbleText = ""; // Aktueller Sprechblasen-Text
+
+  // Witzige Sprüche für Projekt-Ansichten
+  const projectBubbleTexts = [
+    "Oops, you found me!",
+    "I'm just walking by...",
+    "Hey there, stranger!",
+    "Don't mind me!",
+    "Just passing through!",
+    "Am I in your way?",
+    "Caught red-handed!",
+    "I wasn't looking!",
+    "This is awkward...",
+    "Nice projects though!",
+    "Keep scrolling!",
+    "Nothing to see here!",
+    "I'm just a pixel!",
+    "Digital nomad life!",
+    "Professional walker!",
+    "Excuse me, coming through!",
+    "I love this portfolio!",
+    "Mind if I stick around?",
+    "Your cursor tickles!",
+    "I'm camera shy!",
+    "Stop following me!",
+    "This is my route!",
+    "I'm the Easter egg!",
+    "Boop!",
+    "Peek-a-boo!"
+  ];
+
+  function getRandomBubbleText(): string {
+    return projectBubbleTexts[Math.floor(Math.random() * projectBubbleTexts.length)];
+  }
 
   function handleMouseMove(event: MouseEvent) {
     mouseX = event.clientX;
     mouseY = event.clientY;
+    checkProximityToWalkingFigure(event);
+    checkMouseInCenterOfWalkingFigure(event);
     updateEyePositions();
+  }
+
+  function handleTouchMove(event: TouchEvent) {
+    if (event.touches.length > 0) {
+      const touch = event.touches[0];
+      const touchEvent = {
+        clientX: touch.clientX,
+        clientY: touch.clientY
+      };
+      
+      mouseX = touch.clientX;
+      mouseY = touch.clientY;
+      checkProximityToWalkingFigure(touchEvent);
+      checkMouseInCenterOfWalkingFigure(touchEvent);
+      updateEyePositions();
+    }
+  }
+
+  function checkMouseInCenterOfWalkingFigure(event: MouseEvent | {clientX: number, clientY: number}) {
+    if (!walkingFigureVisible) return;
+
+    const figureElement = document.querySelector('.walking-figure');
+    if (!figureElement) return;
+
+    const rect = figureElement.getBoundingClientRect();
+    const centerX = rect.left + rect.width / 2;
+    const centerY = rect.top + rect.height / 2;
+
+    // Definiere einen kleinen Bereich um die Mitte (z.B. 30px Radius)
+    const centerRadius = isMobile ? 25 : 30;
+    const distance = Math.sqrt(
+      Math.pow(event.clientX - centerX, 2) + 
+      Math.pow(event.clientY - centerY, 2)
+    );
+
+    if (distance <= centerRadius && !isMouseInCenterOfWalkingFigure) {
+      isMouseInCenterOfWalkingFigure = true;
+      isWalkingFigureHovered = true;
+      
+      // Verschiedene Texte je nach Sektion
+      if (currentSection === 'hello') {
+        currentBubbleText = "Help me, I'm stuck!";
+        showHelpBubble = true;
+      } else {
+        // Zufälliger witziger Spruch für Projekt-Ansichten
+        currentBubbleText = getRandomBubbleText();
+        showHelpBubble = true;
+      }
+    } else if (distance > centerRadius && isMouseInCenterOfWalkingFigure) {
+      isMouseInCenterOfWalkingFigure = false;
+      isWalkingFigureHovered = false;
+      showHelpBubble = false;
+      currentBubbleText = "";
+    }
+  }
+
+  function checkProximityToWalkingFigure(event: MouseEvent | {clientX: number, clientY: number}) {
+    if (!walkingFigureVisible) return;
+
+    const figureElement = document.querySelector('.walking-figure');
+    if (!figureElement) return;
+
+    const rect = figureElement.getBoundingClientRect();
+    const figureCenterX = rect.left + rect.width / 2;
+    const figureCenterY = rect.top + rect.height / 2;
+
+    const distance = Math.sqrt(
+      Math.pow(event.clientX - figureCenterX, 2) + 
+      Math.pow(event.clientY - figureCenterY, 2)
+    );
+
+    const snapDistance = isMobile ? 80 : 120; // Snapping-Radius
+    
+    if (distance < snapDistance && !isNearWalkingFigure) {
+      isNearWalkingFigure = true;
+      // Sanftes "Snapping" des Cursors zur Figur
+      if (!isMobile) {
+        document.body.style.cursor = 'none';
+      }
+    } else if (distance >= snapDistance && isNearWalkingFigure) {
+      isNearWalkingFigure = false;
+      if (!isMobile) {
+        document.body.style.cursor = 'auto';
+      }
+      showHelpBubble = false;
+    }
   }
 
   function updateEyePositions() {
@@ -135,6 +263,21 @@
     emailCopied = false;
   }
 
+  function handleWalkingFigureMouseEnter() {
+    // Nur setzen wenn nicht bereits durch Center-Detection aktiv
+    if (!isMouseInCenterOfWalkingFigure) {
+      // Leere Funktion - wird nur durch Center-Detection gesteuert
+    }
+  }
+
+  function handleWalkingFigureMouseLeave() {
+    // Nur zurücksetzen wenn nicht durch Center-Detection aktiv
+    if (!isMouseInCenterOfWalkingFigure) {
+      isWalkingFigureHovered = false;
+      showHelpBubble = false;
+    }
+  }
+
   function handleTypingComplete() {
     typingAnimationComplete = true;
     
@@ -213,6 +356,24 @@
   onMount(() => {
     // Add mouse move listener for eye tracking
     window.addEventListener('mousemove', handleMouseMove);
+    
+    // Add touch event listeners for mobile support
+    window.addEventListener('touchmove', handleTouchMove, { passive: false });
+    window.addEventListener('touchstart', (event: TouchEvent) => {
+      if (event.touches.length > 0) {
+        const touch = event.touches[0];
+        const touchEvent = {
+          clientX: touch.clientX,
+          clientY: touch.clientY
+        };
+        
+        mouseX = touch.clientX;
+        mouseY = touch.clientY;
+        checkProximityToWalkingFigure(touchEvent);
+        checkMouseInCenterOfWalkingFigure(touchEvent);
+        updateEyePositions();
+      }
+    });
 
     // Check if animation has been seen in this session
     try {
@@ -243,6 +404,7 @@
 
     return () => {
       window.removeEventListener('mousemove', handleMouseMove);
+      window.removeEventListener('touchmove', handleTouchMove);
       if (scrollTimeout) {
         clearTimeout(scrollTimeout);
       }
@@ -276,6 +438,15 @@
     if (newSection !== currentSection) {
       currentSection = newSection;
       onSectionChange(newSection);
+      
+      // Glassmorphism-Effekt nur bei Hello-Sektion
+      if (helloSectionRef) {
+        if (newSection === 'hello') {
+          helloSectionRef.enableCursorEffect();
+        } else {
+          helloSectionRef.disableCursorEffect();
+        }
+      }
     }
 
     // Update scrolling state
@@ -297,7 +468,7 @@
   >
     <!-- Initial Landing Page -->
     <div class="section-container">
-      <HelloSection on:complete={handleTypingComplete} />
+      <HelloSection bind:this={helloSectionRef} on:complete={handleTypingComplete} />
     </div>
     
     <!-- Projects -->
@@ -324,8 +495,22 @@
   {#if walkingFigureVisible}
     <div class="walking-figure fade-in-from-left {isMovingBackward ? 'moving-backward' : ''}" 
       style="left: {walkingFigurePosition}px; bottom: {isMobile ? '50px' : '70px'}; 
-      transition: left 0.6s linear; position: fixed; z-index: 50; transform-origin: center;">
-      <img src={stickFigureWalking} alt="Walking Stick Figure" 
+      transition: left 0.6s linear; position: fixed; z-index: 50; transform-origin: center;"
+      on:mouseenter={handleWalkingFigureMouseEnter}
+      on:mouseleave={handleWalkingFigureMouseLeave}
+      on:touchstart={(event) => {
+        if (event.touches.length > 0) {
+          const touch = event.touches[0];
+          const touchEvent = {
+            clientX: touch.clientX,
+            clientY: touch.clientY
+          };
+          checkMouseInCenterOfWalkingFigure(touchEvent);
+        }
+      }}
+      role="img"
+      tabindex="0">
+      <img src={isWalkingFigureHovered ? stickFigureStatic : stickFigureWalking} alt="Walking Stick Figure" 
            class="w-auto {isMobile ? 'h-[120px]' : 'h-[150px]'}"
            style="image-rendering: -webkit-optimize-contrast; image-rendering: crisp-edges;" />
       
@@ -341,6 +526,16 @@
           <div class="eyeball" style="transform: translate({eyeRightX}px, {eyeRightY}px);"></div>
         </div>
       </div>
+
+      <!-- Help Sprechblase für alle Sektionen mit dynamischen Texten -->
+      {#if showHelpBubble}
+        <div class="help-speech-bubble">
+          <div class="speech-bubble-content">
+            {currentBubbleText}
+          </div>
+          <div class="speech-bubble-arrow"></div>
+        </div>
+      {/if}
     </div>
   {/if}
 
@@ -411,25 +606,26 @@
   }
 
   :global(.hand-drawn-text) {
-    font-family: 'Helvetica Neue', sans-serif !important;
+    font-family: var(--font-family) !important;
     letter-spacing: 0.02em;
     font-weight: 700;
   }
 
   :global(.hand-drawn-title) {
-    font-family: 'Helvetica Neue', sans-serif !important;
+    font-family: var(--font-family) !important;
     letter-spacing: 0.05em;
     font-weight: bold;
   }
   
   .walking-figure {
-    pointer-events: none;
+    pointer-events: auto; /* Enable mouse events for hover */
     will-change: transform, opacity;
     transform: translateZ(0);
     -webkit-font-smoothing: antialiased;
     position: relative;
     height: auto;
     width: auto;
+    cursor: pointer;
   }
   
   .fade-in-from-left {
@@ -621,7 +817,7 @@
   }
 
   .copy-text {
-    font-family: 'Helvetica Neue', sans-serif;
+    font-family: var(--font-family);
     font-size: 12px;
     font-weight: 600;
     color: #666;
@@ -636,7 +832,7 @@
   }
 
   .email-address {
-    font-family: 'Helvetica Neue', sans-serif;
+    font-family: var(--font-family);
     font-size: 14px;
     font-weight: 500;
     color: #000;
@@ -677,6 +873,73 @@
     
     .email-address {
       font-size: 12px;
+    }
+  }
+
+  /* Help Speech Bubble */
+  .help-speech-bubble {
+    position: absolute;
+    bottom: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    margin-bottom: 15px;
+    z-index: 60;
+    animation: bounceIn 0.4s cubic-bezier(0.68, -0.55, 0.265, 1.55);
+  }
+
+  .speech-bubble-content {
+    background: rgba(255, 255, 255, 0.95);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border: 1px solid rgba(0, 0, 0, 0.1);
+    border-radius: 18px;
+    padding: 8px 16px;
+    font-family: var(--font-family);
+    font-size: 14px;
+    font-weight: 600;
+    color: #333;
+    white-space: nowrap;
+    box-shadow: 
+      0 6px 20px rgba(0, 0, 0, 0.15),
+      inset 0 1px 0 rgba(255, 255, 255, 0.8);
+    text-align: center;
+    min-width: 120px;
+  }
+
+  .speech-bubble-arrow {
+    position: absolute;
+    top: 100%;
+    left: 50%;
+    transform: translateX(-50%);
+    width: 0;
+    height: 0;
+    border-left: 8px solid transparent;
+    border-right: 8px solid transparent;
+    border-top: 8px solid rgba(255, 255, 255, 0.95);
+    filter: drop-shadow(0 2px 4px rgba(0, 0, 0, 0.1));
+  }
+
+  @keyframes bounceIn {
+    0% {
+      opacity: 0;
+      transform: translateX(-50%) scale(0.3) translateY(20px);
+    }
+    50% {
+      opacity: 1;
+      transform: translateX(-50%) scale(1.05) translateY(-5px);
+    }
+    100% {
+      opacity: 1;
+      transform: translateX(-50%) scale(1) translateY(0);
+    }
+  }
+
+  /* Mobile Responsive für Speech Bubble */
+  @media (max-width: 768px) {
+    .speech-bubble-content {
+      font-size: 12px;
+      padding: 6px 12px;
+      min-width: 100px;
     }
   }
 </style>

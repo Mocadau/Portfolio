@@ -7,6 +7,7 @@
   import AlternatingLayoutBlock from '../components/projects/migrants/Layout/AlternatingLayoutBlock.svelte';
   import ContentGrid from '../components/projects/migrants/Layout/ContentGrid.svelte';
   import ContentSection from '../components/projects/migrants/Layout/ContentSection.svelte';
+  import NextProjectNavigation from '../components/NextProjectNavigation.svelte';
   import datasetsImage from '../assets/Migrants/Datasets.png';
   import ColorNames from '../assets/Migrants/ColorNames.png';
   import ColorMappingExample1 from '../assets/Migrants/ColorMappingExample1.png';
@@ -33,7 +34,7 @@
       <svg width="288" height="6" viewBox="0 0 288 6" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M0 3H288" stroke="#CE1010" stroke-width="5"/>
       </svg>
-      <div class="date">2014 - 2023</div>
+      <div class="date">2024</div>
     </div>
   </header>
 
@@ -50,10 +51,10 @@
       </div>
 
       <div class="meta-section">
-        <h3>Responsibilities</h3>
+        <h3>Role</h3>
         <div class="meta-content">
           <p>Concept & Research</p>
-          <p>UX/UI Design</p>
+          <p>UI/UX Design</p>
           <p>Illustration</p>
           <p>Video & Sound Design</p>
         </div>
@@ -82,19 +83,26 @@
       </div>
       <div class="section-divider"></div>
 
-      <!-- Project Overview, Dataset, and Color Mapping -->
       <div class="section-content">
         <div class="left-column">
           <TextBlock
-            title="Project Overview"
             subtitle="An interactive 3D globe that visualizes global migration routes, risk zones, and key patterns—bringing human stories behind the statistics to the surface."
             description="We worked with the Missing Migrants dataset to uncover patterns in global migration crises. Some visuals confirmed our assumptions—others challenged them. Mapping the data onto a globe revealed surprising, often overlooked narratives."
           />
         </div>
+      </div>
+    </section>
 
+    <!-- Dataset Section -->
+    <section class="content-section">
+      <div class="section-titles">
+        <h2>Dataset</h2>
+      </div>
+      <div class="section-divider"></div>
+
+      <div class="section-content">
         <div class="right-column">
           <TextBlock
-            title="Dataset"
             description="Quick overview of our dataset Missing Migrants 2014-2023"
           />
           <ImageBlock
@@ -102,10 +110,19 @@
             alt="Dataset Overview"
           />
         </div>
+      </div>
+    </section>
 
+    <!-- Color Mapping & Representation Section -->
+    <section class="content-section">
+      <div class="section-titles">
+        <h2>Color Mapping & Representation</h2>
+      </div>
+      <div class="section-divider"></div>
+
+      <div class="section-content">
         <div class="left-column">
           <TextBlock
-            title="Color Mapping & Representation"
             description="We used a clear color system to distinguish data points: Gray marks inactive or unselected states. Active incidents are shown using a color gradient and varying dot sizes to convey severity and impact."
           />
           <ImageMosaicHealthApp
@@ -135,7 +152,6 @@
           <ImageBlock
             src={GlobeOverview}
             alt="Globe Overview"
-            caption="Interactive 3D visualization of migration data"
           />
         </div>
 
@@ -148,7 +164,6 @@
           <ImageBlock
             src={InfoCardExample}
             alt="Info Card Example"
-            caption="Detailed information cards with audio narration"
           />
         </div>
 
@@ -161,7 +176,6 @@
           <ImageBlock
             src={TimeSlider}
             alt="Time Slider"
-            caption="Timeline analysis of migration patterns"
           />
         </div>
 
@@ -174,7 +188,6 @@
           <ImageBlock
             src={FilterOptions}
             alt="Filter Options"
-            caption="Comprehensive filtering system for data exploration"
           />
         </div>
       </div>
@@ -197,6 +210,8 @@
       </div>
     </section>
   </main>
+  
+  <NextProjectNavigation currentProject="GlobalMigrants" />
 </div>
 
 <style>
@@ -224,7 +239,7 @@
     margin-bottom: 1.5rem;
     color: #666;
     font-weight: 500;
-    font-family: 'Helvetica Neue', sans-serif;
+    font-family: var(--font-family);
   }
 
   .meta-content {
@@ -264,7 +279,7 @@
 
     .meta-section h3 {
       margin-bottom: 0.75rem;
-      font-family: 'Helvetica Neue', sans-serif;
+      font-family: var(--font-family);
       font-size: 1rem;
     }
 
@@ -329,7 +344,7 @@
     margin-bottom: 1.5rem;
     letter-spacing: -0.02em;
     line-height: 1.1;
-    font-family: 'Helvetica Neue', sans-serif;
+    font-family: var(--font-family);
   }
   
   .subtitle {
@@ -343,7 +358,7 @@
     font-size: 1.25rem;
     color: #333;
     font-weight: 500;
-    font-family: 'Helvetica Neue', sans-serif;
+    font-family: var(--font-family);
   }
 
   .video-section,
@@ -361,7 +376,7 @@
 
   .section-titles h2 {
     color: #000;
-    font-family: 'Helvetica Neue', sans-serif;
+    font-family: var(--font-family);
     font-size: 3.25rem;
     font-weight: 700;
     margin: 0;
@@ -382,7 +397,7 @@
     position: relative;
     display: flex;
     flex-direction: column;
-    gap: 120px;
+    gap: 180px;
   }
 
   .section-content .right-column,
@@ -404,7 +419,7 @@
     font-size: 1.375rem;  /* 22px */
     line-height: 1.8;
     color: #222;
-    font-family: 'Helvetica Neue', sans-serif;
+    font-family: var(--font-family);
     font-weight: 400;
   }
 
@@ -433,7 +448,7 @@
     .section-titles h2 {
       font-size: 32px;
       width: 100%;
-      font-family: 'Helvetica Neue', sans-serif;
+      font-family: var(--font-family);
       font-weight: 700;
     }
 
@@ -442,7 +457,7 @@
     }
 
     .section-content {
-      gap: 80px;
+      gap: 120px;
     }
 
     .section-content .right-column,
@@ -463,12 +478,12 @@
     }
 
     .section-content {
-      gap: 60px;
+      gap: 100px;
     }
 
     .reflection-text {
       font-size: 16px;
-      font-family: 'Helvetica Neue', sans-serif;
+      font-family: var(--font-family);
       font-weight: 400;
     }
 

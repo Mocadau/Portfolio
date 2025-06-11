@@ -64,7 +64,7 @@
 
   .title {
     color: #000;
-    font-family: 'Helvetica Neue', sans-serif;
+    font-family: var(--font-family);
     font-size: 24px;
     font-weight: 700;
     margin: 0 0 16px 0;
@@ -72,7 +72,7 @@
 
   .description {
     color: #000;
-    font-family: 'Helvetica Neue', sans-serif;
+    font-family: var(--font-family);
     font-size: 14px;
     font-weight: 300;
     line-height: 1.6;
@@ -108,7 +108,7 @@
 
   .caption {
     color: #666;
-    font-family: 'Helvetica Neue', sans-serif;
+    font-family: var(--font-family);
     font-size: 12px;
     font-weight: 400;
     line-height: 1.4;
@@ -130,7 +130,7 @@
 
     .title {
       font-size: 20px;
-      font-family: 'Helvetica Neue', sans-serif;
+      font-family: var(--font-family);
       font-weight: 700;
     }
 

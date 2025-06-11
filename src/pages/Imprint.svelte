@@ -51,7 +51,7 @@
     min-height: 100vh;
     background: white;
     color: #000;
-    font-family: 'Helvetica Neue', sans-serif;
+    font-family: var(--font-family);
     padding: 0;
     margin: 0;
   }
@@ -64,7 +64,7 @@
   .back-button {
     background: transparent;
     border: none;
-    font-family: 'Helvetica Neue', sans-serif;
+    font-family: var(--font-family);
     font-size: 16px;
     color: #000;
     cursor: pointer;
@@ -95,9 +95,10 @@
   }
 
   .content {
-    max-width: 800px;
+    max-width: 900px;
     margin: 0 auto;
     padding: 60px 40px;
+    text-align: left;
   }
 
   h1 {
@@ -106,31 +107,51 @@
     margin-bottom: 3rem;
     color: #000;
     letter-spacing: -0.02em;
+    text-align: left;
+    line-height: 1.1;
   }
 
   h2 {
-    font-size: 1.5rem;
+    font-size: 1.75rem;
     font-weight: 600;
     margin-bottom: 1.5rem;
+    margin-top: 2.5rem;
     color: #000;
+    text-align: left;
+    line-height: 1.2;
   }
 
   h3 {
-    font-size: 1.25rem;
+    font-size: 1.375rem;
     font-weight: 500;
     margin-bottom: 1rem;
     margin-top: 2rem;
     color: #000;
+    text-align: left;
+    line-height: 1.3;
   }
 
   .imprint-section {
-    margin-bottom: 3rem;
+    margin-bottom: 3.5rem;
+    text-align: left;
+  }
+
+  .contact-info {
+    text-align: left;
+    padding-left: 0;
   }
 
   .contact-info p {
-    margin-bottom: 0.75rem;
-    line-height: 1.6;
+    margin-bottom: 0.875rem;
+    line-height: 1.7;
     color: #333;
+    font-size: 1rem;
+    text-align: left;
+  }
+
+  .contact-info strong {
+    font-weight: 600;
+    color: #000;
   }
 
   .contact-info a {
@@ -157,15 +178,50 @@
 
   @media (max-width: 768px) {
     .header {
-      padding: 20px;
+      padding: 25px 20px;
     }
 
+    .content {
+      padding: 50px 25px;
+      max-width: 100%;
+    }
+
+    h1 {
+      font-size: 2.5rem;
+      margin-bottom: 2.5rem;
+    }
+
+    h2 {
+      font-size: 1.5rem;
+      margin-bottom: 1.25rem;
+    }
+
+    h3 {
+      font-size: 1.25rem;
+    }
+
+    .contact-info p {
+      font-size: 0.95rem;
+    }
+  }
+
+  @media (max-width: 480px) {
     .content {
       padding: 40px 20px;
     }
 
     h1 {
-      font-size: 2.5rem;
+      font-size: 2rem;
+      margin-bottom: 2rem;
+    }
+
+    h2 {
+      font-size: 1.375rem;
+    }
+
+    .contact-info p {
+      font-size: 0.9rem;
+      line-height: 1.6;
     }
   }
 </style>

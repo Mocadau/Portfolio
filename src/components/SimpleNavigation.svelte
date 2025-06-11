@@ -84,7 +84,7 @@
     z-index: 50;
     opacity: 0;
     animation: navSlideIn 0.8s ease-out forwards;
-    font-family: 'Helvetica Neue', sans-serif;
+    font-family: var(--font-family);
   }
 
   .nav-item {

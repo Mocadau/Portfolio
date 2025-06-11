@@ -22,21 +22,21 @@
       mousePosition: { y: 0 }
     };
 
-    // Add Google Fonts
-    const fonts = [
-      'https://fonts.googleapis.com/css2?family=Helvetica+Neue&display=swap'
-    ];
+    // Optional: Add custom fonts if needed
+    // const fonts = [
+    //   'https://fonts.googleapis.com/css2?family=Your+Custom+Font&display=swap'
+    // ];
 
-    const links = fonts.map(href => {
-      const link = document.createElement('link');
-      link.rel = 'stylesheet';
-      link.href = href;
-      document.head.appendChild(link);
-      return link;
-    });
+    // const links = fonts.map(href => {
+    //   const link = document.createElement('link');
+    //   link.rel = 'stylesheet';
+    //   link.href = href;
+    //   document.head.appendChild(link);
+    //   return link;
+    // });
 
     return () => {
-      links.forEach(link => document.head.removeChild(link));
+      // links.forEach(link => document.head.removeChild(link));
       delete window.portfolioState;
     };
   });
@@ -58,10 +58,10 @@
 <style>
   :global(body) {
     margin: 0;
-    font-family: 'Helvetica Neue', -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif;
+    font-family: var(--font-family);
   }
 
   :global(.hand-drawn-text) {
-    font-family: 'Helvetica Neue', sans-serif;
+    font-family: var(--font-family);
   }
 </style>
