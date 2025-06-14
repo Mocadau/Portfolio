@@ -28,7 +28,7 @@
       </svg>
     </a>
     
-    <h1 class="title">Alignspace – Smart Workspace Booking</h1>
+    <h1 class="title">Alignspace</h1>
     <div class="subtitle">
       <svg width="288" height="6" viewBox="0 0 288 6" fill="none" xmlns="http://www.w3.org/2000/svg">
         <path d="M0 3H288" stroke="#3B82F6" stroke-width="5"/>
@@ -147,7 +147,8 @@
       <div class="section-content">
         <div class="left-column">
           <TextBlock
-            description="Alignspace is based on the concept that users can keep an eye on their current and upcoming bookings at all times. They are reminded of upcoming bookings and receive a recommendation to renew shortly before they expire."
+            title="Overview"
+            description="Alignspace enables users to monitor their current and upcoming bookings through continuous visibility. The platform sends timely reminders for approaching bookings and proactive renewal recommendations before expiration dates."
           />
           <ImageBlock
             src={Bild4}
@@ -160,6 +161,7 @@
       <div class="section-content">
         <div class="right-column">
           <TextBlock
+            title="Booking"
             description="The core function of Alignspace is the booking of workspaces, which can be reserved according to various filters and sorted by seat neighbors. The app also offers the option of booking meeting rooms and inviting employees to them. Parking spaces can also be reserved via the platform so that the entire working day can be organized efficiently."
           />
           <ImageBlock
@@ -173,6 +175,7 @@
       <div class="section-content">
         <div class="left-column">
           <TextBlock
+            title="Communication"
             description="Alignspace offers an integrated communication tool for communicating with employees and inviting them to meetings. This facilitates coordination within the team and ensures that all relevant people are informed about appointments and bookings in good time."
           />
           <ImageBlock
@@ -186,6 +189,7 @@
       <div class="section-content">
         <div class="right-column">
           <TextBlock
+            title="Service"
             description="The service bot is available for all kinds of problems. It analyzes the request and creates a ticket for the person responsible, who then contacts the person seeking help via the communication tool."
           />
           <ImageBlock

@@ -63,7 +63,7 @@
       <div class="meta-section">
         <h3>Duration</h3>
         <div class="meta-content">
-          <p>1 week</p>
+          <p>Two weeks</p>
         </div>
       </div>
     </section>

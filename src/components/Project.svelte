@@ -1,6 +1,6 @@
 <script lang="ts">
   import { navigate } from "svelte-routing";
-  import performBanner from '../assets/PerformBanner.png';
+  import performBanner from '../assets/PerForm/PerformBanner.png';
   import migrantsImage from '../assets/Migrants/GlobeOverview.png';
   import alignspaceImage from '../assets/Alignspace/Ubersicht.jpg';
 
@@ -55,7 +55,7 @@
             
             <!-- Image -->
             <div class="project-image relative w-full md:w-[584px] ml-0">
-              <div class="project-border absolute border-4 border-black border-solid rounded-lg"></div>
+              <div class="project-border absolute border-4 border-black border-solid"></div>
               <div 
                 class="relative w-full h-full overflow-visible z-10"
                 role="button"
@@ -63,11 +63,11 @@
                 on:click={navigateToProject}
                 on:keydown={(e) => e.key === 'Enter' && navigateToProject()}
               >
-                <div class="w-full h-full bg-white p-[10px] cursor-pointer rounded-lg">
+                <div class="w-full h-full bg-white p-[10px] cursor-pointer">
                   <img
                     src={index === 1 ? performBanner : index === 2 ? migrantsImage : alignspaceImage}
                     alt={index === 1 ? "PerForm Banner" : index === 2 ? "Global Migrants" : "Alignspace"}
-                    class="w-full h-full object-cover rounded"
+                    class="w-full h-full object-cover"
                   />
                 </div>
               </div>
@@ -114,6 +114,7 @@
     border-color: #000;
     /* Kleine Inset-Anpassung, um Overflow zu vermeiden */
     inset: 4px;
+    border-radius: 0; /* Eckige Ecken */
   }
 
   /* Tag-Styles - exakt gleiche Border wie Projekt-Border */
@@ -121,7 +122,7 @@
     border-style: solid;
     border-width: 4px;
     border-color: #000;
-    border-radius: 0.5rem; /* rounded-lg equivalent */
+    border-radius: 0; /* Eckige Ecken */
     padding: 0.25rem 0.75rem; /* px-3 py-1 equivalent für Desktop */
     display: inline-block;
   }
@@ -141,11 +142,24 @@
     }
   }
 
-  /* Sicherstellen, dass alle Bilder die gleiche Größe haben */
+  /* Sicherstellen, dass alle Bilder die gleiche Größe haben und den Border-Container ausfüllen */
   .project-image img {
+    position: absolute;
+    top: 0;
+    left: 0;
     width: 100%;
     height: 100%;
     object-fit: cover; /* Bilder füllen den Container vollständig aus */
-    border-radius: 8px; /* rounded entspricht */
+    border-radius: 0; /* Eckige Ecken */
+  }
+
+  /* Sicherstellen, dass der innere Container den Border-Bereich vollständig ausfüllt */
+  .project-image > div > div {
+    position: absolute;
+    top: 0;
+    left: 0;
+    width: 100%;
+    height: 100%;
+    padding: 0; /* Entferne das padding damit das Bild den Border ausfüllt */
   }
 </style>

@@ -4,10 +4,12 @@
   import { selectedPhotoIndex } from '../stores/selectedPolaroid';
   import { isProcessing } from '../stores/photoProcessing';
   import PolaroidCamera from '../assets/polaroid-camera.svg';
-  import HeyImage from '../assets/Hey.png';
-  import AboutMeImage from '../assets/AboutMe.png';
+  import HeyImage from '../assets/AboutMe.png';
+  import AboutMeImage from '../assets/Background.png';
   import WhatDrivesImage from '../assets/WhatDrives.png';
   import BeyondDesignImage from '../assets/BeyondDesign.png';
+  import MyApproachImage from '../assets/MyApproach.png';
+  import PhilosophyImage from '../assets/Philosophy.png';
 
   function handleButtonKeydown(e: KeyboardEvent) {
     if (e.key === 'Enter') {
@@ -101,13 +103,13 @@
       description: 'When I\'m not buried in design projects, you\'ll either find me backpacking solo through remote villages on the other side of the globe, or hanging out with friends for spontaneous activities like volleyball, spikeball, or game nights.'
     },
     { 
-      src: HeyImage, // Platzhalter - kann durch neues Bild ersetzt werden
+      src: MyApproachImage,
       alt: 'My Approach',
       title: 'My Approach',
       description: 'I consider myself an idea generator and creative out-of-the-box thinker. My mind constantly buzzes with new concepts, and I love making connections others might miss. New inventions and tools with technical capabilities immediately capture my attention.'
     },
     { 
-      src: AboutMeImage, // Platzhalter - kann durch neues Bild ersetzt werden
+      src: PhilosophyImage,
       alt: 'Philosophy',
       title: 'Philosophy',
       description: 'I believe the world is a playground of possibilities where every conversation is an opportunity to explore new concepts and challenge the status quo. I see potential where others might see problems, and I approach every challenge with enthusiasm and creativity.'
@@ -318,14 +320,14 @@
     </div>
 
     <!-- Rechte Spalte: Dynamischer Text - auf Kamera-Höhe ausgerichtet -->
-    <div class="text-section flex flex-col justify-start pl-0 sm:pl-6 md:pl-6 lg:pl-10 xl:pl-14 pr-4 sm:pr-8 md:pr-10 lg:pr-12 xl:pr-16">
+    <div class="text-section flex flex-col justify-start pl-0 sm:pl-4 md:pl-4 lg:pl-8 xl:pl-12 pr-4 sm:pr-8 md:pr-10 lg:pr-12 xl:pr-16">
       <div class="text-content-wrapper">
         {#if currentDescription}
           <div class="text-content text-left">
-            <h2 class="hand-drawn-text text-3xl sm:text-4xl md:text-3xl lg:text-4xl xl:text-5xl 2xl:text-6xl mb-6 sm:mb-7 md:mb-6 lg:mb-7 xl:mb-8 2xl:mb-10 text-black font-bold leading-tight">
+            <h2 class="hand-drawn-text text-2xl sm:text-3xl md:text-2xl lg:text-3xl xl:text-4xl 2xl:text-5xl mb-6 sm:mb-7 md:mb-6 lg:mb-7 xl:mb-8 2xl:mb-10 text-black font-bold leading-tight">
               {currentDescription.title}
             </h2>
-            <p class="text-2xl sm:text-3xl md:text-2xl lg:text-3xl xl:text-4xl 2xl:text-5xl text-gray-700 leading-relaxed font-light max-w-none tracking-wide mb-8 sm:mb-10 md:mb-12 lg:mb-16 xl:mb-20">
+            <p class="text-xl sm:text-2xl md:text-xl lg:text-2xl xl:text-3xl 2xl:text-4xl text-gray-700 leading-relaxed font-light max-w-none tracking-wide mb-8 sm:mb-10 md:mb-12 lg:mb-16 xl:mb-20">
               {currentDescription.description}
             </p>
           </div>
@@ -419,7 +421,7 @@
   .text-content-wrapper {
     width: 100%;
     margin-top: 0;
-    padding-bottom: 2rem; /* Zusätzlicher Abstand nach unten */
+    padding-bottom: 1rem; /* Weniger Abstand nach unten */
   }
 
   .text-content {
@@ -431,7 +433,7 @@
   /* Responsive Wrapper-Anpassungen */
   @media (max-width: 768px) {
     .text-content-wrapper {
-      padding-bottom: 3rem; /* Mehr Abstand auf mobilen Geräten */
+      padding-bottom: 1.5rem; /* Weniger Abstand auf mobilen Geräten */
       padding-left: 0rem !important; /* Ganz nach links */
     }
     
@@ -443,7 +445,7 @@
 
   @media (max-width: 480px) {
     .text-content-wrapper {
-      padding-bottom: 2.5rem;
+      padding-bottom: 1rem; /* Noch weniger Abstand */
       padding-left: 0rem !important; /* Ganz nach links */
     }
     
@@ -456,18 +458,18 @@
   /* Mobile-spezifische Text-Überschreibungen */
   @media (max-width: 768px) {
     .text-content h2 {
-      font-size: 2.5rem !important; /* Überschreibt text-3xl */
-      margin-bottom: 2rem !important;
+      font-size: 1.75rem !important; /* Deutlich kleiner für mobile */
+      margin-bottom: 1rem !important;
       line-height: 1.1 !important;
       margin-left: 0rem !important; /* Ganz nach links */
       padding-left: 0rem !important; /* Ganz nach links */
     }
     
     .text-content p {
-      font-size: 1.75rem !important; /* Überschreibt text-2xl */
+      font-size: 1rem !important; /* Deutlich kleiner für mobile */
       line-height: 1.4 !important;
-      margin-bottom: 2.5rem !important; /* Zusätzlicher Abstand nach unten */
-      padding-right: 0.5rem !important; /* Zusätzlicher Abstand nach rechts */
+      margin-bottom: 1rem !important; /* Weniger Abstand nach unten */
+      padding-right: 1rem !important; /* Mehr Abstand nach rechts */
       margin-left: 0rem !important; /* Ganz nach links */
       padding-left: 0rem !important; /* Ganz nach links */
     }
@@ -475,18 +477,18 @@
 
   @media (max-width: 480px) {
     .text-content h2 {
-      font-size: 2.25rem !important; /* Noch größer für sehr kleine Bildschirme */
-      margin-bottom: 1.75rem !important;
+      font-size: 1.5rem !important; /* Noch kleiner für sehr kleine Bildschirme */
+      margin-bottom: 0.75rem !important;
       line-height: 1.05 !important;
       margin-left: 0rem !important; /* Ganz nach links */
       padding-left: 0rem !important; /* Ganz nach links */
     }
     
     .text-content p {
-      font-size: 1.5rem !important; /* Proportional angepasst */
+      font-size: 0.9rem !important; /* Sehr kompakt für kleine Bildschirme */
       line-height: 1.35 !important;
-      margin-bottom: 2rem !important; /* Ausreichend Abstand nach unten */
-      padding-right: 0.75rem !important; /* Ausreichend Abstand nach rechts */
+      margin-bottom: 0.75rem !important; /* Weniger Abstand nach unten */
+      padding-right: 1.25rem !important; /* Noch mehr Abstand nach rechts */
       margin-left: 0rem !important; /* Ganz nach links */
       padding-left: 0rem !important; /* Ganz nach links */
     }
@@ -666,8 +668,8 @@
     left: 50%;
     top: calc(1rem + 110px);
     transform: translateX(-50%);
-    width: min(400px, 80vw);
-    height: 70vh;
+    width: min(450px, 85vw) !important;
+    height: 75vh !important;
     overflow: visible;
     pointer-events: all;
     background: transparent;
@@ -680,8 +682,8 @@
     .photos-container {
       left: 50%;
       top: calc(1rem + 100px);
-      width: min(350px, 75vw);
-      height: 65vh;
+      width: min(400px, 80vw) !important;
+      height: 70vh !important;
       margin: 0 auto;
       box-sizing: border-box;
     }
@@ -691,8 +693,8 @@
     .photos-container {
       left: 50%;
       top: calc(0.75rem + 80px);
-      width: min(320px, 75vw);
-      height: 65vh;
+      width: min(350px, 78vw) !important;
+      height: 68vh !important;
       margin: 0 auto;
       box-sizing: border-box;
     }
@@ -702,8 +704,8 @@
     .photos-container {
       left: 50%;
       top: calc(0.5rem + 120px);
-      width: min(280px, 70vw);
-      height: 60vh;
+      width: min(320px, 75vw) !important;
+      height: 65vh !important;
       margin: 0 auto;
       box-sizing: border-box;
     }
@@ -796,30 +798,47 @@
     pointer-events: all;
     opacity: 1;
     background: white;
+    box-sizing: border-box;
+  }
+
+  .photo-container .polaroid-frame {
+    width: 100% !important;
+    height: 100% !important;
+    padding: 8px !important;
+    box-sizing: border-box;
+    display: flex;
+    flex-direction: column;
+  }
+
+  .photo-container .photo-wrapper {
+    flex: 1 !important;
+    width: 100% !important;
+    height: auto !important;
+    min-height: 0 !important;
   }
 
   @media (min-width: 640px) {
     .photo-container {
-      width: min(100px, calc(35vw - 1.5rem));
+      width: min(120px, calc(40vw - 1.5rem)) !important;
     }
   }
 
   @media (min-width: 1024px) {
     .photo-container {
-      width: min(120px, calc(40vw - 2rem));
+      width: min(140px, calc(45vw - 2rem)) !important;
     }
   }
 
   /* Mobile Skalierung für größere Polaroids */
   @media (max-width: 768px) {
     .photo-container {
-      width: min(110px, calc(35vw - 1rem));
+      width: min(110px, calc(38vw - 1rem)) !important;
     }
   }
 
   @media (max-width: 480px) {
     .photo-container {
-      width: min(100px, calc(32vw - 0.5rem));
+      width: min(100px, calc(35vw - 0.5rem)) !important;
     }
   }
 
@@ -843,10 +862,11 @@
   }
 
   .photo-position.selected .photo-container {
-    width: min(400px, 70vw);
+    width: 500px !important;
+    height: 600px !important;
     margin: 0;
-    transform: none !important;
-    animation: none;
+    transform: translate(150px, 100px) !important; /* Position nach links verschoben */
+    animation: moveToNewPosition 0.6s ease-out;
     box-shadow: 0 8px 24px rgba(0, 0, 0, 0.2);
     border-radius: 8px;
     overflow: hidden;
@@ -854,10 +874,34 @@
     z-index: 10000;
   }
 
+  .photo-position.selected .photo-wrapper {
+    width: 100% !important;
+    height: 100% !important;
+    aspect-ratio: auto !important;
+  }
+
+  .photo-position.selected .photo-wrapper img {
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: contain !important;
+    object-position: center !important;
+  }
+
   @media (max-width: 768px) {
     .photo-position.selected .photo-container {
-      width: 240px; /* Vergrößerte mobile Polaroid-Größe */
+      width: 280px !important; /* Vergrößerte mobile Polaroid-Größe */
+      height: 340px !important;
+      transform: translate(160px, 60px) !important; /* Angepasste Position für Mobile - noch weiter rechts */
       box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
+    }
+  }
+
+  @media (max-width: 480px) {
+    .photo-position.selected .photo-container {
+      width: 220px !important; /* Vergrößert für sehr kleine Bildschirme */
+      height: 260px !important;
+      transform: translate(120px, 40px) !important; /* Angepasste Position für kleine Bildschirme - noch weiter rechts */
+      box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
     }
   }
 
@@ -915,9 +959,13 @@
   }
 
   .photo-wrapper img {
-    width: 100%;
-    height: 100%;
-    object-fit: cover;
+    width: 100% !important;
+    height: 100% !important;
+    object-fit: cover !important;
+    object-position: center !important;
+    max-width: none !important;
+    max-height: none !important;
+    transform: scale(1) !important;
   }
 
   @keyframes fadeIn {
@@ -928,6 +976,38 @@
     to {
       opacity: 1;
       transform: translateY(0);
+    }
+  }
+
+  @keyframes moveToNewPosition {
+    0% {
+      transform: translateY(calc(var(--index) * 45px)) scale(1);
+    }
+    100% {
+      transform: translate(150px, 100px) scale(1);
+    }
+  }
+
+  /* Mobile Version der moveToNewPosition Animation */
+  @media (max-width: 768px) {
+    @keyframes moveToNewPosition {
+      0% {
+        transform: translateY(calc(var(--index) * 55px)) scale(1);
+      }
+      100% {
+        transform: translate(160px, 60px) scale(1);
+      }
+    }
+  }
+
+  @media (max-width: 480px) {
+    @keyframes moveToNewPosition {
+      0% {
+        transform: translateY(calc(var(--index) * 50px)) scale(1);
+      }
+      100% {
+        transform: translate(120px, 40px) scale(1);
+      }
     }
   }
   

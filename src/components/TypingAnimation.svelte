@@ -102,10 +102,10 @@
     }
     
     // Global flag setzen, damit es nie wieder abgespielt wird
+    if (typeof window !== 'undefined' && window.hasPlayedGlobalIntroSounds) {
+      return;
+    }
     if (typeof window !== 'undefined') {
-      if (window.hasPlayedGlobalIntroSounds) {
-        return;
-      }
       window.hasPlayedGlobalIntroSounds = true;
     }
     
@@ -151,14 +151,12 @@
     }, speed);
   }
 
-  onMount(async () => {
+  onMount(() => {
     // Initialize audio context early
-    const initAudio = async () => {
-      try {
-        await initializeAudio();
-      } catch (e) {
+    const initAudio = () => {
+      initializeAudio().catch(e => {
         console.warn('Initial audio setup failed, will retry on user interaction');
-      }
+      });
     };
 
     // Try to initialize immediately
@@ -174,20 +172,24 @@
     document.addEventListener('click', handleFirstInteraction);
     document.addEventListener('keydown', handleFirstInteraction);
 
-    const delayTimer = setTimeout(async () => {
-      // Spiele tiefe Intro-Sounds nur beim allerersten "HELLO" Text
+    const delayTimer = setTimeout(() => {
+      // For "HELLO" text, try to play intro sounds but don't wait for them
       if (text === "HELLO" && isFirstAnimation && !hasPlayedIntroSounds) {
-        await playIntroTypingSounds();
-        // Warte bis Intro-Sounds fertig sind, dann starte Typing
+        // Try to play intro sounds (will fail silently if audio not ready)
+        playIntroTypingSounds().catch(() => {
+          console.warn('Intro sounds failed, continuing with animation');
+        });
+        
+        // Start typing after intro sound delay, regardless of audio state
         setTimeout(() => {
           startTyping();
         }, 650);
       } else {
-        // Alle anderen Texte starten sofort ohne Intro-Sounds
+        // All other texts start immediately
         startTyping();
       }
       
-      // Nach dem ersten Text ist es nicht mehr die erste Animation
+      // After first text, it's no longer the first animation
       isFirstAnimation = false;
     }, delayStart);
 

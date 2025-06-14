@@ -78,8 +78,8 @@
   .polaroid-frame {
     transform-origin: center;
     position: relative;
-    max-width: 90vh;
-    max-height: 90vh;
+    width: min(600px, 90vw);
+    height: min(600px, 90vh);
     transform: rotate(-1deg);
     transition: transform 0.3s ease;
   }
@@ -118,7 +118,8 @@
   .polaroid-image {
     width: 100%;
     height: 100%;
-    object-fit: contain;
+    object-fit: cover;
+    object-position: center;
     transition: transform 0.3s ease;
   }
 

@@ -26,6 +26,7 @@
   import Bild13 from '../assets/PerForm/result5.png';
   import Bild14 from '../assets/PerForm/result6.png';
   import Bild15 from '../assets/PerForm/analysis.png';
+  import SpeechIcon from '../assets/PerForm/SpeechIcon.png';
 </script>
 
 <div class="page-container">
@@ -87,11 +88,12 @@
 
     <!-- Introduction Section -->
     <section class="content-section">
-      <div class="section-titles">
-        <h2>Introduction</h2>
-      </div>
-      <div class="section-divider"></div>
-      <div class="section-content">
+      <div class="container mx-auto px-6 sm:px-8 lg:px-12 xl:px-16">
+        <div class="section-titles">
+          <h2>Introduction</h2>
+        </div>
+        <div class="section-divider"></div>
+        <div class="section-content">
         <div class="intro-text">
           <TextBlock
             description="The desire to increase the safety and effectiveness of fitness exercises. Beginners in particular often perform incorrect movements, which can lead to injuries or ineffective training."
@@ -110,14 +112,16 @@
             />
           </div>
         </div>
+        </div>
       </div>
     </section>
 
     <!-- Process Section -->
     <section class="content-section">
-      <div class="section-titles">
-        <h2>Process</h2>
-      </div>
+      <div class="container mx-auto px-6 sm:px-8 lg:px-12 xl:px-16">
+        <div class="section-titles">
+          <h2>Process</h2>
+        </div>
       <div class="section-divider"></div>
       <div class="section-content process-content">
         <div class="process-images">
@@ -134,91 +138,133 @@
             />
           </div>
         </div>
+        </div>
       </div>
     </section>
 
     <!-- Steps Section -->
     <section class="content-section">
-      <div class="section-titles">
-        <h2>Steps</h2>
-      </div>
-      <div class="section-divider"></div>
-      <div class="section-content">
+      <div class="container mx-auto px-6 sm:px-8 lg:px-12 xl:px-16">
+        <div class="section-titles">
+          <h2>Steps</h2>
+        </div>
+        <div class="section-divider"></div>
+        <div class="section-content">
         <div class="steps-description">
-          <p>The exercise process is divided into three clear steps that guide users through proper form correction using VR technology and real-time feedback.</p>
+          <p>The training system follows a three-step process that corrects user posture through VR technology and real-time feedback.</p>
         </div>
         <div class="steps-grid">
           <div class="step-item">
-            <h3>Exercise Step 1</h3>
+            <h3>Step 1: Detection</h3>
             <StepImageBlock
               src={Bild4}
-              alt="Exercise Step 1"
-              caption="User tries to do exercise correctly, wrong posture, visual aid shows him, video stops."
+              alt="Step 1: Detection"
+              caption="The user attempts the exercise. When the system detects incorrect posture, visual cues appear and the video pauses."
             />
           </div>
           
           <div class="step-item">
-            <h3>Exercise Step 2</h3>
+            <h3>Step 2: Correction</h3>
             <StepImageBlock
               src={Bild5}
-              alt="Exercise Step 2"
-              caption="User improves his posture with the help of visual aids"
+              alt="Step 2: Correction"
+              caption="The user adjusts their posture using the visual guidance provided by the system."
             />
           </div>
           
           <div class="step-item">
-            <h3>Exercise Step 3</h3>
+            <h3>Step 3: Confirmation</h3>
             <StepImageBlock
               src={Bild6}
-              alt="Exercise Step 3"
-              caption="User is in the perfect position and the video continues to run so that he can move to the next position."
+              alt="Step 3: Confirmation"
+              caption="Once the user achieves correct form, the video resumes and progresses to the next movement."
             />
           </div>
+        </div>
         </div>
       </div>
     </section>
 
     <!-- First interviews Section -->
     <section class="content-section">
-      <div class="section-titles">
-        <h2>First interviews</h2>
-        <div class="subtitle-text">9 people interviewed between the ages of 19 and 55.</div>
-      </div>
-      <div class="section-divider"></div>
-      <div class="section-content">
-        <div class="centered-column">
-          <ImageBlock
-            src={Bild7}
-            alt="User Interview Results"
-          />
+      <div class="container mx-auto px-6 sm:px-8 lg:px-12 xl:px-16">
+        <div class="section-titles">
+          <h2>User Research Insights</h2>
+          <div class="subtitle-text">9 people interviewed between the ages of 19 and 55.</div>
+        </div>
+        <div class="section-divider"></div>
+        <div class="section-content">
+          <!-- User Research Statistics -->
+          <div class="research-stats">
+            <div class="stat-item">
+              <div class="stat-number">78%</div>
+              <div class="stat-description">have used videos as exercise guides</div>
+            </div>
+            
+            <div class="stat-item">
+              <div class="stat-number">67%</div>
+              <div class="stat-description">had positive experiences with personal trainers</div>
+            </div>
+            
+            <div class="stat-item">
+              <div class="stat-number">22%</div>
+              <div class="stat-description">had no prior trainer experience</div>
+            </div>
+          </div>
         </div>
       </div>
     </section>
 
     <!-- Trainer Interviews Section -->
     <section class="content-section">
-      <div class="section-titles">
-        <h2>Interviews with trainers</h2>
-        <div class="subtitle-text">3 interviewed trainers between the ages of 25 and 40.</div>
-      </div>
-      <div class="section-divider"></div>
-      <div class="section-content">
-        <div class="centered-column">
-          <ImageBlock
-            src={Bild8}
-            alt="Trainer Interview Results"
-          />
+      <div class="container mx-auto px-6 sm:px-8 lg:px-12 xl:px-16">
+        <div class="section-titles">
+          <h2>Key Findings</h2>
+          <div class="subtitle-text">3 interviewed trainers between the ages of 25 and 40.</div>
+        </div>
+        <div class="section-divider"></div>
+        <div class="section-content">
+          <!-- Key Findings Text Content -->
+          <div class="key-findings">
+            <div class="finding-item">
+              <div class="finding-icon">
+                <img src={SpeechIcon} alt="Speech Icon" />
+              </div>
+              <div class="finding-text">
+                Visual demonstration proves most effective - verbal instructions alone often fall short.
+              </div>
+            </div>
+            
+            <div class="finding-item">
+              <div class="finding-icon">
+                <img src={SpeechIcon} alt="Speech Icon" />
+              </div>
+              <div class="finding-text">
+                Most users lack initial body awareness, making targeted corrections essential.
+              </div>
+            </div>
+            
+            <div class="finding-item">
+              <div class="finding-icon">
+                <img src={SpeechIcon} alt="Speech Icon" />
+              </div>
+              <div class="finding-text">
+                Slow, controlled executions at the beginning improve the later performance.
+              </div>
+            </div>
+          </div>
         </div>
       </div>
     </section>
 
     <!-- Results Section -->
-    <section class="content-section results-section">
-      <div class="section-titles">
-        <h2>Result</h2>
-      </div>
-      <div class="section-divider"></div>
-      <div class="section-content">
+    <section class="content-section">
+      <div class="container mx-auto px-6 sm:px-8 lg:px-12 xl:px-16">
+        <div class="section-titles">
+          <h2>Result</h2>
+        </div>
+        <div class="section-divider"></div>
+        <div class="section-content">
         <div class="left-column">
           <ImageBlock
             src={Bild9}
@@ -260,21 +306,24 @@
             alt="Result Visual 6"
           />
         </div>
+        </div>
       </div>
     </section>
 
     <!-- Analysis Section -->
-    <section class="content-section analysis-section">
-      <div class="section-titles">
-        <h2>Analysis</h2>
-      </div>
-      <div class="section-divider"></div>
-      <div class="section-content">
-        <div class="centered-column">
-          <ImageBlock
-            src={Bild15}
-            alt="Analysis"
-          />
+    <section class="content-section">
+      <div class="container mx-auto px-6 sm:px-8 lg:px-12 xl:px-16">
+        <div class="section-titles">
+          <h2>Analysis</h2>
+        </div>
+        <div class="section-divider"></div>
+        <div class="section-content">
+          <div class="centered-column">
+            <ImageBlock
+              src={Bild15}
+              alt="Analysis"
+            />
+          </div>
         </div>
       </div>
     </section>
@@ -391,9 +440,8 @@
   .section-divider {
     width: 100%;
     height: 1px;
-    background-color: #000;
-    opacity: 0.1;
-    margin-bottom: 60px;
+    background: rgba(0, 0, 0, 0.1);
+    margin: 0 auto 3rem auto;
   }
 
   .video-section,
@@ -513,19 +561,145 @@
     min-height: 300px;
   }
 
-  /* Results Section - Bilder auf 120% skaliert */
-  .results-section .section-content .right-column :global(.image-block),
-  .results-section .section-content .left-column :global(.image-block) {
-    transform: scale(1.2);
+  /* Results Section - Vergrößerter Bereich ohne Abschneiden */
+  .content-section:nth-child(6) {
+    overflow: visible;
+  }
+  
+  .content-section:nth-child(6) .container {
+    max-width: none;
+    padding: 0 2rem;
+  }
+  
+  .content-section:nth-child(6) .section-content {
+    transform: scale(1);
     transform-origin: center;
-    margin: 2rem 0;
+    margin: 4rem 0;
+    overflow: visible;
+  }
+  
+  .content-section:nth-child(6) .section-content .right-column :global(.image-block),
+  .content-section:nth-child(6) .section-content .left-column :global(.image-block) {
+    overflow: visible;
   }
 
-  /* Analysis Section - Größeres Bild */
-  .analysis-section .section-content .centered-column :global(.image-block) {
-    transform: scale(1.4);
+  /* Mobile Anpassungen für Results Section */
+  @media (max-width: 1024px) {
+    .content-section:nth-child(6) .section-content {
+      transform: scale(1.2);
+      margin: 3rem 0;
+    }
+    
+    .content-section:nth-child(6) .container {
+      padding: 0 1rem;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .content-section:nth-child(6) .section-content {
+      transform: scale(1.1);
+      margin: 2rem 0;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .content-section:nth-child(6) .section-content {
+      transform: scale(1.0);
+      margin: 1rem 0;
+    }
+    
+    .content-section:nth-child(6) .container {
+      padding: 0 0.5rem;
+    }
+  }
+
+  /* Analysis Section - Container in voller Breite wie video-section */
+  .content-section:nth-child(9) .section-content .centered-column :global(.image-block) {
+    width: 100%;
+    max-width: 100%;
+    transform: none;
     transform-origin: center;
     margin: 3rem 0;
+  }
+  
+  .content-section:nth-child(9) .section-content .centered-column {
+    width: 100%;
+    max-width: 100%;
+  }
+
+  /* User Research Statistics */
+  .research-stats {
+    display: flex;
+    justify-content: center;
+    align-items: flex-start;
+    gap: 10rem;
+    margin-top: 3rem;
+    max-width: 1200px;
+    margin-left: auto;
+    margin-right: auto;
+    padding: 0 2rem;
+  }
+
+  .stat-item {
+    text-align: center;
+    flex: 1;
+    max-width: 350px;
+  }
+
+  .stat-number {
+    font-size: 3rem;
+    font-weight: bold;
+    color: #000;
+    margin-bottom: 0.5rem;
+    line-height: 1;
+  }
+
+  .stat-description {
+    font-size: 1rem;
+    line-height: 1.5;
+    color: #333;
+    font-weight: 400;
+  }
+
+  /* Key Findings */
+  /* Key Findings - begrenzt auf Trennlinien-Breite */
+  .key-findings {
+    display: flex;
+    justify-content: space-between;
+    align-items: flex-start;
+    gap: 2rem;
+    margin-top: 3rem;
+    width: 100%;
+    max-width: 100%;
+    margin-left: 0;
+    margin-right: 0;
+    padding: 0;
+  }
+
+  .finding-item {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    text-align: center;
+    flex: 1;
+    max-width: 280px;
+  }
+
+  .finding-icon {
+    margin-bottom: 1.5rem;
+  }
+
+  .finding-icon img {
+    width: 60px;
+    height: 60px;
+    object-fit: contain;
+  }
+
+  .finding-text {
+    font-size: 1rem;
+    line-height: 1.5;
+    color: #333;
+    font-weight: 400;
   }
 
   @media (max-width: 1024px) {
@@ -640,5 +814,230 @@
     .steps-description p {
       font-size: 1rem;
     }
+
+    .research-stats {
+      flex-direction: column;
+      align-items: center;
+      gap: 2.5rem;
+      margin-top: 2rem;
+      padding: 0 1rem;
+      max-width: 400px;
+    }
+
+    .stat-item {
+      max-width: 100%;
+      width: 100%;
+    }
+
+    .stat-number {
+      font-size: 2.5rem;
+    }
+
+    .stat-description {
+      font-size: 0.95rem;
+    }
+
+    .key-findings {
+      flex-direction: column;
+      gap: 3rem;
+      margin-top: 2rem;
+      padding: 0 1rem;
+    }
+
+    .finding-item {
+      max-width: 100%;
+    }
+
+    .finding-icon img {
+      width: 50px;
+      height: 50px;
+    }
+
+    .finding-text {
+      font-size: 0.95rem;
+    }
+  }
+
+  /* Container System für einheitliche Margins */
+  .container {
+    max-width: 1280px;
+    margin: 0 auto;
+  }
+
+  /* Content Section Basis-Styling */
+  .content-section {
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    justify-content: center;
+    position: relative;
+    padding: 4rem 0;
+  }
+
+  /* Mobile/Tablet - User Research Insights gleiche Schriftgröße wie Key Findings */
+  @media (max-width: 1024px) {
+    .content-section:nth-child(7) .section-content {
+      font-size: 1rem;
+      line-height: 1.5;
+    }
+    
+    .content-section:nth-child(7) .stat-description {
+      font-size: 1rem;
+      line-height: 1.5;
+    }
+    
+    .content-section:nth-child(7) .stat-number {
+      font-size: 2.5rem;
+    }
+  }
+
+  @media (max-width: 768px) {
+    .content-section:nth-child(7) .section-content {
+      font-size: 1rem;
+      line-height: 1.5;
+    }
+    
+    .content-section:nth-child(7) .stat-description {
+      font-size: 1rem;
+      line-height: 1.5;
+    }
+    
+    .content-section:nth-child(7) .stat-number {
+      font-size: 2rem;
+    }
+    
+    /* Results und Analysis Section - komplett ohne padding/min-height auf mobile */
+    .content-section:nth-child(8),
+    .content-section:nth-child(9) {
+      min-height: auto;
+      padding: 0;
+      margin: 0;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .content-section:nth-child(7) .stat-number {
+      font-size: 1.8rem;
+    }
+    
+    .content-section:nth-child(7) .stat-description {
+      font-size: 0.9rem;
+    }
+  }
+
+  /* Key Findings Section - entferne min-height */
+  .content-section:nth-child(6) {
+    min-height: auto;
+    padding: 0;
+  }
+  
+  /* Results Section - entferne padding und min-height */
+  .content-section:nth-child(8) {
+    min-height: auto;
+    padding: 0;
+  }
+  .content-section:nth-child(9) {
+    min-height: auto;
+    padding: 0;
+  }
+
+  /* User Research Insights Section - mit Abstand */
+  .content-section:nth-child(7) {
+    min-height: auto;
+    padding-top: 3rem;
+    padding-bottom: 3rem;
+    margin-top: 2rem;
+    margin-bottom: 2rem;
+  }
+
+  .content-section:nth-child(7) .section-titles {
+    margin-bottom: 1rem;
+  }
+
+  .content-section:nth-child(7) .section-divider {
+    margin-bottom: 1.5rem;
+  }
+
+  /* Result Section - Bilder in normaler Größe */
+  .content-section:nth-child(8) :global(.image-block img) {
+    transform: scale(1.0);
+    transform-origin: center;
+  }
+
+  /* Analysis Section - Bild in voller Container-Breite wie video-section */
+  .content-section:nth-child(9) :global(.image-block img) {
+    width: 100%;
+    max-width: 100%;
+    height: auto;
+    transform: none;
+    transform-origin: center;
+  }
+
+  /* Results Section - Mobile Layout wie Global Migrants Features */
+  @media (max-width: 768px) {
+    .content-section:nth-child(8) .section-content .left-column,
+    .content-section:nth-child(8) .section-content .right-column {
+      width: 100%;
+      margin: 0;
+    }
+    
+    .content-section:nth-child(8) .section-content {
+      flex-direction: column;
+      gap: 60px;
+    }
+    
+    .content-section:nth-child(8) .section-content .left-column :global(.image-block),
+    .content-section:nth-child(8) .section-content .right-column :global(.image-block) {
+      width: 100%;
+      max-width: 100%;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .content-section:nth-child(8) .section-content {
+      gap: 40px;
+    }
+  }
+
+  /* Results Section - Bilder in normaler Größe */
+  .content-section:nth-child(8) :global(.image-block img) {
+    transform: scale(1.0);
+    transform-origin: center;
+  }
+
+  /* Results Section - letztes Bild bekommt Abstand zur Analysis Section */
+  .content-section:nth-child(8) .section-content .right-column:last-child :global(.image-block) {
+    margin-bottom: 4rem;
+  }
+  
+  .content-section:nth-child(8) .section-content .right-column:last-child :global(.image-block img) {
+    margin-bottom: 2rem;
+  }
+
+  /* Mobile Anpassung für letztes Result-Bild */
+  @media (max-width: 768px) {
+    .content-section:nth-child(8) .section-content .right-column:last-child :global(.image-block) {
+      margin-bottom: 3rem;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .content-section:nth-child(8) .section-content .right-column:last-child :global(.image-block) {
+      margin-bottom: 2rem;
+    }
+  }
+
+  /* Analysis Section - Container in voller Breite wie video-section */
+  .content-section:nth-child(9) .section-content .centered-column :global(.image-block) {
+    width: 100%;
+    max-width: 100%;
+    transform: none;
+    transform-origin: center;
+    margin: 3rem 0;
+  }
+  
+  .content-section:nth-child(9) .section-content .centered-column {
+    width: 100%;
+    max-width: 100%;
   }
 </style>

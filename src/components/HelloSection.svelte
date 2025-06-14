@@ -67,9 +67,11 @@
   
   function handleMouseMove(event: MouseEvent) {
     if (showCursorEffect) {
-      // Global positioning relative to viewport
-      cursorX = event.clientX;
-      cursorY = event.clientY;
+      // Use requestAnimationFrame for smoother performance
+      requestAnimationFrame(() => {
+        cursorX = event.clientX;
+        cursorY = event.clientY;
+      });
     }
   }
   
@@ -268,27 +270,27 @@
 
   .cursor-glow {
     position: absolute;
-    width: 200px;
-    height: 200px;
+    width: 120px;
+    height: 120px;
     pointer-events: none;
     transform: translate(-50%, -50%);
     background: linear-gradient(
       135deg,
-      rgba(220, 220, 220, 0.3) 0%,
-      rgba(200, 200, 200, 0.2) 50%,
-      rgba(180, 180, 180, 0.1) 100%
+      rgba(255, 255, 255, 0.15) 0%,
+      rgba(255, 255, 255, 0.08) 50%,
+      rgba(255, 255, 255, 0.04) 100%
     );
-    backdrop-filter: blur(15px);
-    -webkit-backdrop-filter: blur(15px);
-    border: 1px solid rgba(150, 150, 150, 0.4);
+    backdrop-filter: blur(8px);
+    -webkit-backdrop-filter: blur(8px);
+    border: 1px solid rgba(255, 255, 255, 0.2);
     border-radius: 50%;
     box-shadow: 
-      0 6px 20px rgba(0, 0, 0, 0.08),
-      inset 0 2px 0 rgba(255, 255, 255, 0.5),
-      inset 0 -2px 0 rgba(0, 0, 0, 0.08);
-    transition: all 0.1s ease-out;
+      0 4px 15px rgba(0, 0, 0, 0.05),
+      inset 0 1px 0 rgba(255, 255, 255, 0.3);
     z-index: 100;
-    opacity: 0.9;
+    opacity: 0.8;
+    will-change: transform;
+    transform: translate3d(-50%, -50%, 0);
   }
 
   /* Global Cursor positioning */
@@ -321,7 +323,7 @@
   /* Smooth Cursor Movement auf modernen Browsern */
   @media (prefers-reduced-motion: no-preference) {
     .cursor-glow {
-      transition: all 0.06s ease-out;
+      transition: none;
     }
   }
 
