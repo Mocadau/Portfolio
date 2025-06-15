@@ -8,13 +8,13 @@
   import NextProjectNavigation from '../components/NextProjectNavigation.svelte';
   
   // Bild-Importe
-  import Bild1 from '../assets/alignspace/intro.png';
-  import Bild2 from '../assets/alignspace/process1.png';
-  import Bild3 from '../assets/alignspace/designSystem.png';
-  import Bild4 from '../assets/alignspace/overview.png';
-  import Bild5 from '../assets/alignspace/booking.png';
-  import Bild6 from '../assets/alignspace/communication.png';
-  import Bild7 from '../assets/alignspace/service.png';
+  import Bild1 from '../assets/Alignspace/intro.png';
+  import Bild2 from '../assets/Alignspace/process1.png';
+  import Bild3 from '../assets/Alignspace/designSystem.png';
+  import Bild4 from '../assets/Alignspace/overview.png';
+  import Bild5 from '../assets/Alignspace/booking.png';
+  import Bild6 from '../assets/Alignspace/communication.png';
+  import Bild7 from '../assets/Alignspace/service.png';
 </script>
 
 <div class="page-container">
