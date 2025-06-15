@@ -115,7 +115,7 @@
     ></div>
   {/if}
 
-  <div class="w-full md:w-auto flex justify-start mt-8 sm:mt-12 md:mt-32 min-h-[350px] scale-75 md:scale-100 origin-top-center md:mx-auto px-4">
+  <div class="w-full md:w-auto flex justify-start mt-2 sm:mt-4 md:mt-32 min-h-[350px] scale-75 md:scale-100 origin-top-center md:mx-auto px-4">
     <div class="px-2 md:px-6 ml-0 max-w-[90%] md:max-w-none text-left">
       
       <!-- HELLO als getippter Text oder statischer Text -->
