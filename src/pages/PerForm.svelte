@@ -739,6 +739,11 @@
 
     .title {
       padding-top: 80px;
+      font-size: 2.5rem; /* Anpassung an andere Projekte */
+    }
+
+    .section-titles h2 {
+      font-size: 2.5rem; /* Gleiche Größe wie Alignspace und Migrants */
     }
 
     .section-content {
@@ -797,6 +802,14 @@
 
     .meta-content {
       gap: 0.5rem;
+    }
+
+    .title {
+      font-size: 2rem; /* Weitere Reduzierung für sehr kleine Bildschirme */
+    }
+
+    .section-titles h2 {
+      font-size: 2rem; /* Konsistent mit anderen Projekten */
     }
 
     .meta-content p {
