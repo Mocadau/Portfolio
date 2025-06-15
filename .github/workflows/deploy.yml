@@ -20,32 +20,33 @@ jobs:
     steps:
       - name: Checkout
         uses: actions/checkout@v4
-           - name: Setup Node.js
-      uses: actions/setup-node@v4
-      with:
-        node-version: '18'
-        cache: 'npm'
         
-    - name: Setup Pages
-      uses: actions/configure-pages@v4
-      
-    - name: Install dependencies
-      run: npm ci
-      
-    - name: Build
-      run: npm run build
-      
-    - name: Fix MIME type issue
-      run: |
-        # Remove type="module" to fix GitHub Pages MIME type issue
-        sed -i 's/type="module" crossorigin//g' dist/index.html
-        # Add .nojekyll file
-        touch dist/.nojekyll
-      
-    - name: Upload artifact
-      uses: actions/upload-pages-artifact@v3
-      with:
-        path: 'dist'
+      - name: Setup Node.js
+        uses: actions/setup-node@v4
+        with:
+          node-version: '18'
+          cache: 'npm'
+          
+      - name: Setup Pages
+        uses: actions/configure-pages@v4
+        
+      - name: Install dependencies
+        run: npm ci
+        
+      - name: Build
+        run: npm run build
+        
+      - name: Fix MIME type issue
+        run: |
+          # Remove type="module" to fix GitHub Pages MIME type issue
+          sed -i 's/type="module" crossorigin//g' dist/index.html
+          # Add .nojekyll file
+          touch dist/.nojekyll
+        
+      - name: Upload artifact
+        uses: actions/upload-pages-artifact@v3
+        with:
+          path: 'dist'
 
   deploy:
     environment:
