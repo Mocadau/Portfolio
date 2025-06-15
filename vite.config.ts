@@ -5,7 +5,7 @@ import path from 'path'
 // https://vite.dev/config/
 export default defineConfig({
   plugins: [svelte()],
-  base: './', // Wichtig für GitHub Pages
+  base: '/', // Root-Pfad für Custom Domain
   resolve: {
     alias: {
       '@': path.resolve(__dirname, './src')
