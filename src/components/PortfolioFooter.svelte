@@ -37,7 +37,7 @@
       class="footer-link mobile-link" 
       on:click={handleEmail}
     >
-      E-Mail
+      Email
     </button>
     
     <button 
@@ -58,12 +58,12 @@
       Imprint
     </button>
     
-    <!-- Oben rechts: E-Mail -->
+    <!-- Oben rechts: Email -->
     <button 
       class="footer-link top-right desktop-link" 
       on:click={handleEmail}
     >
-      E-Mail
+      Email
     </button>
     
     <!-- Unten rechts: LinkedIn -->
@@ -88,16 +88,19 @@
     z-index: 1000;
   }
 
-  /* Mobile Footer Container - horizontal rechts */
+  /* Mobile Footer Container - zentriert horizontal */
   .mobile-footer-container {
     display: none; /* Standardmäßig versteckt */
     position: absolute;
     bottom: 220px; /* Deutlich höher positioniert */
-    right: 20px; /* Rechts positioniert */
+    left: 50%; /* Zentriert horizontal */
+    transform: translateX(-50%); /* Perfekt zentriert */
     display: flex;
     flex-direction: row; /* Horizontal nebeneinander */
-    gap: 1.5rem; /* Gleichmäßiger Abstand zwischen den Links */
+    gap: 2rem; /* Gleichmäßiger Abstand zwischen den Links */
     pointer-events: auto;
+    justify-content: center; /* Zusätzliche Zentrierung */
+    align-items: center;
   }
 
   /* Desktop Footer Container */
@@ -195,13 +198,12 @@
   @media (max-width: 768px) {
     .mobile-footer-container {
       bottom: 200px; /* Noch höher für Tablets */
-      right: 20px;
-      gap: 1.2rem;
+      gap: 1.8rem; /* Etwas größerer Abstand für Tablets */
     }
     
     .mobile-link {
       font-size: 13px;
-      padding: 6px 10px;
+      padding: 6px 12px;
     }
   }
 
@@ -209,13 +211,12 @@
   @media (max-width: 480px) {
     .mobile-footer-container {
       bottom: 180px; /* Hoch positioniert für mobile Phones */
-      right: 15px;
-      gap: 1rem;
+      gap: 1.5rem; /* Angepasster Abstand für kleinere Screens */
     }
     
     .mobile-link {
       font-size: 12px;
-      padding: 5px 8px;
+      padding: 5px 10px;
       font-weight: 600;
     }
   }
@@ -224,13 +225,12 @@
   @media (max-width: 375px) {
     .mobile-footer-container {
       bottom: 160px; /* Hoch positioniert für sehr kleine Screens */
-      right: 10px;
-      gap: 0.8rem;
+      gap: 1.2rem; /* Kleinerer Abstand für sehr kleine Screens */
     }
     
     .mobile-link {
       font-size: 11px;
-      padding: 4px 6px;
+      padding: 4px 8px;
     }
   }
 

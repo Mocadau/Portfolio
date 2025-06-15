@@ -31,6 +31,7 @@
   // Email overlay state
   let showEmailOverlay = false;
   let emailCopied = false;
+  let cameraPosition = { x: 0, y: 0 };
   
   // Mouse tracking for walking figure eyes
   let mouseX = 0;
@@ -223,12 +224,29 @@
     showEmailOverlay = true;
     emailCopied = false;
     
+    // Für Mobile: Finde die Kameraposition
+    if (isMobile) {
+      updateCameraPosition();
+    }
+    
     // Auto-hide after 5 seconds if not copied
     setTimeout(() => {
       if (showEmailOverlay && !emailCopied) {
         hideEmailOverlay();
       }
     }, 5000);
+  }
+
+  function updateCameraPosition() {
+    // Suche die Kamera in der MoreSection
+    const cameraElement = document.querySelector('.camera-wrapper img[src*="polaroid-camera"]') as HTMLElement;
+    if (cameraElement) {
+      const rect = cameraElement.getBoundingClientRect();
+      cameraPosition = {
+        x: rect.left + rect.width / 2,
+        y: rect.top + rect.height / 2
+      };
+    }
   }
 
   // Export function for external access
@@ -415,7 +433,7 @@
     if (!scrollContainer) return;
     
     // Ermittle die Scrollrichtung
-    isMovingBackward = scrollPos < lastScrollPosition;
+    const scrollDirection = scrollPos < lastScrollPosition ? 'backward' : 'forward';
     lastScrollPosition = scrollPos;
     
     scrollPosition = scrollPos;
@@ -433,6 +451,18 @@
       newSection = "more";
     } else {
       newSection = "works";
+    }
+    
+    // Walking figure Richtungslogik:
+    // 1. Umdrehen wenn rückwärts scrollt
+    // 2. Automatisch umgedreht wenn auf "More" Seite
+    // 3. Normal ausgerichtet wenn vorwärts scrollt und nicht auf "More" Seite
+    if (scrollDirection === 'backward') {
+      isMovingBackward = true;
+    } else if (newSection === 'more') {
+      isMovingBackward = true; // Automatisch umgedreht am Ende
+    } else {
+      isMovingBackward = false; // Normal ausgerichtet für vorwärts scrollen
     }
     
     if (newSection !== currentSection) {
@@ -539,7 +569,7 @@
     </div>
   {/if}
 
-  <!-- Email Overlay above Walking Figure -->
+  <!-- Email Overlay above Walking Figure (Desktop) -->
   {#if showEmailOverlay && walkingFigureVisible && !isMobile}
     <div class="email-overlay-backdrop" 
          on:click={hideEmailOverlay}
@@ -562,6 +592,29 @@
         </div>
         <!-- Arrow pointing to walking figure -->
         <div class="email-arrow"></div>
+      </div>
+    </div>
+  {/if}
+
+  <!-- Email Overlay at Camera Position (Mobile) -->
+  {#if showEmailOverlay && isMobile && currentSection === 'more'}
+    <div class="email-overlay-backdrop-mobile" 
+         on:click={hideEmailOverlay}
+         on:keydown={(e) => e.key === 'Escape' && hideEmailOverlay()}
+         role="button"
+         tabindex="-1"
+         aria-label="Close email overlay"></div>
+    <div class="email-overlay-mobile" 
+         style="left: {cameraPosition.x}px; top: {cameraPosition.y}px;">
+      <div class="email-container-mobile" on:click|stopPropagation>
+        <div class="email-address-mobile" 
+             on:click={copyEmail} 
+             on:keydown={(e) => e.key === 'Enter' && copyEmail()}
+             role="button" 
+             tabindex="0"
+             class:copied={emailCopied}>
+          {emailCopied ? 'Copied!' : 'maurice.cadau@hfg-gmuend.de'}
+        </div>
       </div>
     </div>
   {/if}
@@ -690,14 +743,14 @@
   }
   
   .left-eye {
-    top: 16%;
-    left: 47.5%;
+    top: 15%;
+    left: 47.5%; /* Zurück zur ursprünglichen Position */
     transform-origin: center;
   }
   
   .right-eye {
-    top: 16%;
-    left: 52.5%;
+    top: 15%;
+    left: 52.5%; /* Zurück zur ursprünglichen Position */
     transform-origin: center;
   }
   
@@ -714,23 +767,34 @@
     }
     
     .left-eye {
-      top: 13%;
-      left: 47.5%;
+      top: 12%;
+      left: 47.5%; /* Zurück zur ursprünglichen mobilen Position */
     }
     
     .right-eye {
-      top: 13%;
-      left: 52.5%;
+      top: 12%;
+      left: 52.5%; /* Zurück zur ursprünglichen mobilen Position */
     }
   }
   
-  /* Direction-specific eye adjustments */
+  /* Direction-specific eye adjustments für moving-backward */
   .walking-figure.moving-backward .left-eye {
-    left: 53%;
+    left: 48%; /* Ein paar Pixel weiter nach links */
   }
   
   .walking-figure.moving-backward .right-eye {
-    left: 47%;
+    left: 42%; /* Ein paar Pixel weiter nach links */
+  }
+  
+  /* Mobile moving-backward adjustments */
+  @media (max-width: 768px) {
+    .walking-figure.moving-backward .left-eye {
+      left: 48%; /* Ein paar Pixel weiter nach links für mobile */
+    }
+    
+    .walking-figure.moving-backward .right-eye {
+      left: 42%; /* Ein paar Pixel weiter nach links für mobile */
+    }
   }
   
   .scroll-hint {
@@ -873,6 +937,110 @@
     
     .email-address {
       font-size: 12px;
+    }
+  }
+
+  /* Mobile Email Overlay Styles */
+  .email-overlay-backdrop-mobile {
+    position: fixed;
+    top: 0;
+    left: 0;
+    width: 100vw;
+    height: 100vh;
+    z-index: 89;
+    background: transparent;
+    cursor: pointer;
+  }
+
+  .email-overlay-mobile {
+    position: fixed;
+    left: calc(50% + 70px); /* Rechts von der Kamera */
+    top: 15%; /* Höhe der Kamera */
+    z-index: 90;
+    pointer-events: auto;
+    transform: translateY(-50%);
+    animation: fadeInScale 0.3s ease-out forwards;
+  }
+
+  .email-container-mobile {
+    background: rgba(255, 255, 255, 0.95);
+    border: 1px solid #ddd;
+    border-radius: 6px;
+    padding: 6px 10px;
+    box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
+    backdrop-filter: blur(10px);
+    text-align: center;
+    min-width: auto;
+    max-width: auto;
+    white-space: nowrap;
+  }
+
+  .email-address-mobile {
+    font-family: var(--font-family);
+    font-size: 11px;
+    font-weight: 500;
+    color: #333;
+    cursor: pointer;
+    padding: 2px 4px;
+    border-radius: 4px;
+    transition: all 0.2s ease;
+    line-height: 1.2;
+    display: block;
+  }
+
+  .email-address-mobile:hover {
+    background: rgba(0, 0, 0, 0.05);
+    transform: scale(1.05);
+  }
+
+  .email-address-mobile.copied {
+    background: #10b981;
+    color: white;
+    transform: scale(1.08);
+  }
+
+  /* Anpassungen für verschiedene mobile Bildschirmgrößen */
+  @media (max-width: 480px) {
+    .email-overlay-mobile {
+      left: calc(50% + 50px); /* Näher zur Kamera auf kleinen Bildschirmen */
+    }
+    
+    .email-address-mobile {
+      font-size: 10px;
+    }
+  }
+
+  @media (max-width: 360px) {
+    .email-overlay-mobile {
+      left: calc(50% + 40px); /* Noch näher auf sehr kleinen Bildschirmen */
+    }
+    
+    .email-address-mobile {
+      font-size: 9px;
+    }
+  }
+
+  @keyframes fadeInScale {
+    0% {
+      opacity: 0;
+      transform: translate(-50%, -50%) scale(0.8);
+    }
+    100% {
+      opacity: 1;
+      transform: translate(-50%, -50%) scale(1);
+    }
+  }
+
+  @media (max-width: 480px) {
+    .email-container-mobile {
+      padding: 14px 18px;
+      min-width: 240px;
+      max-width: 85vw;
+    }
+    
+    .email-address-mobile {
+      font-size: 14px;
+      padding: 6px 10px;
     }
   }
 

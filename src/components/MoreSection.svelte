@@ -252,7 +252,9 @@
           <div class="w-full h-full pointer-events-none relative">
             <!-- Kamera am oberen Bereich -->
             <div class="camera-wrapper">
-              <div class="camera-container flex flex-col items-center" class:processing={$isProcessing}>
+              <div class="camera-container flex flex-col items-center" 
+                   class:processing={$isProcessing}
+                   class:camera-disabled={isComplete}>
                 <!-- Klickbarer Kamera-Button -->
                 <button
                   type="button"
@@ -403,8 +405,10 @@
     .text-section {
       padding-top: calc(1rem + 120px); /* Weiter nach unten */
       padding-left: 0rem !important; /* Ganz nach links */
-      padding-right: 1.5rem; /* Mehr Abstand nach rechts */
+      padding-right: 3rem !important; /* Container breiter nach rechts */
       padding-bottom: 3rem; /* Mehr Abstand nach unten */
+      width: calc(100% + 1rem); /* Container breiter machen */
+      margin-left: -0.5rem; /* Leicht nach links verschieben */
     }
   }
 
@@ -413,8 +417,10 @@
       padding: 0rem !important; /* Ganz nach links */
       padding-top: calc(0.75rem + 160px) !important; /* Noch weiter nach unten */
       padding-left: 0rem !important;
-      padding-right: 1.25rem !important; /* Ausreichend Abstand nach rechts */
+      padding-right: 2.5rem !important; /* Container noch breiter nach rechts */
       padding-bottom: 2.5rem !important; /* Mehr Abstand nach unten */
+      width: calc(100% + 1.5rem); /* Container noch breiter machen */
+      margin-left: -0.75rem; /* Weiter nach links verschieben */
     }
   }
 
@@ -583,6 +589,17 @@
     animation: shake 0.8s cubic-bezier(.36,.07,.19,.97) infinite;
   }
 
+  /* Stoppe alle Animationen wenn die Kamera deaktiviert ist (isComplete) */
+  .camera-container.camera-disabled,
+  .camera-container.camera-disabled:hover,
+  .camera-container.camera-disabled.processing {
+    animation: none !important;
+  }
+
+  .camera-container.camera-disabled .camera-image {
+    animation: none !important;
+  }
+
   @keyframes gentle-wobble {
     0%, 100% {
       transform: scale(0.98) rotate(0deg);
@@ -666,7 +683,7 @@
   .photos-container {
     position: absolute;
     left: 50%;
-    top: calc(1rem + 110px);
+    top: calc(1rem + 120px); /* Deutlich mehr Abstand zur Kamera */
     transform: translateX(-50%);
     width: min(450px, 85vw) !important;
     height: 75vh !important;
@@ -681,7 +698,7 @@
   @media (max-width: 1024px) {
     .photos-container {
       left: 50%;
-      top: calc(1rem + 100px);
+      top: calc(1rem + 110px); /* Mehr Abstand zur Kamera auf Tablets */
       width: min(400px, 80vw) !important;
       height: 70vh !important;
       margin: 0 auto;
@@ -692,7 +709,7 @@
   @media (max-width: 768px) {
     .photos-container {
       left: 50%;
-      top: calc(0.75rem + 80px);
+      top: calc(0.75rem + 100px); /* Deutlich mehr Abstand zur Kamera auf mobilen Geräten */
       width: min(350px, 78vw) !important;
       height: 68vh !important;
       margin: 0 auto;
@@ -703,7 +720,7 @@
   @media (max-width: 480px) {
     .photos-container {
       left: 50%;
-      top: calc(0.5rem + 120px);
+      top: calc(0.75rem + 110px); /* Mehr Abstand für kleine mobile Geräte */
       width: min(320px, 75vw) !important;
       height: 65vh !important;
       margin: 0 auto;
@@ -767,10 +784,10 @@
   @media (max-width: 768px) {
     .photo-position.selected {
       position: fixed;
-      left: 20px;
+      left: 10px; /* Weiter nach links verschoben */
       top: auto;
       right: auto;
-      bottom: 80px;
+      bottom: 60px; /* Weiter nach unten verschoben */
       transform: none;
       width: auto;
       height: auto;
@@ -874,6 +891,16 @@
     z-index: 10000;
   }
 
+  /* iPad-spezifische Anpassungen (768px - 1024px) */
+  @media (min-width: 769px) and (max-width: 1024px) {
+    .photo-position.selected .photo-container {
+      width: 380px !important; /* Kleiner für iPad */
+      height: 460px !important; /* Proportional kleiner */
+      transform: translate(120px, 30px) !important; /* Noch weiter nach oben verschoben */
+      box-shadow: 0 6px 20px rgba(0, 0, 0, 0.18);
+    }
+  }
+
   .photo-position.selected .photo-wrapper {
     width: 100% !important;
     height: 100% !important;
@@ -891,7 +918,7 @@
     .photo-position.selected .photo-container {
       width: 280px !important; /* Vergrößerte mobile Polaroid-Größe */
       height: 340px !important;
-      transform: translate(160px, 60px) !important; /* Angepasste Position für Mobile - noch weiter rechts */
+      transform: translate(140px, 80px) !important; /* Nach links und unten verschoben */
       box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
     }
   }
@@ -900,7 +927,7 @@
     .photo-position.selected .photo-container {
       width: 220px !important; /* Vergrößert für sehr kleine Bildschirme */
       height: 260px !important;
-      transform: translate(120px, 40px) !important; /* Angepasste Position für kleine Bildschirme - noch weiter rechts */
+      transform: translate(100px, 60px) !important; /* Nach links und unten verschoben für kleine Bildschirme */
       box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
     }
   }
@@ -1144,9 +1171,12 @@
     }
     
     .text-section {
-      padding: 1rem 0.75rem;
+      padding: 1rem 0rem; /* Links kein Padding, rechts mehr Platz */
       margin-top: 0;
       padding-top: calc(0.5rem + 60px) !important;
+      padding-right: 2.5rem !important; /* Mehr Platz nach rechts */
+      width: calc(100% + 1rem); /* Breiter machen */
+      margin-left: -0.5rem; /* Nach links verschieben */
     }
     
     .text-content h2 {
@@ -1163,6 +1193,9 @@
   @media (max-width: 480px) {
     .text-section {
       padding-top: calc(0.5rem + 100px) !important;
+      padding-right: 2rem !important; /* Noch mehr Platz nach rechts */
+      width: calc(100% + 1.5rem); /* Noch breiter machen */
+      margin-left: -0.75rem; /* Weiter nach links verschieben */
     }
   }
 
