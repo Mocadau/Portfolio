@@ -954,34 +954,36 @@
 
   .email-overlay-mobile {
     position: fixed;
-    left: calc(50% + 70px); /* Rechts von der Kamera */
-    top: 15%; /* Höhe der Kamera */
+    left: 50%; /* Zentriert wie der Footer */
+    bottom: 260px; /* Direkt über dem Footer */
     z-index: 90;
     pointer-events: auto;
-    transform: translateY(-50%);
+    transform: translateX(-50%); /* Zentriert */
     animation: fadeInScale 0.3s ease-out forwards;
   }
 
   .email-container-mobile {
     background: rgba(255, 255, 255, 0.95);
     border: 1px solid #ddd;
-    border-radius: 6px;
-    padding: 6px 10px;
+    border-radius: 4px;
+    padding: 8px 12px;
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
     backdrop-filter: blur(10px);
     text-align: center;
-    min-width: auto;
-    max-width: auto;
+    /* Gleiche Breite wie der mobile Footer Container */
+    width: calc(3 * (8px + 12px + 12px) + 2 * 2rem + 2rem); /* 3 Buttons + gaps + padding */
+    min-width: 200px;
+    max-width: 90vw;
     white-space: nowrap;
   }
 
   .email-address-mobile {
     font-family: var(--font-family);
-    font-size: 11px;
+    font-size: 14px;
     font-weight: 500;
     color: #333;
     cursor: pointer;
-    padding: 2px 4px;
+    padding: 4px 8px;
     border-radius: 4px;
     transition: all 0.2s ease;
     line-height: 1.2;
@@ -990,33 +992,45 @@
 
   .email-address-mobile:hover {
     background: rgba(0, 0, 0, 0.05);
-    transform: scale(1.05);
+    transform: scale(1.02);
   }
 
   .email-address-mobile.copied {
     background: #10b981;
     color: white;
-    transform: scale(1.08);
+    transform: scale(1.05);
   }
 
   /* Anpassungen für verschiedene mobile Bildschirmgrößen */
+  @media (max-width: 768px) {
+    .email-overlay-mobile {
+      bottom: 240px; /* Angepasst für Tablets */
+    }
+  }
+
   @media (max-width: 480px) {
     .email-overlay-mobile {
-      left: calc(50% + 50px); /* Näher zur Kamera auf kleinen Bildschirmen */
+      bottom: 220px; /* Angepasst für kleine mobile Geräte */
+    }
+    
+    .email-container-mobile {
+      width: calc(100vw - 4rem); /* Volle Breite minus Margins */
+      max-width: 300px;
     }
     
     .email-address-mobile {
-      font-size: 10px;
+      font-size: 13px;
     }
   }
 
   @media (max-width: 360px) {
-    .email-overlay-mobile {
-      left: calc(50% + 40px); /* Noch näher auf sehr kleinen Bildschirmen */
+    .email-container-mobile {
+      width: calc(100vw - 2rem);
+      max-width: 280px;
     }
     
     .email-address-mobile {
-      font-size: 9px;
+      font-size: 12px;
     }
   }
 
