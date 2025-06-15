@@ -87,6 +87,31 @@
     font-family: var(--font-family);
   }
 
+  /* Mobile responsive adjustments */
+  @media (max-width: 768px) {
+    .navigation {
+      top: 0.75rem; /* Höher positioniert für mobile */
+      left: 1rem;
+      gap: 1rem;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .navigation {
+      top: 0.5rem; /* Noch höher für kleine mobile Geräte */
+      left: 0.75rem;
+      gap: 0.8rem;
+    }
+  }
+
+  @media (max-width: 375px) {
+    .navigation {
+      top: 0.4rem; /* Maximale Höhe für sehr kleine Screens */
+      left: 0.5rem;
+      gap: 0.6rem;
+    }
+  }
+
   .nav-item {
     padding: 0.25rem 0.5rem;
     cursor: pointer;
@@ -102,6 +127,29 @@
     letter-spacing: 0.05em;
     margin-bottom: 4px;
     display: inline-block;
+  }
+
+  /* Mobile responsive text adjustments */
+  @media (max-width: 768px) {
+    .nav-item {
+      font-size: 0.8rem;
+      padding: 0.2rem 0.4rem;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .nav-item {
+      font-size: 0.75rem;
+      padding: 0.15rem 0.3rem;
+      letter-spacing: 0.03em;
+    }
+  }
+
+  @media (max-width: 375px) {
+    .nav-item {
+      font-size: 0.7rem;
+      padding: 0.1rem 0.25rem;
+    }
   }
 
   .nav-item:hover {

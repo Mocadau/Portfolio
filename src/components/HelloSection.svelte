@@ -13,6 +13,17 @@
   let sectionElement: HTMLElement;
   let globalMouseHandler: ((event: MouseEvent) => void) | null = null;
   
+  // Mobile peek effect variables
+  let showMobilePeek = false;
+  let peekX = 0;
+  let peekY = 0;
+  let touchHandler: ((event: TouchEvent) => void) | null = null;
+  let isMobile = false;
+  
+  // Scroll indicator variables
+  let showScrollIndicator = false;
+  let scrollIndicatorTimeout: NodeJS.Timeout;
+  
   function handleHelloComplete() {
     helloComplete = true;
     
@@ -28,8 +39,16 @@
     
     // Aktiviere Cursor-Effekt nach einer kurzen Verzögerung
     setTimeout(() => {
-      showCursorEffect = true;
-      setupGlobalMouseHandler();
+      if (isMobile) {
+        showMobilePeek = true;
+        setupMobileTouchHandler();
+        // Zeige Scroll-Indicator für mobile Geräte
+        showScrollIndicator = true;
+        startScrollIndicatorTimer();
+      } else {
+        showCursorEffect = true;
+        setupGlobalMouseHandler();
+      }
     }, 1000);
   }
 
@@ -53,15 +72,78 @@
     showCursorEffect = false;
   }
 
+  function setupMobileTouchHandler() {
+    if (touchHandler) {
+      document.removeEventListener('touchmove', touchHandler);
+      document.removeEventListener('touchstart', touchHandler);
+    }
+    
+    touchHandler = (event: TouchEvent) => {
+      handleTouchMove(event);
+    };
+    
+    document.addEventListener('touchmove', touchHandler, { passive: true });
+    document.addEventListener('touchstart', touchHandler, { passive: true });
+  }
+
+  function removeMobileTouchHandler() {
+    if (touchHandler) {
+      document.removeEventListener('touchmove', touchHandler);
+      document.removeEventListener('touchstart', touchHandler);
+      touchHandler = null;
+    }
+    showMobilePeek = false;
+  }
+
+  function handleTouchMove(event: TouchEvent) {
+    if (showMobilePeek && event.touches.length > 0) {
+      const touch = event.touches[0];
+      requestAnimationFrame(() => {
+        peekX = touch.clientX;
+        peekY = touch.clientY;
+      });
+    }
+  }
+
+  function startScrollIndicatorTimer() {
+    // Zeige Scroll-Indicator für 4 Sekunden
+    scrollIndicatorTimeout = setTimeout(() => {
+      showScrollIndicator = false;
+    }, 4000);
+    
+    // Verstecke Indicator beim Scrollen
+    const handleScroll = () => {
+      hideScrollIndicator();
+      window.removeEventListener('scroll', handleScroll);
+    };
+    
+    window.addEventListener('scroll', handleScroll, { passive: true });
+  }
+
+  function hideScrollIndicator() {
+    showScrollIndicator = false;
+    if (scrollIndicatorTimeout) {
+      clearTimeout(scrollIndicatorTimeout);
+    }
+  }
+
   // Export function to be called by parent component
   export function disableCursorEffect() {
     removeGlobalMouseHandler();
+    removeMobileTouchHandler();
   }
 
   export function enableCursorEffect() {
     if (isTypingComplete) {
-      showCursorEffect = true;
-      setupGlobalMouseHandler();
+      if (isMobile) {
+        showMobilePeek = true;
+        setupMobileTouchHandler();
+        showScrollIndicator = true;
+        startScrollIndicatorTimer();
+      } else {
+        showCursorEffect = true;
+        setupGlobalMouseHandler();
+      }
     }
   }
   
@@ -76,6 +158,9 @@
   }
   
   onMount(() => {
+    // Check if device is mobile
+    isMobile = window.innerWidth <= 768 || 'ontouchstart' in window;
+    
     // Check if animation has been seen in this session
     try {
       skipAnimation = sessionStorage.getItem('hasSeenAnimation') === 'true';
@@ -84,11 +169,23 @@
         helloComplete = true;
         showRestContent = true;
         isTypingComplete = true;
-        showCursorEffect = true;
+        
+        if (isMobile) {
+          showMobilePeek = true;
+          showScrollIndicator = true;
+        } else {
+          showCursorEffect = true;
+        }
+        
         // Dispatch complete immediately for skip case
         setTimeout(() => {
           dispatch('complete');
-          setupGlobalMouseHandler();
+          if (isMobile) {
+            setupMobileTouchHandler();
+            startScrollIndicatorTimer();
+          } else {
+            setupGlobalMouseHandler();
+          }
         }, 100);
       }
     } catch (e) {
@@ -98,6 +195,13 @@
     return () => {
       if (globalMouseHandler) {
         document.removeEventListener('mousemove', globalMouseHandler);
+      }
+      if (touchHandler) {
+        document.removeEventListener('touchmove', touchHandler);
+        document.removeEventListener('touchstart', touchHandler);
+      }
+      if (scrollIndicatorTimeout) {
+        clearTimeout(scrollIndicatorTimeout);
       }
     };
   });
@@ -113,6 +217,34 @@
       class="cursor-glow global-cursor" 
       style="left: {cursorX}px; top: {cursorY}px;"
     ></div>
+  {/if}
+
+  <!-- Mobile Peek-Effekt -->
+  {#if showMobilePeek}
+    <div 
+      class="mobile-peek-effect" 
+      style="left: {peekX}px; top: {peekY}px;"
+    ></div>
+  {/if}
+
+  <!-- Mobile Swipe Indicator -->
+  {#if showScrollIndicator && isMobile}
+    <div 
+      class="swipe-indicator" 
+      role="button" 
+      tabindex="0"
+      aria-label="Hide swipe indicator"
+      on:click={hideScrollIndicator} 
+      on:keydown={(e) => e.key === 'Enter' && hideScrollIndicator()}
+    >
+      <div class="swipe-animation">
+        <div class="swipe-icon">
+          <div class="swipe-line"></div>
+          <div class="swipe-arrow"></div>
+        </div>
+        <div class="swipe-text hand-drawn-text">SWIPE</div>
+      </div>
+    </div>
   {/if}
 
   <div class="w-full md:w-auto flex justify-center md:justify-start items-center h-screen md:mt-32 min-h-[350px] scale-75 md:scale-100 origin-center md:mx-auto px-4 md:px-4">
@@ -191,9 +323,9 @@
                 <div class="absolute -bottom-1 left-0 w-0 h-[3px] bg-blue-500 animate-underline md-only"></div>
               {/if}
             </a>
-            <span class="inline-block">
+            <span class="inline-block whitespace-nowrap">
               {#if skipAnimation}
-                &nbsp;
+                &nbsp;&
               {:else}
                 <TypingAnimation 
                   text=" "
@@ -201,12 +333,6 @@
                   delayStart={1900}
                   underline={false}
                 />
-              {/if}
-            </span>
-            <span class="inline-block">
-              {#if skipAnimation}
-                &
-              {:else}
                 <TypingAnimation 
                   text="&" 
                   speed={50} 
@@ -320,6 +446,174 @@
     }
   }
 
+  /* Mobile Peek-Effekt */
+  .mobile-peek-effect {
+    position: fixed;
+    width: 80px;
+    height: 80px;
+    pointer-events: none;
+    transform: translate(-50%, -50%);
+    background: radial-gradient(
+      circle,
+      rgba(59, 130, 246, 0.3) 0%,
+      rgba(59, 130, 246, 0.15) 40%,
+      rgba(59, 130, 246, 0.05) 70%,
+      transparent 100%
+    );
+    border-radius: 50%;
+    z-index: 100;
+    opacity: 0.8;
+    will-change: transform;
+    transform: translate3d(-50%, -50%, 0);
+    animation: mobile-peek-pulse 2s ease-in-out infinite;
+  }
+
+  @keyframes mobile-peek-pulse {
+    0%, 100% {
+      transform: translate3d(-50%, -50%, 0) scale(1);
+      opacity: 0.8;
+    }
+    50% {
+      transform: translate3d(-50%, -50%, 0) scale(1.2);
+      opacity: 0.4;
+    }
+  }
+
+  /* Mobile Peek-Effekt nur auf mobilen Geräten anzeigen */
+  @media (min-width: 769px) {
+    .mobile-peek-effect {
+      display: none;
+    }
+  }
+
+  /* Swipe Indicator Styles */
+  .swipe-indicator {
+    position: fixed;
+    bottom: 40px;
+    left: 50%;
+    transform: translateX(-50%);
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    z-index: 150;
+    animation: swipe-indicator-fade-in 0.5s ease-out forwards;
+    cursor: pointer;
+    padding: 12px 20px;
+    border-radius: 20px;
+    background: rgba(255, 255, 255, 0.9);
+    backdrop-filter: blur(15px);
+    -webkit-backdrop-filter: blur(15px);
+    border: 2px solid rgba(0, 0, 0, 0.1);
+    box-shadow: 0 8px 25px rgba(0, 0, 0, 0.1);
+  }
+
+  .swipe-animation {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 8px;
+  }
+
+  .swipe-icon {
+    position: relative;
+    width: 40px;
+    height: 20px;
+    margin-bottom: 4px;
+  }
+
+  .swipe-line {
+    position: absolute;
+    top: 50%;
+    left: 0;
+    width: 30px;
+    height: 2px;
+    background: #000;
+    transform: translateY(-50%);
+    border-radius: 2px;
+    animation: swipe-line-slide 2s ease-in-out infinite;
+  }
+
+  .swipe-arrow {
+    position: absolute;
+    top: 50%;
+    right: 0;
+    width: 0;
+    height: 0;
+    border-left: 6px solid #000;
+    border-top: 4px solid transparent;
+    border-bottom: 4px solid transparent;
+    transform: translateY(-50%);
+    animation: swipe-arrow-pulse 2s ease-in-out infinite;
+  }
+
+  .swipe-text {
+    font-size: 14px;
+    font-weight: bold;
+    color: #000;
+    letter-spacing: 1px;
+    text-align: center;
+    margin: 0;
+  }
+
+  @keyframes swipe-line-slide {
+    0%, 20% {
+      transform: translateY(-50%) translateX(0);
+      opacity: 1;
+    }
+    50%, 70% {
+      transform: translateY(-50%) translateX(10px);
+      opacity: 0.7;
+    }
+    100% {
+      transform: translateY(-50%) translateX(0);
+      opacity: 1;
+    }
+  }
+
+  @keyframes swipe-arrow-pulse {
+    0%, 20% {
+      opacity: 1;
+      transform: translateY(-50%) scale(1);
+    }
+    50%, 70% {
+      opacity: 0.7;
+      transform: translateY(-50%) scale(1.2);
+    }
+    100% {
+      opacity: 1;
+      transform: translateY(-50%) scale(1);
+    }
+  }
+
+  @keyframes swipe-indicator-fade-in {
+    from {
+      opacity: 0;
+      transform: translateX(-50%) translateY(20px);
+    }
+    to {
+      opacity: 1;
+      transform: translateX(-50%) translateY(0);
+    }
+  }
+
+  /* Swipe Indicator nur auf mobilen Geräten anzeigen */
+  @media (min-width: 769px) {
+    .swipe-indicator {
+      display: none;
+    }
+  }
+
+  /* Verstecke Swipe Indicator bei sehr kleinen Screens */
+  @media (max-height: 600px) {
+    .swipe-indicator {
+      bottom: 20px;
+    }
+    
+    .swipe-text {
+      font-size: 11px;
+    }
+  }
+
   /* Smooth Cursor Movement auf modernen Browsern */
   @media (prefers-reduced-motion: no-preference) {
     .cursor-glow {
@@ -355,10 +649,6 @@
     
     .mb-3 {
       margin-bottom: 0.5rem !important;
-    }
-    
-    .mt-8 {
-      margin-top: 0.5rem !important;
     }
     
     .px-4 {

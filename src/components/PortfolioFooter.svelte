@@ -92,7 +92,7 @@
   .mobile-footer-container {
     display: none; /* Standardmäßig versteckt */
     position: absolute;
-    bottom: 160px; /* Deutlich höher wegen Safari UI */
+    bottom: 220px; /* Deutlich höher positioniert */
     right: 20px; /* Rechts positioniert */
     display: flex;
     flex-direction: row; /* Horizontal nebeneinander */
@@ -194,7 +194,7 @@
   /* Tablet Anpassungen */
   @media (max-width: 768px) {
     .mobile-footer-container {
-      bottom: 150px; /* Deutlich höher wegen Safari UI */
+      bottom: 200px; /* Noch höher für Tablets */
       right: 20px;
       gap: 1.2rem;
     }
@@ -208,7 +208,7 @@
   /* Mobile Phone Anpassungen */
   @media (max-width: 480px) {
     .mobile-footer-container {
-      bottom: 140px; /* Deutlich höher wegen Safari UI und kleinerer Screen */
+      bottom: 180px; /* Hoch positioniert für mobile Phones */
       right: 15px;
       gap: 1rem;
     }
@@ -223,7 +223,7 @@
   /* Extra kleine Screens */
   @media (max-width: 375px) {
     .mobile-footer-container {
-      bottom: 130px; /* Deutlich höher wegen Safari UI auf kleinen Screens */
+      bottom: 160px; /* Hoch positioniert für sehr kleine Screens */
       right: 10px;
       gap: 0.8rem;
     }
@@ -248,24 +248,24 @@
   /* Safari UI-sicherer Bereich - für Geräte mit Home Indicator */
   @supports (bottom: env(safe-area-inset-bottom)) {
     .mobile-footer-container {
-      bottom: calc(100px + env(safe-area-inset-bottom)); /* Berücksichtigt Safari's Safe Area */
+      bottom: calc(160px + env(safe-area-inset-bottom)); /* Berücksichtigt Safari's Safe Area aber höher positioniert */
     }
     
     @media (max-width: 768px) {
       .mobile-footer-container {
-        bottom: calc(90px + env(safe-area-inset-bottom));
+        bottom: calc(140px + env(safe-area-inset-bottom));
       }
     }
     
     @media (max-width: 480px) {
       .mobile-footer-container {
-        bottom: calc(80px + env(safe-area-inset-bottom));
+        bottom: calc(120px + env(safe-area-inset-bottom));
       }
     }
     
     @media (max-width: 375px) {
       .mobile-footer-container {
-        bottom: calc(70px + env(safe-area-inset-bottom));
+        bottom: calc(100px + env(safe-area-inset-bottom));
       }
     }
   }
