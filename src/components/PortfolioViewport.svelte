@@ -951,10 +951,65 @@
       -webkit-overflow-scrolling: touch;
       /* Verbessert das Touch-Scrolling auf iOS */
       touch-action: pan-x;
+      /* Reduziert Snap-Stärke für besseren Peek-Effekt */
+      scroll-snap-type: x proximity;
     }
     
     .viewport-container {
       overflow-x: hidden; /* Verhindert doppeltes Scrollen */
+    }
+
+    /* Peek-Effekt: Sections sind etwas schmaler damit nächste sichtbar ist */
+    :global(.section-container) {
+      min-width: calc(100vw - 40px); /* 40px weniger für Peek-Effekt */
+      width: calc(100vw - 40px);
+      margin-right: 40px; /* Abstand zur nächsten Sektion */
+    }
+
+    /* Erster Container (Hello) hat keinen Peek nach links */
+    :global(.section-container:first-child) {
+      margin-left: 0;
+    }
+
+    /* Letzter Container (More) hat keinen Peek nach rechts */
+    :global(.section-container:last-child) {
+      margin-right: 0;
+    }
+  }
+
+  /* Kleinere Mobile Geräte - stärkerer Peek-Effekt */
+  @media (max-width: 768px) {
+    :global(.section-container) {
+      min-width: calc(100vw - 60px); /* Größerer Peek auf kleinen Geräten */
+      width: calc(100vw - 60px);
+      margin-right: 60px;
+    }
+
+    /* Scroll-Container hat subtilen Schatten rechts für besseren Hinweis */
+    .scroll-container::after {
+      content: '';
+      position: fixed;
+      top: 0;
+      right: 0;
+      width: 30px;
+      height: 100vh;
+      background: linear-gradient(to left, rgba(0,0,0,0.1), transparent);
+      pointer-events: none;
+      z-index: 10;
+    }
+  }
+
+  /* Sehr kleine Geräte - deutlicherer Peek */
+  @media (max-width: 480px) {
+    :global(.section-container) {
+      min-width: calc(100vw - 80px); /* Noch größerer Peek */
+      width: calc(100vw - 80px);
+      margin-right: 80px;
+    }
+
+    .scroll-container::after {
+      width: 40px;
+      background: linear-gradient(to left, rgba(0,0,0,0.15), transparent);
     }
   }
 </style>
