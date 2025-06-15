@@ -35,8 +35,12 @@ jobs:
     - name: Build
       run: npm run build
       
-    - name: Add .nojekyll file
-      run: touch dist/.nojekyll
+    - name: Fix MIME type issue
+      run: |
+        # Remove type="module" to fix GitHub Pages MIME type issue
+        sed -i 's/type="module" crossorigin//g' dist/index.html
+        # Add .nojekyll file
+        touch dist/.nojekyll
       
     - name: Upload artifact
       uses: actions/upload-pages-artifact@v3
