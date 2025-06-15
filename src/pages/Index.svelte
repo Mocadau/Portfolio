@@ -155,7 +155,7 @@
   />
   
   <!-- Footer component -->
-  <PortfolioFooter on:showEmailOverlay={handleShowEmailOverlay} />
+  <PortfolioFooter currentSection={currentSection} on:showEmailOverlay={handleShowEmailOverlay} />
 </div>
 
 <style>

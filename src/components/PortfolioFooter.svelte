@@ -4,6 +4,8 @@
   
   const dispatch = createEventDispatcher();
   
+  export let currentSection = 'hello'; // Prop um aktuelle Sektion zu erhalten
+  
   function handleImprint() {
     navigate('/imprint');
   }
@@ -18,31 +20,62 @@
   }
 </script>
 
+<!-- Footer nur in der More Section anzeigen -->
+{#if currentSection === 'more'}
+
 <footer class="portfolio-footer">
-  <!-- Links unten: Imprint -->
-  <button 
-    class="footer-link bottom-left" 
-    on:click={handleImprint}
-  >
-    Imprint
-  </button>
-  
-  <!-- Oben rechts: E-Mail -->
-  <button 
-    class="footer-link top-right" 
-    on:click={handleEmail}
-  >
-    E-Mail
-  </button>
-  
-  <!-- Unten rechts: LinkedIn -->
-  <button 
-    class="footer-link bottom-right" 
-    on:click={handleLinkedIn}
-  >
-    LinkedIn
-  </button>
+  <!-- Mobile Layout: Alle Links horizontal nebeneinander unten rechts -->
+  <div class="mobile-footer-container">
+    <button 
+      class="footer-link mobile-link" 
+      on:click={handleImprint}
+    >
+      Imprint
+    </button>
+    
+    <button 
+      class="footer-link mobile-link" 
+      on:click={handleEmail}
+    >
+      E-Mail
+    </button>
+    
+    <button 
+      class="footer-link mobile-link" 
+      on:click={handleLinkedIn}
+    >
+      LinkedIn
+    </button>
+  </div>
+
+  <!-- Desktop Layout: Original Positionen -->
+  <div class="desktop-footer-container">
+    <!-- Links unten: Imprint -->
+    <button 
+      class="footer-link bottom-left desktop-link" 
+      on:click={handleImprint}
+    >
+      Imprint
+    </button>
+    
+    <!-- Oben rechts: E-Mail -->
+    <button 
+      class="footer-link top-right desktop-link" 
+      on:click={handleEmail}
+    >
+      E-Mail
+    </button>
+    
+    <!-- Unten rechts: LinkedIn -->
+    <button 
+      class="footer-link bottom-right desktop-link" 
+      on:click={handleLinkedIn}
+    >
+      LinkedIn
+    </button>
+  </div>
 </footer>
+{/if}
 
 <style>
   .portfolio-footer {
@@ -53,6 +86,26 @@
     height: 100vh;
     pointer-events: none;
     z-index: 1000;
+  }
+
+  /* Mobile Footer Container - horizontal rechts */
+  .mobile-footer-container {
+    display: none; /* Standardmäßig versteckt */
+    position: absolute;
+    bottom: 30px; /* Unten positioniert */
+    right: 20px; /* Rechts positioniert */
+    display: flex;
+    flex-direction: row; /* Horizontal nebeneinander */
+    gap: 1.5rem; /* Gleichmäßiger Abstand zwischen den Links */
+    pointer-events: auto;
+  }
+
+  /* Desktop Footer Container */
+  .desktop-footer-container {
+    display: block;
+    width: 100%;
+    height: 100%;
+    position: relative;
   }
 
   .footer-link {
@@ -71,6 +124,20 @@
     white-space: nowrap;
     text-align: left;
     line-height: 1.2;
+  }
+
+  /* Mobile Links - relative positioning within flex container */
+  .mobile-link {
+    position: relative !important;
+    padding: 8px 12px; /* Horizontales Padding für bessere Klickbarkeit */
+    font-size: 14px;
+    background: rgba(255, 255, 255, 0.9); /* Leicht transparenter Hintergrund */
+    border-radius: 4px; /* Abgerundete Ecken */
+    transition: background 0.2s ease;
+  }
+
+  .mobile-link:hover {
+    background: rgba(0, 0, 0, 0.05); /* Hover-Effekt */
   }
 
   .footer-link:hover {
@@ -113,46 +180,68 @@
   }
 
   /* Mobile Anpassungen */
-  @media (max-width: 768px) {
-    .footer-link {
-      font-size: 14px;
-      padding: 8px 0;
+  @media (max-width: 1024px) {
+    /* Mobile Layout zeigen, Desktop verstecken */
+    .mobile-footer-container {
+      display: flex !important;
     }
     
-    .bottom-left {
-      bottom: 25px;
-      left: 25px;
-    }
-
-    .top-right {
-      top: 25px;
-      right: 25px;
-    }
-
-    .bottom-right {
-      bottom: 25px;
-      right: 25px;
+    .desktop-footer-container {
+      display: none !important;
     }
   }
 
-  @media (max-width: 480px) {
-    .footer-link {
-      font-size: 13px;
+  /* Tablet Anpassungen */
+  @media (max-width: 768px) {
+    .mobile-footer-container {
+      bottom: 25px;
+      right: 20px;
+      gap: 1.2rem;
     }
     
-    .bottom-left {
-      bottom: 20px;
-      left: 20px;
+    .mobile-link {
+      font-size: 13px;
+      padding: 6px 10px;
     }
+  }
 
-    .top-right {
-      top: 20px;
-      right: 20px;
-    }
-
-    .bottom-right {
+  /* Mobile Phone Anpassungen */
+  @media (max-width: 480px) {
+    .mobile-footer-container {
       bottom: 20px;
-      right: 20px;
+      right: 15px;
+      gap: 1rem;
+    }
+    
+    .mobile-link {
+      font-size: 12px;
+      padding: 5px 8px;
+      font-weight: 600;
+    }
+  }
+
+  /* Extra kleine Screens */
+  @media (max-width: 375px) {
+    .mobile-footer-container {
+      bottom: 15px;
+      right: 10px;
+      gap: 0.8rem;
+    }
+    
+    .mobile-link {
+      font-size: 11px;
+      padding: 4px 6px;
+    }
+  }
+
+  /* Desktop Media Queries - nur für Desktop Container */
+  @media (min-width: 1025px) {
+    .mobile-footer-container {
+      display: none !important;
+    }
+    
+    .desktop-footer-container {
+      display: block !important;
     }
   }
 </style>

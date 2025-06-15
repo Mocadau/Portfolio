@@ -389,7 +389,7 @@
     // Ensure More section is reachable
     if (scrollContainer) {
       containerWidth = window.innerWidth;
-      isMobile = containerWidth < 768;
+      isMobile = containerWidth < 1024; // Walking figure nur ab Desktop-Größe (1024px+)
       const sections = Array.from(scrollContainer.children);
       sections.forEach((section: Element) => {
         (section as HTMLElement).style.minWidth = '100vw';
@@ -398,7 +398,7 @@
 
     window.addEventListener('resize', () => {
       containerWidth = window.innerWidth;
-      isMobile = containerWidth < 768;
+      isMobile = containerWidth < 1024; // Walking figure nur ab Desktop-Größe (1024px+)
       updateEyePositions(); // Recalculate eye positions on resize
     });
 
@@ -492,9 +492,9 @@
   </div>
   
   <!-- Walking Figure -->
-  {#if walkingFigureVisible}
+  {#if walkingFigureVisible && !isMobile}
     <div class="walking-figure fade-in-from-left {isMovingBackward ? 'moving-backward' : ''}" 
-      style="left: {walkingFigurePosition}px; bottom: {isMobile ? '50px' : '70px'}; 
+      style="left: {walkingFigurePosition}px; bottom: 70px; 
       transition: left 0.6s linear; position: fixed; z-index: 50; transform-origin: center;"
       on:mouseenter={handleWalkingFigureMouseEnter}
       on:mouseleave={handleWalkingFigureMouseLeave}
@@ -511,7 +511,7 @@
       role="img"
       tabindex="0">
       <img src={isWalkingFigureHovered ? stickFigureStatic : stickFigureWalking} alt="Walking Stick Figure" 
-           class="w-auto {isMobile ? 'h-[120px]' : 'h-[150px]'}"
+           class="w-auto h-[150px]"
            style="image-rendering: -webkit-optimize-contrast; image-rendering: crisp-edges;" />
       
       <!-- Eyes overlay -->
@@ -540,7 +540,7 @@
   {/if}
 
   <!-- Email Overlay above Walking Figure -->
-  {#if showEmailOverlay && walkingFigureVisible}
+  {#if showEmailOverlay && walkingFigureVisible && !isMobile}
     <div class="email-overlay-backdrop" 
          on:click={hideEmailOverlay}
          on:keydown={(e) => e.key === 'Escape' && hideEmailOverlay()}
@@ -548,7 +548,7 @@
          tabindex="-1"
          aria-label="Close email overlay"></div>
     <div class="email-overlay" 
-         style="left: {walkingFigurePosition + (isMobile ? 5 : 15)}px; bottom: {isMobile ? '180px' : '230px'};">
+         style="left: {walkingFigurePosition + 15}px; bottom: 230px;">
       <div class="email-container" on:click|stopPropagation>
         <div class="copy-text" class:copied={emailCopied}>
           {emailCopied ? 'Copied!' : 'Copy'}
@@ -567,7 +567,7 @@
   {/if}
   
   <!-- Scroll Hint - only shown when scrolling is disabled and walking figure is visible -->
-  {#if !scrollingEnabled && walkingFigureVisible}
+  {#if !scrollingEnabled && walkingFigureVisible && !isMobile}
     <div class="scroll-hint">
       <div class="scroll-hint-text">
         Scroll to explore →

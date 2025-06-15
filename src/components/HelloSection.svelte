@@ -115,11 +115,11 @@
     ></div>
   {/if}
 
-  <div class="w-full md:w-auto flex justify-start mt-20 md:mt-32 min-h-[350px] scale-75 md:scale-100 origin-top-center md:mx-auto">
-    <div class="px-4 md:px-6 ml-0 max-w-[90%] md:max-w-none text-left">
+  <div class="w-full md:w-auto flex justify-start mt-8 sm:mt-12 md:mt-32 min-h-[350px] scale-75 md:scale-100 origin-top-center md:mx-auto px-4">
+    <div class="px-2 md:px-6 ml-0 max-w-[90%] md:max-w-none text-left">
       
       <!-- HELLO als getippter Text oder statischer Text -->
-      <h1 class="text-5xl font-bold mb-12 hand-drawn-title relative">
+      <h1 class="text-4xl sm:text-5xl font-bold mb-8 sm:mb-12 hand-drawn-title relative">
         <span class="relative inline-block">
           {#if skipAnimation}
             HELLO
@@ -138,7 +138,7 @@
       
       <!-- Rest des Inhalts wird nur angezeigt wenn Hello fertig ist -->
       {#if showRestContent}
-        <div class="text-3xl md:text-4xl mb-4 md:mb-8 leading-relaxed hand-drawn-text pl-0">
+        <div class="text-2xl sm:text-3xl md:text-4xl mb-3 sm:mb-4 md:mb-8 leading-relaxed hand-drawn-text pl-0">
           {#if skipAnimation}
             I AM AN INTERACTION DESIGNER.
           {:else}
@@ -151,7 +151,7 @@
           {/if}
         </div>
         
-        <div class="text-3xl md:text-4xl mb-4 md:mb-8 leading-relaxed hand-drawn-text relative">
+        <div class="text-2xl sm:text-3xl md:text-4xl mb-3 sm:mb-4 md:mb-8 leading-relaxed hand-drawn-text relative">
           <div class="flex flex-wrap items-start md:flex-nowrap md:items-center gap-1 md:gap-4 mx-0 w-full">
             <span class="inline-block">
               {#if skipAnimation}
@@ -218,7 +218,7 @@
           </div>
         </div>
         
-        <div class="text-3xl md:text-4xl leading-relaxed hand-drawn-text pl-0">
+        <div class="text-2xl sm:text-3xl md:text-4xl leading-relaxed hand-drawn-text pl-0">
           {#if skipAnimation}
             LOOKING 4 AN INTERNSHIP!
           {:else}
@@ -331,6 +331,55 @@
   @media (prefers-reduced-motion: reduce) {
     .cursor-glow {
       transition: none;
+    }
+  }
+
+  /* iPhone SE und sehr kleine Geräte spezifische Anpassungen */
+  @media (max-width: 375px) and (max-height: 667px) {
+    :global(.section-container) {
+      padding-top: 1rem !important;
+    }
+    
+    .text-4xl {
+      font-size: 2rem !important;
+    }
+    
+    .text-2xl {
+      font-size: 1.25rem !important;
+      line-height: 1.4 !important;
+    }
+    
+    .mb-8 {
+      margin-bottom: 1rem !important;
+    }
+    
+    .mb-3 {
+      margin-bottom: 0.5rem !important;
+    }
+    
+    .mt-8 {
+      margin-top: 0.5rem !important;
+    }
+    
+    .px-4 {
+      padding-left: 0.75rem !important;
+      padding-right: 0.75rem !important;
+    }
+    
+    .px-2 {
+      padding-left: 0.5rem !important;
+      padding-right: 0.5rem !important;
+    }
+  }
+
+  /* Extra kleine Screens - Portrait Modus */
+  @media (max-width: 320px) {
+    .text-4xl {
+      font-size: 1.75rem !important;
+    }
+    
+    .text-2xl {
+      font-size: 1.125rem !important;
     }
   }
 </style>
