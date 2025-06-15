@@ -604,8 +604,7 @@
          role="button"
          tabindex="-1"
          aria-label="Close email overlay"></div>
-    <div class="email-overlay-mobile" 
-         style="left: {cameraPosition.x}px; top: {cameraPosition.y}px;">
+    <div class="email-overlay-mobile">
       <div class="email-container-mobile" on:click|stopPropagation>
         <div class="email-address-mobile" 
              on:click={copyEmail} 
@@ -954,8 +953,8 @@
 
   .email-overlay-mobile {
     position: fixed;
-    left: 50%; /* Zentriert wie der Footer */
-    bottom: 260px; /* Direkt über dem Footer */
+    left: 50%; /* Zentriert wie der mobile-footer-container */
+    bottom: 230px; /* 10px über mobile-footer-container (220px) */
     z-index: 90;
     pointer-events: auto;
     transform: translateX(-50%); /* Zentriert */
@@ -970,11 +969,15 @@
     box-shadow: 0 2px 8px rgba(0, 0, 0, 0.15);
     backdrop-filter: blur(10px);
     text-align: center;
-    /* Gleiche Breite wie der mobile Footer Container */
-    width: calc(3 * (8px + 12px + 12px) + 2 * 2rem + 2rem); /* 3 Buttons + gaps + padding */
-    min-width: 200px;
+    /* Exakt die gleiche Struktur wie mobile-footer-container */
+    display: flex;
+    flex-direction: row;
+    gap: 2rem;
+    justify-content: center;
+    align-items: center;
+    /* Minimale Breite basierend auf 3 Buttons + Gaps */
+    min-width: 250px;
     max-width: 90vw;
-    white-space: nowrap;
   }
 
   .email-address-mobile {
@@ -983,11 +986,15 @@
     font-weight: 500;
     color: #333;
     cursor: pointer;
-    padding: 4px 8px;
+    padding: 8px 12px;
     border-radius: 4px;
     transition: all 0.2s ease;
     line-height: 1.2;
-    display: block;
+    background: rgba(255, 255, 255, 0.9);
+    user-select: text; /* Text ist selektierbar zum Kopieren */
+    white-space: nowrap;
+    flex: 1;
+    text-align: center;
   }
 
   .email-address-mobile:hover {
@@ -1001,36 +1008,44 @@
     transform: scale(1.05);
   }
 
-  /* Anpassungen für verschiedene mobile Bildschirmgrößen */
+  /* Responsive Anpassungen - jeweils 10px über mobile-footer-container */
   @media (max-width: 768px) {
     .email-overlay-mobile {
-      bottom: 240px; /* Angepasst für Tablets */
+      bottom: 210px; /* 10px über mobile-footer-container (200px) */
     }
   }
 
   @media (max-width: 480px) {
     .email-overlay-mobile {
-      bottom: 220px; /* Angepasst für kleine mobile Geräte */
+      bottom: 190px; /* 10px über mobile-footer-container (180px) */
     }
     
     .email-container-mobile {
-      width: calc(100vw - 4rem); /* Volle Breite minus Margins */
-      max-width: 300px;
+      gap: 1.5rem; /* Kleinere Gaps auf mobilen Geräten */
+      min-width: 200px;
+      padding: 6px 10px;
     }
     
     .email-address-mobile {
       font-size: 13px;
+      padding: 6px 10px;
     }
   }
 
-  @media (max-width: 360px) {
+  @media (max-width: 375px) {
+    .email-overlay-mobile {
+      bottom: 170px; /* 10px über mobile-footer-container (160px) */
+    }
+    
     .email-container-mobile {
-      width: calc(100vw - 2rem);
-      max-width: 280px;
+      gap: 1.2rem;
+      min-width: 180px;
+      padding: 4px 8px;
     }
     
     .email-address-mobile {
       font-size: 12px;
+      padding: 4px 8px;
     }
   }
 
