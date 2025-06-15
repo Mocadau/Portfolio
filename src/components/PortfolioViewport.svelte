@@ -584,7 +584,7 @@
 
   .scroll-container {
     display: flex;
-    overflow-x: hidden;
+    overflow-x: auto; /* Ermöglicht horizontales Scrollen auf Mobile */
     scroll-snap-type: x mandatory;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
@@ -940,6 +940,21 @@
       font-size: 12px;
       padding: 6px 12px;
       min-width: 100px;
+    }
+  }
+
+  /* Mobile Scroll Optimierungen */
+  @media (max-width: 1024px) {
+    .scroll-container {
+      overflow-x: auto;
+      scroll-behavior: smooth;
+      -webkit-overflow-scrolling: touch;
+      /* Verbessert das Touch-Scrolling auf iOS */
+      touch-action: pan-x;
+    }
+    
+    .viewport-container {
+      overflow-x: hidden; /* Verhindert doppeltes Scrollen */
     }
   }
 </style>
