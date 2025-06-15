@@ -33,8 +33,8 @@ export default defineConfig({
   build: {
     outDir: 'dist',
     assetsDir: 'assets',
-    target: 'es2015',
-    minify: 'esbuild',
+    target: 'es2015', // Use es2015 instead of es5 for better compatibility
+    minify: 'terser', // Use terser instead of esbuild for es2015
     rollupOptions: {
       output: {
         manualChunks: undefined,
