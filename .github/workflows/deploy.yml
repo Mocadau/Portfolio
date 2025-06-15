@@ -32,15 +32,15 @@ jobs:
         
       - name: Install dependencies
         run: npm ci
-        
-      - name: Build
+         - name: Build
         run: npm run build
-           - name: Fix MIME type issue
-      run: |
-        # Add .nojekyll file to prevent Jekyll processing
-        touch dist/.nojekyll
-        # Replace type="module" with type="text/javascript" for better GitHub Pages compatibility
-        sed -i 's/type="module"/type="text\/javascript"/g' dist/index.html
+        
+      - name: Fix MIME type issue
+        run: |
+          # Add .nojekyll file to prevent Jekyll processing
+          touch dist/.nojekyll
+          # Replace type="module" with type="text/javascript" for better GitHub Pages compatibility
+          sed -i 's/type="module"/type="text\/javascript"/g' dist/index.html
         
       - name: Upload artifact
         uses: actions/upload-pages-artifact@v3
