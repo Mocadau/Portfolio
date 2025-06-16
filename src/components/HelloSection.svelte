@@ -24,10 +24,10 @@
   let showScrollIndicator = false;
   let scrollIndicatorTimeout: NodeJS.Timeout;
 
-  // Check if we should skip the animation
+  // Check if we should skip the animation (use sessionStorage for refresh behavior)
   function shouldSkipAnimation() {
-    if (typeof localStorage !== 'undefined') {
-      return localStorage.getItem('hasPlayedAnimation') === 'true';
+    if (typeof sessionStorage !== 'undefined') {
+      return sessionStorage.getItem('hasPlayedAnimation') === 'true';
     }
     return false;
   }
@@ -45,11 +45,11 @@
     isTypingComplete = true;
     dispatch('complete');
     
-    // Markiere Animation als gesehen (für andere Features, aber nicht zum Überspringen)
+    // Markiere Animation als gesehen in sessionStorage (wird bei Browser-Schließung zurückgesetzt)
     try {
-      localStorage.setItem('hasPlayedAnimation', 'true');
+      sessionStorage.setItem('hasPlayedAnimation', 'true');
     } catch (e) {
-      console.error('Could not write to localStorage:', e);
+      console.error('Could not write to sessionStorage:', e);
     }
     
     // Aktiviere Cursor-Effekt nach einer kurzen Verzögerung
