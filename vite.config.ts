@@ -14,8 +14,8 @@ export default defineConfig({
     })
   ],
   
-  // GitHub Pages base path (falls nicht in root)
-  base: './',
+  // GitHub Pages base path - entfernt da es Asset-Pfade bricht
+  // base: './',
   
   build: {
     // WICHTIG: Älterer JavaScript-Standard
