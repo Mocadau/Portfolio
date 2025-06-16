@@ -90,7 +90,7 @@
   /* Mobile responsive adjustments */
   @media (max-width: 768px) {
     .navigation {
-      top: 0.75rem; /* Höher positioniert für mobile */
+      top: 0.75rem;
       left: 1rem;
       gap: 1rem;
     }

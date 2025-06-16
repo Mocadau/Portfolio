@@ -1,0 +1,10 @@
+<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Simple background -->
+  <rect width="32" height="32" rx="6" fill="#000000"/>
+  
+  <!-- Hand cursor - represents interaction design -->
+  <path d="M12 8V14M15 10V14M18 12V14M21 14V20C21 22 19 24 17 24H13C11 24 9 22 9 20V16" stroke="#ffffff" stroke-width="2" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  
+  <!-- Small interaction dot -->
+  <circle cx="24" cy="8" r="1.5" fill="#ffffff"/>
+</svg>

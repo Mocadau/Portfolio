@@ -224,7 +224,7 @@
     showEmailOverlay = true;
     emailCopied = false;
     
-    // Für Mobile: Finde die Kameraposition
+    // Mobile: Find camera position
     if (isMobile) {
       updateCameraPosition();
     }
@@ -356,7 +356,7 @@
     // Größerer Puffer für MoreSection, um Verzerrung zu vermeiden
     const additionalMargin = isMobile ? 60 : 100; // Mehr Platz für MoreSection
     const endPosition = isMobile 
-      ? width - gifWidth - safeMargin - additionalMargin // Größerer Puffer für mobile Ansicht
+      ? width - gifWidth - safeMargin - additionalMargin // Larger buffer for mobile view
       : width - gifWidth - safeMargin - additionalMargin;
     
     // Berechne die gleichmäßige Schrittgröße zwischen den Seiten
@@ -523,23 +523,23 @@
   
   <!-- Walking Figure -->
   {#if walkingFigureVisible && !isMobile}
-    <div class="walking-figure fade-in-from-left {isMovingBackward ? 'moving-backward' : ''}" 
+    <button type="button"
+      class="walking-figure fade-in-from-left {isMovingBackward ? 'moving-backward' : ''}" 
       style="left: {walkingFigurePosition}px; bottom: 70px; 
-      transition: left 0.6s linear; position: fixed; z-index: 50; transform-origin: center;"
+      transition: left 0.6s linear; position: fixed; z-index: 50; transform-origin: center; background: none; border: none; padding: 0;"
       on:mouseenter={handleWalkingFigureMouseEnter}
       on:mouseleave={handleWalkingFigureMouseLeave}
-      on:touchstart={(event) => {
-        if (event.touches.length > 0) {
-          const touch = event.touches[0];
-          const touchEvent = {
-            clientX: touch.clientX,
-            clientY: touch.clientY
-          };
-          checkMouseInCenterOfWalkingFigure(touchEvent);
+      on:touchstart={() => {
+        const element = document.querySelector('.walking-figure');
+        if (element) {
+          const rect = element.getBoundingClientRect();
+          checkMouseInCenterOfWalkingFigure({
+            clientX: rect.left + rect.width / 2,
+            clientY: rect.top + rect.height / 2
+          });
         }
       }}
-      role="img"
-      tabindex="0">
+      aria-label="Interactive walking figure">
       <img src={isWalkingFigureHovered ? stickFigureStatic : stickFigureWalking} alt="Walking Stick Figure" 
            class="w-auto h-[150px]"
            style="image-rendering: -webkit-optimize-contrast; image-rendering: crisp-edges;" />
@@ -566,7 +566,7 @@
           <div class="speech-bubble-arrow"></div>
         </div>
       {/if}
-    </div>
+    </button>
   {/if}
 
   <!-- Email Overlay above Walking Figure (Desktop) -->
@@ -579,17 +579,19 @@
          aria-label="Close email overlay"></div>
     <div class="email-overlay" 
          style="left: {walkingFigurePosition + 15}px; bottom: 230px;">
-      <div class="email-container" on:click|stopPropagation>
-        <div class="copy-text" class:copied={emailCopied}>
+      <div class="email-container" role="dialog" aria-label="Email copy dialog">
+        <button type="button"
+                class="copy-text"
+                class:copied={emailCopied}
+                on:click|stopPropagation={copyEmail}>
           {emailCopied ? 'Copied!' : 'Copy'}
-        </div>
-        <div class="email-address" 
-             on:click={copyEmail} 
-             on:keydown={(e) => e.key === 'Enter' && copyEmail()}
-             role="button" 
-             tabindex="0">
+        </button>
+        <button type="button"
+                class="email-address"
+                on:click={copyEmail}
+                on:keydown={(e) => e.key === 'Enter' && copyEmail()}>
           maurice.cadau@hfg-gmuend.de
-        </div>
+        </button>
         <!-- Arrow pointing to walking figure -->
         <div class="email-arrow"></div>
       </div>
@@ -605,15 +607,14 @@
          tabindex="-1"
          aria-label="Close email overlay"></div>
     <div class="email-overlay-mobile">
-      <div class="email-container-mobile" on:click|stopPropagation>
-        <div class="email-address-mobile" 
-             on:click={copyEmail} 
-             on:keydown={(e) => e.key === 'Enter' && copyEmail()}
-             role="button" 
-             tabindex="0"
-             class:copied={emailCopied}>
+      <div class="email-container-mobile" role="dialog" aria-label="Email copy dialog for mobile">
+        <button type="button"
+                class="email-address-mobile"
+                on:click={copyEmail}
+                on:keydown={(e) => e.key === 'Enter' && copyEmail()}
+                class:copied={emailCopied}>
           {emailCopied ? 'Copied!' : 'maurice.cadau@hfg-gmuend.de'}
-        </div>
+        </button>
       </div>
     </div>
   {/if}
@@ -788,11 +789,11 @@
   /* Mobile moving-backward adjustments */
   @media (max-width: 768px) {
     .walking-figure.moving-backward .left-eye {
-      left: 48%; /* Ein paar Pixel weiter nach links für mobile */
+      left: 48%;
     }
     
     .walking-figure.moving-backward .right-eye {
-      left: 42%; /* Ein paar Pixel weiter nach links für mobile */
+      left: 42%;
     }
   }
   
@@ -954,7 +955,7 @@
   .email-overlay-mobile {
     position: fixed;
     left: 50%; /* Zentriert wie der mobile-footer-container */
-    bottom: 230px; /* 10px über mobile-footer-container (220px) */
+    bottom: 225px; /* Nur 5px über mobile-footer-container (220px) - viel näher */
     z-index: 90;
     pointer-events: auto;
     transform: translateX(-50%); /* Zentriert */
@@ -1008,16 +1009,16 @@
     transform: scale(1.05);
   }
 
-  /* Responsive Anpassungen - jeweils 10px über mobile-footer-container */
+  /* Responsive Anpassungen - jeweils 5px über mobile-footer-container */
   @media (max-width: 768px) {
     .email-overlay-mobile {
-      bottom: 210px; /* 10px über mobile-footer-container (200px) */
+      bottom: 205px; /* 5px über mobile-footer-container (200px) */
     }
   }
 
   @media (max-width: 480px) {
     .email-overlay-mobile {
-      bottom: 190px; /* 10px über mobile-footer-container (180px) */
+      bottom: 185px; /* 5px über mobile-footer-container (180px) */
     }
     
     .email-container-mobile {
@@ -1034,7 +1035,7 @@
 
   @media (max-width: 375px) {
     .email-overlay-mobile {
-      bottom: 170px; /* 10px über mobile-footer-container (160px) */
+      bottom: 165px; /* 5px über mobile-footer-container (160px) */
     }
     
     .email-container-mobile {

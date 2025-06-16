@@ -23,6 +23,14 @@
   // Scroll indicator variables
   let showScrollIndicator = false;
   let scrollIndicatorTimeout: NodeJS.Timeout;
+
+  // Check if we should skip the animation
+  function shouldSkipAnimation() {
+    if (typeof localStorage !== 'undefined') {
+      return localStorage.getItem('hasPlayedAnimation') === 'true';
+    }
+    return false;
+  }
   
   function handleHelloComplete() {
     helloComplete = true;
@@ -37,12 +45,19 @@
     isTypingComplete = true;
     dispatch('complete');
     
+    // Markiere Animation als gesehen (für andere Features, aber nicht zum Überspringen)
+    try {
+      localStorage.setItem('hasPlayedAnimation', 'true');
+    } catch (e) {
+      console.error('Could not write to localStorage:', e);
+    }
+    
     // Aktiviere Cursor-Effekt nach einer kurzen Verzögerung
     setTimeout(() => {
       if (isMobile) {
         showMobilePeek = true;
         setupMobileTouchHandler();
-        // Zeige Scroll-Indicator für mobile Geräte
+        // Show scroll indicator for mobile devices
         showScrollIndicator = true;
         startScrollIndicatorTimer();
       } else {
@@ -161,37 +176,27 @@
     // Check if device is mobile
     isMobile = window.innerWidth <= 768 || 'ontouchstart' in window;
     
-    // Check if animation has been seen in this session
-    try {
-      skipAnimation = sessionStorage.getItem('hasSeenAnimation') === 'true';
-      if (skipAnimation) {
-        // Skip animation and show everything immediately
-        helloComplete = true;
-        showRestContent = true;
-        isTypingComplete = true;
-        
+    // Check if animation should be skipped
+    skipAnimation = shouldSkipAnimation();
+
+    if (skipAnimation) {
+      // If skipping animation, show content immediately
+      helloComplete = true;
+      showRestContent = true;
+      isTypingComplete = true;
+      
+      // Show cursor effect after a short delay
+      setTimeout(() => {
         if (isMobile) {
           showMobilePeek = true;
-          showScrollIndicator = true;
+          setupMobileTouchHandler();
         } else {
           showCursorEffect = true;
+          setupGlobalMouseHandler();
         }
-        
-        // Dispatch complete immediately for skip case
-        setTimeout(() => {
-          dispatch('complete');
-          if (isMobile) {
-            setupMobileTouchHandler();
-            startScrollIndicatorTimer();
-          } else {
-            setupGlobalMouseHandler();
-          }
-        }, 100);
-      }
-    } catch (e) {
-      console.error('Could not read from sessionStorage:', e);
+      }, 100);
     }
-
+    
     return () => {
       if (globalMouseHandler) {
         document.removeEventListener('mousemove', globalMouseHandler);
@@ -247,11 +252,11 @@
     </div>
   {/if}
 
-  <div class="w-full md:w-auto flex justify-center md:justify-start items-center h-screen md:mt-32 min-h-[350px] scale-75 md:scale-100 origin-center md:mx-auto px-4 md:px-4">
-    <div class="px-2 md:px-6 max-w-[100%] sm:max-w-[95%] md:max-w-none text-left w-full md:w-auto">
+  <div class="w-full md:w-auto flex justify-center items-center h-screen md:mt-16 min-h-[350px] scale-75 md:scale-100 origin-center md:mx-auto px-4 md:px-4">
+    <div class="px-2 md:px-6 max-w-[100%] sm:max-w-[95%] md:max-w-none text-left w-full md:w-auto md:flex md:flex-col md:justify-center md:items-start">
       
       <!-- HELLO als getippter Text oder statischer Text -->
-      <h1 class="text-4xl sm:text-5xl font-bold mb-8 sm:mb-12 hand-drawn-title relative">
+      <h1 class="text-2xl sm:text-5xl font-bold mb-8 sm:mb-12 hand-drawn-title relative text-left">
         <span class="relative inline-block">
           {#if skipAnimation}
             HELLO
@@ -260,7 +265,7 @@
             <TypingAnimation 
               text="HELLO"
               speed={100} 
-              delayStart={500}
+              delayStart={0}
               underline={true}
               on:complete={handleHelloComplete}
             />
@@ -270,7 +275,7 @@
       
       <!-- Rest des Inhalts wird nur angezeigt wenn Hello fertig ist -->
       {#if showRestContent}
-        <div class="text-2xl sm:text-3xl md:text-4xl mb-3 sm:mb-4 md:mb-8 leading-relaxed hand-drawn-text pl-0">
+        <div class="text-2xl sm:text-3xl md:text-4xl mb-3 sm:mb-4 md:mb-8 leading-relaxed hand-drawn-text pl-0 text-left">
           {#if skipAnimation}
             I AM AN INTERACTION DESIGNER.
           {:else}
@@ -283,8 +288,8 @@
           {/if}
         </div>
         
-        <div class="text-2xl sm:text-3xl md:text-4xl mb-3 sm:mb-4 md:mb-8 leading-relaxed hand-drawn-text relative">
-          <div class="flex flex-wrap items-start md:flex-nowrap md:items-center gap-1 md:gap-4 mx-0 w-full">
+        <div class="text-2xl sm:text-3xl md:text-4xl mb-3 sm:mb-4 md:mb-8 leading-relaxed hand-drawn-text relative text-left">
+          <div class="flex flex-wrap items-start md:flex-nowrap md:items-center gap-1 md:gap-4 mx-0 w-full justify-start">
             <span class="inline-block">
               {#if skipAnimation}
                 STUDYING
@@ -344,7 +349,7 @@
           </div>
         </div>
         
-        <div class="text-2xl sm:text-3xl md:text-4xl leading-relaxed hand-drawn-text pl-0">
+        <div class="text-2xl sm:text-3xl md:text-4xl leading-relaxed hand-drawn-text pl-0 text-left">
           {#if skipAnimation}
             LOOKING 4 AN INTERNSHIP!
           {:else}

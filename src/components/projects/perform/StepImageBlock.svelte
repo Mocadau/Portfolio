@@ -45,6 +45,10 @@
   }
 
   @media (max-width: 768px) {
+    .caption {
+      font-size: 1rem; 
+    }
+    
     .step-image-block {
       width: 100%;
       max-width: 250px;

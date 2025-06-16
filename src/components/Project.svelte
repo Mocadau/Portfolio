@@ -1,6 +1,6 @@
 <script lang="ts">
-  import { navigate } from "svelte-routing";
-  import performBanner from '../assets/PerForm/PerformBanner.png';
+  import { navigate } from 'svelte-routing';
+  import performBanner from '../assets/PerformBanner.png';
   import migrantsImage from '../assets/Migrants/GlobeOverview.png';
   import alignspaceImage from '../assets/Alignspace/Ubersicht.jpg';
 
@@ -51,7 +51,7 @@
         <div class="flex flex-col md:flex-row justify-start md:gap-12 px-4 md:px-0">
           <div class="flex flex-col w-full md:w-auto items-start">
             <!-- Title -->
-            <h2 class="text-3xl md:text-5xl mb-4 md:mb-8 hand-drawn-title text-left">{title}</h2>
+            <h2 class="text-2xl md:text-5xl mb-4 md:mb-8 hand-drawn-title text-left">{title}</h2>
             
             <!-- Image -->
             <div class="project-image relative w-full md:w-[584px] ml-0">
@@ -77,10 +77,10 @@
           <!-- Tags and description -->
           <div class="flex flex-col items-start mt-12 md:mt-[5rem] w-full md:w-auto">
             <div class="flex flex-wrap justify-start gap-4 md:gap-6 mb-6 md:mb-8">
-              <span class="project-tag hand-drawn-text text-lg md:text-xl">{field}</span>
-              <span class="project-tag hand-drawn-text text-lg md:text-xl">{category}</span>
+              <span class="project-tag hand-drawn-text text-base md:text-xl">{field}</span>
+              <span class="project-tag hand-drawn-text text-base md:text-xl">{category}</span>
             </div>
-            <p class="hand-drawn-text text-xl md:text-2xl max-w-full md:max-w-md text-left">{description}</p>
+            <p class="hand-drawn-text text-base md:text-2xl max-w-full md:max-w-md text-left">{description}</p>
           </div>
         </div>
       </div>
@@ -137,8 +137,8 @@
   /* Mobile Anpassungen für Projekt-Bilder */
   @media (max-width: 768px) {
     .project-image {
-      width: 350px; /* Feste Breite für Mobile */
-      height: 200px; /* Feste Höhe für Mobile */
+      width: 350px;
+      height: 200px;
     }
   }
 

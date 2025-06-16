@@ -1,23 +1,51 @@
-# Svelte + TS + Vite
+# Maurice Cadau - Portfolio
 
-This template should help get you started developing with Svelte and TypeScript in Vite.
+> Interactive Design Portfolio showcasing projects in UX/UI, Data Visualization, and Strategic Design
 
-## Recommended IDE Setup
+## 🎯 About
 
-[VS Code](https://code.visualstudio.com/) + [Svelte](https://marketplace.visualstudio.com/items?itemName=svelte.svelte-vscode).
+Hi, I'm Maurice – a 23-year-old interaction designer from Aalen, Germany, currently in my 4th semester studying Interaction Design at HfG Schwäbisch Gmünd. My portfolio showcases my passion for pushing creative boundaries and exploring new possibilities in design.
 
-## Need an official Svelte framework?
+## 🚀 Featured Projects
 
-Check out [SvelteKit](https://github.com/sveltejs/kit#readme), which is also powered by Vite. Deploy anywhere with its serverless-first approach and adapt to various platforms, with out of the box support for TypeScript, SCSS, and Less, and easily-added support for mdsvex, GraphQL, PostCSS, Tailwind CSS, and more.
+- **PerForm** - Fitness app focusing on proper exercise execution
+- **Global Migrants** - Data visualization of worldwide migration patterns
+- **Alignspace** - Coworking space booking platform
 
-## Technical considerations
+## 🛠 Tech Stack
 
-**Why use this over SvelteKit?**
+- **Frontend**: Svelte + TypeScript
+- **Styling**: Tailwind CSS
+- **Build Tool**: Vite
+- **Deployment**: GitHub Pages
 
-- It brings its own routing solution which might not be preferable for some users.
-- It is first and foremost a framework that just happens to use Vite under the hood, not a Vite app.
+## 🏃‍♂️ Quick Start
 
-This template contains as little as possible to get started with Vite + TypeScript + Svelte, while taking into account the developer experience with regards to HMR and intellisense. It demonstrates capabilities on par with the other `create-vite` templates and is a good starting point for beginners dipping their toes into a Vite + Svelte project.
+```bash
+# Install dependencies
+npm install
+
+# Start development server
+npm run dev
+
+# Build for production
+npm run build
+
+# Preview production build
+npm run preview
+```
+
+## 📱 Features
+
+- Responsive design optimized for all devices
+- Interactive polaroid camera interface
+- Smooth scroll-based navigation
+- Walking figure animation system
+- Email integration with copy functionality
+
+## 🎨 Design Philosophy
+
+I believe great design comes from understanding people, challenging assumptions, and embracing failure as a learning opportunity. Every project is a chance to create something meaningful that pushes the boundaries of what's possible.
 
 Should you later need the extended capabilities and extensibility provided by SvelteKit, the template has been structured similarly to SvelteKit so that it is easy to migrate.
 

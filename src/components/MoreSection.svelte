@@ -1,5 +1,5 @@
 <script lang="ts">
-  import { onMount } from 'svelte';
+  import { onMount, onDestroy } from 'svelte';
   import { isFlashing } from '../stores/flash';
   import { selectedPhotoIndex } from '../stores/selectedPolaroid';
   import { isProcessing } from '../stores/photoProcessing';
@@ -120,18 +120,29 @@
   let hoveredPhotoIndex = -1;
   let lastClickedPhotoIndex = -1; // Letztes angeklicktes Foto bleibt persistent
   let droppedPhotos = new Set(); // Verfolgt welche Fotos bereits gefallen sind
+  let hoverTimeout: number | null = null;
+  
+  // Optimierte reactive Beschreibung mit weniger Updates
   $: currentDescription = hoveredPhotoIndex >= 0 ? images[hoveredPhotoIndex] :
                          (lastClickedPhotoIndex >= 0 ? images[lastClickedPhotoIndex] : 
                          (currentPhotoIndex > 0 ? images[currentPhotoIndex - 1] : null));
 
-  // Debug: Verfolge Änderungen
-  $: {
-    console.log('Text state:', {
-      hoveredPhotoIndex,
-      lastClickedPhotoIndex,
-      currentPhotoIndex,
-      currentDescription: currentDescription?.title
-    });
+  // Debounced hover functions für bessere Performance
+  function handleMouseEnter(index: number) {
+    if (hoverTimeout) {
+      clearTimeout(hoverTimeout);
+    }
+    hoveredPhotoIndex = index;
+  }
+
+  function handleMouseLeave() {
+    if (hoverTimeout) {
+      clearTimeout(hoverTimeout);
+    }
+    hoverTimeout = window.setTimeout(() => {
+      hoveredPhotoIndex = -1;
+      hoverTimeout = null;
+    }, 50); // Kurze Verzögerung um Flickering zu vermeiden
   }
 
   onMount(() => {
@@ -205,6 +216,14 @@
       $isProcessing = false;
     }
   }
+
+  onDestroy(() => {
+    // Cleanup timeouts for better performance
+    if (hoverTimeout) {
+      clearTimeout(hoverTimeout);
+      hoverTimeout = null;
+    }
+  });
 </script>
 
 
@@ -292,8 +311,8 @@
                       tabindex="0"
                       on:click|stopPropagation={(event) => handlePhotoClick(i, event)}
                       on:keydown|stopPropagation={event => handlePhotoKeydown(event, i)}
-                      on:mouseenter={() => hoveredPhotoIndex = i}
-                      on:mouseleave={() => hoveredPhotoIndex = -1}
+                      on:mouseenter={() => handleMouseEnter(i)}
+                      on:mouseleave={handleMouseLeave}
                     >
                       <div 
                         class="photo-container"
@@ -350,6 +369,27 @@
     0% { opacity: 0.5; }
     50% { opacity: 1; }
     100% { opacity: 0.5; }
+  }
+
+  /* Performance-Optimierungen für smooth Text-Übergänge */
+  .text-content-wrapper {
+    will-change: contents; /* Optimierung für häufige Updates */
+    transform: translateZ(0); /* Hardware-Beschleunigung aktivieren */
+  }
+
+  .text-content {
+    transition: opacity 0.2s ease-out, transform 0.2s ease-out;
+    will-change: opacity, transform;
+  }
+
+  .text-content h2 {
+    transition: opacity 0.15s ease-out;
+    will-change: opacity;
+  }
+
+  .text-content p {
+    transition: opacity 0.15s ease-out;
+    will-change: opacity;
   }
 
   /* Camera section layout */
@@ -464,7 +504,7 @@
   /* Mobile-spezifische Text-Überschreibungen */
   @media (max-width: 768px) {
     .text-content h2 {
-      font-size: 1.75rem !important; /* Deutlich kleiner für mobile */
+      font-size: 1.75rem !important;
       margin-bottom: 1rem !important;
       line-height: 1.1 !important;
       margin-left: 0rem !important; /* Ganz nach links */
@@ -472,7 +512,7 @@
     }
     
     .text-content p {
-      font-size: 1rem !important; /* Deutlich kleiner für mobile */
+      font-size: 1rem !important;
       line-height: 1.4 !important;
       margin-bottom: 1rem !important; /* Weniger Abstand nach unten */
       padding-right: 1rem !important; /* Mehr Abstand nach rechts */
@@ -491,7 +531,7 @@
     }
     
     .text-content p {
-      font-size: 0.9rem !important; /* Sehr kompakt für kleine Bildschirme */
+      font-size: 1rem !important;
       line-height: 1.35 !important;
       margin-bottom: 0.75rem !important; /* Weniger Abstand nach unten */
       padding-right: 1.25rem !important; /* Noch mehr Abstand nach rechts */
@@ -649,12 +689,13 @@
     transform-origin: center top;
     position: relative;
     width: 100%;
-    transition: all 0.2s ease;
+    transition: transform 0.15s ease-out, box-shadow 0.15s ease-out;
     cursor: pointer;
     opacity: 1;
     z-index: 1;
     border: none;
     box-sizing: border-box;
+    will-change: transform;
   }
 
   /* Mobile Polaroid-Frame mit größerem Padding */
@@ -744,6 +785,7 @@
     margin: -16px;
     background: transparent;
     isolation: isolate;
+    will-change: transform;
   }
 
   /* Mobile: Größere Abstände zwischen Polaroids */
@@ -971,7 +1013,7 @@
     margin-top: 6px;
     color: rgba(0, 0, 0, 0.8);
     font-family: var(--font-family) !important;
-    font-size: 0.9rem;
+    font-size: 1rem;
     font-weight: 300;
   }
 
@@ -1185,7 +1227,7 @@
     }
     
     .text-content p {
-      font-size: 0.875rem;
+      font-size: 1rem;
       line-height: 1.4;
     }
   }
@@ -1242,7 +1284,7 @@
     }
   }
 
-  /* Overflow-Schutz für mobile Geräte */
+  /* Overflow protection for mobile devices */
   @media (max-width: 768px) {
     section {
       overflow-x: hidden;

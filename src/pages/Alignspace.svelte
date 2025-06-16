@@ -274,6 +274,12 @@
     font-weight: 500;
   }
 
+  @media (max-width: 768px) {
+    .meta-section h3 {
+      font-size: 1rem; 
+    }
+  }
+
   .meta-content {
     display: flex;
     flex-direction: column;
@@ -356,7 +362,7 @@
   /* Design System Bild - kleiner mit margin wie rand */
   .full-width-content :global(.image-block) {
     transform: scale(1) !important;
-    margin: 0 40px !important;
+    margin: 0 px !important;
   }
 
   @media (max-width: 1024px) {
@@ -393,7 +399,7 @@
 
     .title {
       padding-top: 80px;
-      font-size: 3rem;
+      font-size: 2rem; 
     }
 
     .section-content {
@@ -433,7 +439,7 @@
     }
 
     .section-titles h2 {
-      font-size: 2.5rem;
+      font-size: 2rem; 
     }
 
     .section-content {

@@ -239,7 +239,7 @@
     }
 
     h1 {
-      font-size: 2.5rem;
+      font-size: 2rem; 
       margin-bottom: 2.5rem;
     }
 
@@ -253,7 +253,7 @@
     }
 
     .contact-info p {
-      font-size: 0.95rem;
+      font-size: 1rem; 
     }
   }
 
@@ -272,7 +272,7 @@
     }
 
     .contact-info p {
-      font-size: 0.9rem;
+      font-size: 1rem; 
       line-height: 1.6;
     }
   }

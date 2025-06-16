@@ -242,6 +242,12 @@
     font-family: var(--font-family);
   }
 
+  @media (max-width: 768px) {
+    .meta-section h3 {
+      font-size: 1rem; 
+    }
+  }
+
   .meta-content {
     display: flex;
     flex-direction: column;
@@ -267,7 +273,7 @@
     }
 
     .meta-content p {
-      font-size: 1.125rem;
+      font-size: 1rem; 
     }
   }
 

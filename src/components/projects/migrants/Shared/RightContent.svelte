@@ -129,13 +129,13 @@
     }
 
     .title {
-      font-size: 20px;
+      font-size: 32px; 
       font-family: var(--font-family);
       font-weight: 700;
     }
 
     .description {
-      font-size: 12px;
+      font-size: 16px; 
     }
 
     .images-grid {

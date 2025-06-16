@@ -54,7 +54,7 @@
 
   @media (max-width: 768px) {
     .title {
-      font-size: 20px;
+      font-size: 32px; 
       font-family: var(--font-family);
       font-weight: 700;
     }

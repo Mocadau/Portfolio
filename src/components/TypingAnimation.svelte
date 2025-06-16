@@ -17,25 +17,77 @@
   let audioInitialized = false;
   let isFirstAnimation = true; // Track if this is the very first animation
 
-  // Initialize AudioContext properly with user interaction
-  async function initializeAudio() {
-    if (audioInitialized && audioContext && audioContext.state === 'running') {
-      return true;
-    }
+  let initTimer: ReturnType<typeof setInterval>;
 
+  // Check if animation has already played
+  function hasAnimationPlayed() {
+    if (typeof localStorage !== 'undefined') {
+      return localStorage.getItem('hasPlayedAnimation') === 'true';
+    }
+    return false;
+  }
+
+  // Mark animation as played
+  function markAnimationAsPlayed() {
+    if (typeof localStorage !== 'undefined') {
+      localStorage.setItem('hasPlayedAnimation', 'true');
+    }
+  }
+
+  // Initialize AudioContext with continuous attempts
+  async function initializeAudio() {
     try {
       if (!audioContext) {
-        audioContext = new (window.AudioContext || (window as any).webkitAudioContext)();
+        const AudioContext = window.AudioContext || (window as any).webkitAudioContext;
+        audioContext = new AudioContext({ latencyHint: "interactive" });
       }
 
-      if (audioContext.state === 'suspended') {
-        await audioContext.resume();
+      // Try to resume immediately
+      await audioContext.resume();
+
+      // Create a buffer with very quiet pink noise
+      const sampleRate = audioContext.sampleRate;
+      const buffer = audioContext.createBuffer(2, sampleRate * 0.1, sampleRate);
+      for (let channel = 0; channel < buffer.numberOfChannels; channel++) {
+        const data = buffer.getChannelData(channel);
+        let b0 = 0, b1 = 0, b2 = 0, b3 = 0, b4 = 0, b5 = 0;
+        for (let i = 0; i < buffer.length; i++) {
+          const white = Math.random() * 2 - 1;
+          b0 = 0.99886 * b0 + white * 0.0555179;
+          b1 = 0.99332 * b1 + white * 0.0750759;
+          b2 = 0.96900 * b2 + white * 0.1538520;
+          b3 = 0.86650 * b3 + white * 0.3104856;
+          b4 = 0.55000 * b4 + white * 0.5329522;
+          b5 = -0.7616 * b5 - white * 0.0168980;
+          data[i] = (b0 + b1 + b2 + b3 + b4 + b5 + white * 0.5362) * 0.00001;
+        }
       }
 
-      audioInitialized = true;
-      return true;
+      const source = audioContext.createBufferSource();
+      const gainNode = audioContext.createGain();
+      gainNode.gain.value = 0.00001; // Extremely quiet
+      source.buffer = buffer;
+      source.loop = true;
+      source.connect(gainNode);
+      gainNode.connect(audioContext.destination);
+      source.start(0);
+      
+      // Keep checking audio context state
+      if (!initTimer) {
+        initTimer = setInterval(() => {
+          if (audioContext.state === 'running') {
+            audioInitialized = true;
+            clearInterval(initTimer);
+          } else {
+            audioContext.resume().catch(() => {});
+          }
+        }, 100);
+      }
+
+      audioInitialized = audioContext.state === 'running';
+      return audioInitialized;
     } catch (e) {
-      console.error('Audio initialization failed:', e);
+      console.warn('Audio initialization attempt:', e);
       return false;
     }
   }
@@ -96,20 +148,13 @@
   }
 
   async function playIntroTypingSounds() {
-    // Nur beim allerersten Text und nur einmal global
-    if (hasPlayedIntroSounds || !isFirstAnimation || text !== "HELLO") {
+    // Check if animation has already played
+    if (hasPlayedIntroSounds || !isFirstAnimation || text !== "HELLO" || hasAnimationPlayed()) {
       return;
-    }
-    
-    // Global flag setzen, damit es nie wieder abgespielt wird
-    if (typeof window !== 'undefined' && window.hasPlayedGlobalIntroSounds) {
-      return;
-    }
-    if (typeof window !== 'undefined') {
-      window.hasPlayedGlobalIntroSounds = true;
     }
     
     hasPlayedIntroSounds = true;
+    markAnimationAsPlayed();
 
     // Initialize audio first
     if (!(await initializeAudio())) {
@@ -134,13 +179,21 @@
   }
 
   function startTyping() {
+    // If HELLO text and animation has already played, show immediately
+    if (text === "HELLO" && hasAnimationPlayed()) {
+      displayText = text;
+      isComplete = true;
+      dispatch('complete');
+      return;
+    }
+
     timer = setInterval(async () => {
       if (currentIndex < text.length) {
         displayText = text.substring(0, currentIndex + 1);
         currentIndex++;
         
-        // Spiele normale Typewriter-Sounds nur für sichtbare Zeichen (nicht Leerzeichen)
-        if (text[currentIndex - 1] !== ' ') {
+        // Only play sound for first visit or non-HELLO text
+        if (text[currentIndex - 1] !== ' ' && (!hasAnimationPlayed() || text !== "HELLO")) {
           await createTypewriterSound();
         }
       } else {
@@ -152,52 +205,51 @@
   }
 
   onMount(() => {
-    // Initialize audio context early
-    const initAudio = () => {
-      initializeAudio().catch(e => {
-        console.warn('Initial audio setup failed, will retry on user interaction');
-      });
+    const startAudioAndAnimation = async () => {
+      // Check if animation has already played
+      const hasPlayed = hasAnimationPlayed();
+
+      if (!hasPlayed) {
+        // Try multiple parallel initialization attempts for first-time visitors
+        const attempts = [
+          initializeAudio(),
+          new Promise(resolve => setTimeout(() => initializeAudio().then(resolve), 100)),
+          new Promise(resolve => setTimeout(() => initializeAudio().then(resolve), 300)),
+          new Promise(resolve => setTimeout(() => initializeAudio().then(resolve), 500))
+        ];
+
+        Promise.any(attempts)
+          .then(async () => {
+            if (text === "HELLO" && isFirstAnimation && !hasPlayedIntroSounds) {
+              await playIntroTypingSounds();
+            }
+          })
+          .catch(console.warn);
+      }
     };
 
-    // Try to initialize immediately
-    initAudio();
+    // Start audio initialization if needed
+    startAudioAndAnimation();
 
-    // Also try on first user interaction
-    const handleFirstInteraction = async () => {
-      await initializeAudio();
-      document.removeEventListener('click', handleFirstInteraction);
-      document.removeEventListener('keydown', handleFirstInteraction);
-    };
-
-    document.addEventListener('click', handleFirstInteraction);
-    document.addEventListener('keydown', handleFirstInteraction);
-
+    // Start the animation
     const delayTimer = setTimeout(() => {
-      // For "HELLO" text, try to play intro sounds but don't wait for them
-      if (text === "HELLO" && isFirstAnimation && !hasPlayedIntroSounds) {
-        // Try to play intro sounds (will fail silently if audio not ready)
-        playIntroTypingSounds().catch(() => {
-          console.warn('Intro sounds failed, continuing with animation');
-        });
-        
-        // Start typing after intro sound delay, regardless of audio state
-        setTimeout(() => {
-          startTyping();
-        }, 650);
+      if (text === "HELLO" && hasAnimationPlayed()) {
+        // If HELLO text and not first visit, show immediately without animation
+        displayText = text;
+        isComplete = true;
+        dispatch('complete');
       } else {
-        // All other texts start immediately
         startTyping();
       }
       
-      // After first text, it's no longer the first animation
+      // No longer first animation after any animation completes
       isFirstAnimation = false;
     }, delayStart);
 
     return () => {
       clearTimeout(delayTimer);
       clearInterval(timer);
-      document.removeEventListener('click', handleFirstInteraction);
-      document.removeEventListener('keydown', handleFirstInteraction);
+      clearInterval(initTimer);
       if (audioContext && audioContext.state !== 'closed') {
         audioContext.close();
       }

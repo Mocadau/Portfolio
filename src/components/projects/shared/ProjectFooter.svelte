@@ -31,8 +31,8 @@
       >
         <img src={previousProject.preview} alt="Previous Project Preview" class="w-16 h-16 object-cover" />
         <div>
-          <span class="hand-drawn-text text-sm block">← Previous</span>
-          <h4 class="hand-drawn-text text-lg">{previousProject.name}</h4>
+          <span class="hand-drawn-text text-base md:text-sm block">← Previous</span>
+          <h4 class="hand-drawn-text text-base md:text-lg">{previousProject.name}</h4>
         </div>
       </button>
       <button
@@ -40,8 +40,8 @@
         on:click={goToNext}
       >
         <div>
-          <span class="hand-drawn-text text-sm block">Next →</span>
-          <h4 class="hand-drawn-text text-lg">{nextProject.name}</h4>
+          <span class="hand-drawn-text text-base md:text-sm block">Next →</span>
+          <h4 class="hand-drawn-text text-base md:text-lg">{nextProject.name}</h4>
         </div>
         <img src={nextProject.preview} alt="Next Project Preview" class="w-16 h-16 object-cover" />
       </button>

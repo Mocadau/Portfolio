@@ -403,6 +403,12 @@
     font-weight: 500;
   }
 
+  @media (max-width: 768px) {
+    .meta-section h3 {
+      font-size: 1rem;
+    }
+  }
+
   .meta-content {
     display: flex;
     flex-direction: column;
@@ -435,6 +441,12 @@
     color: #666;
     margin-top: 0.5rem;
     font-weight: normal;
+  }
+
+  @media (max-width: 768px) {
+    .subtitle-text {
+      font-size: 1rem;
+    }
   }
 
   .section-divider {
@@ -739,11 +751,11 @@
 
     .title {
       padding-top: 80px;
-      font-size: 2.5rem; /* Anpassung an andere Projekte */
+      font-size: 2rem;
     }
 
     .section-titles h2 {
-      font-size: 2.5rem; /* Gleiche Größe wie Alignspace und Migrants */
+      font-size: 2rem;
     }
 
     .section-content {
@@ -847,7 +859,7 @@
     }
 
     .stat-description {
-      font-size: 0.95rem;
+      font-size: 1rem; 
     }
 
     .key-findings {
@@ -867,7 +879,7 @@
     }
 
     .finding-text {
-      font-size: 0.95rem;
+      font-size: 1rem; 
     }
   }
 
@@ -934,7 +946,7 @@
     }
     
     .content-section:nth-child(7) .stat-description {
-      font-size: 0.9rem;
+      font-size: 1rem; 
     }
   }
 

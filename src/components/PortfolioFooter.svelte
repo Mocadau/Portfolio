@@ -210,7 +210,7 @@
   /* Mobile Phone Anpassungen */
   @media (max-width: 480px) {
     .mobile-footer-container {
-      bottom: 180px; /* Hoch positioniert für mobile Phones */
+      bottom: 180px;
       gap: 1.5rem; /* Angepasster Abstand für kleinere Screens */
     }
     
