@@ -637,7 +637,7 @@
 
   .scroll-container {
     display: flex;
-    overflow-x: auto; /* Ermöglicht horizontales Scrollen auf Mobile */
+    overflow-x: auto;
     scroll-snap-type: x mandatory;
     -webkit-overflow-scrolling: touch;
     scrollbar-width: none;
@@ -1022,7 +1022,7 @@
     }
     
     .email-container-mobile {
-      gap: 1.5rem; /* Kleinere Gaps auf mobilen Geräten */
+      gap: 1.5rem;
       min-width: 200px;
       padding: 6px 10px;
     }

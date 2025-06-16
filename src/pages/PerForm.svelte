@@ -595,7 +595,6 @@
     overflow: visible;
   }
 
-  /* Mobile Anpassungen für Results Section */
   @media (max-width: 1024px) {
     .content-section:nth-child(6) .section-content {
       transform: scale(1.2);
@@ -899,7 +898,6 @@
     padding: 4rem 0;
   }
 
-  /* Mobile/Tablet - User Research Insights gleiche Schriftgröße wie Key Findings */
   @media (max-width: 1024px) {
     .content-section:nth-child(7) .section-content {
       font-size: 1rem;
@@ -931,7 +929,6 @@
       font-size: 2rem;
     }
     
-    /* Results und Analysis Section - komplett ohne padding/min-height auf mobile */
     .content-section:nth-child(8),
     .content-section:nth-child(9) {
       min-height: auto;
@@ -998,7 +995,6 @@
     transform-origin: center;
   }
 
-  /* Results Section - Mobile Layout wie Global Migrants Features */
   @media (max-width: 768px) {
     .content-section:nth-child(8) .section-content .left-column,
     .content-section:nth-child(8) .section-content .right-column {
@@ -1039,7 +1035,6 @@
     margin-bottom: 2rem;
   }
 
-  /* Mobile Anpassung für letztes Result-Bild */
   @media (max-width: 768px) {
     .content-section:nth-child(8) .section-content .right-column:last-child :global(.image-block) {
       margin-bottom: 3rem;

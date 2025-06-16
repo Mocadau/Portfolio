@@ -123,18 +123,17 @@
     border-width: 4px;
     border-color: #000;
     border-radius: 0; /* Eckige Ecken */
-    padding: 0.25rem 0.75rem; /* px-3 py-1 equivalent für Desktop */
+    padding: 0.25rem 0.75rem;
     display: inline-block;
   }
 
   /* Responsive Padding für Tags */
   @media (min-width: 768px) {
     .project-tag {
-      padding: 0.25rem 1rem; /* px-4 py-1 equivalent für Desktop */
+      padding: 0.25rem 1rem;
     }
   }
 
-  /* Mobile Anpassungen für Projekt-Bilder */
   @media (max-width: 768px) {
     .project-image {
       width: 350px;

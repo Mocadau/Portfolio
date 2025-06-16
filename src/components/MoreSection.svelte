@@ -127,7 +127,7 @@
                          (lastClickedPhotoIndex >= 0 ? images[lastClickedPhotoIndex] : 
                          (currentPhotoIndex > 0 ? images[currentPhotoIndex - 1] : null));
 
-  // Debounced hover functions für bessere Performance
+  // Debounced hover functions
   function handleMouseEnter(index: number) {
     if (hoverTimeout) {
       clearTimeout(hoverTimeout);
@@ -218,7 +218,7 @@
   }
 
   onDestroy(() => {
-    // Cleanup timeouts for better performance
+    // Cleanup timeouts
     if (hoverTimeout) {
       clearTimeout(hoverTimeout);
       hoverTimeout = null;
@@ -371,7 +371,7 @@
     100% { opacity: 0.5; }
   }
 
-  /* Performance-Optimierungen für smooth Text-Übergänge */
+  /* Smooth text transitions */
   .text-content-wrapper {
     will-change: contents; /* Optimierung für häufige Updates */
     transform: translateZ(0); /* Hardware-Beschleunigung aktivieren */
@@ -479,7 +479,7 @@
   /* Responsive Wrapper-Anpassungen */
   @media (max-width: 768px) {
     .text-content-wrapper {
-      padding-bottom: 1.5rem; /* Weniger Abstand auf mobilen Geräten */
+      padding-bottom: 1.5rem;
       padding-left: 0rem !important; /* Ganz nach links */
     }
     
@@ -501,7 +501,6 @@
     }
   }
 
-  /* Mobile-spezifische Text-Überschreibungen */
   @media (max-width: 768px) {
     .text-content h2 {
       font-size: 1.75rem !important;
@@ -698,7 +697,6 @@
     will-change: transform;
   }
 
-  /* Mobile Polaroid-Frame mit größerem Padding */
   @media (max-width: 768px) {
     .polaroid-frame {
       padding: 14px;
@@ -750,7 +748,7 @@
   @media (max-width: 768px) {
     .photos-container {
       left: 50%;
-      top: calc(0.75rem + 100px); /* Deutlich mehr Abstand zur Kamera auf mobilen Geräten */
+      top: calc(0.75rem + 100px);
       width: min(350px, 78vw) !important;
       height: 68vh !important;
       margin: 0 auto;
@@ -761,7 +759,7 @@
   @media (max-width: 480px) {
     .photos-container {
       left: 50%;
-      top: calc(0.75rem + 110px); /* Mehr Abstand für kleine mobile Geräte */
+      top: calc(0.75rem + 110px);
       width: min(320px, 75vw) !important;
       height: 65vh !important;
       margin: 0 auto;
@@ -788,7 +786,6 @@
     will-change: transform;
   }
 
-  /* Mobile: Größere Abstände zwischen Polaroids */
   @media (max-width: 768px) {
     .photo-position {
       transform: translateX(-50%) translateY(calc(var(--index, 0) * 55px));
@@ -822,7 +819,6 @@
     cursor: pointer;
   }
 
-  /* Mobile: Polaroid in untere linke Ecke (Position des roten Rechtecks) */
   @media (max-width: 768px) {
     .photo-position.selected {
       position: fixed;
@@ -888,7 +884,6 @@
     }
   }
 
-  /* Mobile Skalierung für größere Polaroids */
   @media (max-width: 768px) {
     .photo-container {
       width: min(110px, calc(38vw - 1rem)) !important;
@@ -907,7 +902,6 @@
     transform: translateY(calc(var(--index) * 45px)) rotate(0deg) scale(1);
   }
 
-  /* Mobile: Angepasste dropped Position */
   @media (max-width: 768px) {
     .photo-container.dropped {
       transform: translateY(calc(var(--index) * 55px)) rotate(0deg) scale(1);
@@ -958,7 +952,7 @@
 
   @media (max-width: 768px) {
     .photo-position.selected .photo-container {
-      width: 280px !important; /* Vergrößerte mobile Polaroid-Größe */
+      width: 280px !important;
       height: 340px !important;
       transform: translate(140px, 80px) !important; /* Nach links und unten verschoben */
       box-shadow: 0 6px 18px rgba(0, 0, 0, 0.2);
@@ -975,7 +969,6 @@
   }
 
   /* Blur-Effekte nur wenn ein Bild ausgewählt ist */
-  /* Mobile */
   @media (max-width: 768px) {
     .photo-position.blur-others {
       filter: blur(3px);
@@ -984,7 +977,6 @@
     }
   }
 
-  /* Desktop */
   @media (min-width: 769px) {
     .photo-position.blur-others {
       filter: blur(4px);
@@ -1057,7 +1049,6 @@
     }
   }
 
-  /* Mobile Version der moveToNewPosition Animation */
   @media (max-width: 768px) {
     @keyframes moveToNewPosition {
       0% {
@@ -1099,7 +1090,6 @@
     }
   }
 
-  /* Mobile: Angepasste Animation für größere Abstände */
   @media (max-width: 768px) {
     @keyframes polaroid-slide {
       0% {
@@ -1151,10 +1141,9 @@
 
   .camera-section {
     position: relative;
-    height: 100vh; /* Desktop default */
+    height: 100vh;
   }
 
-  /* Desktop Layout */
   @media (min-width: 1025px) {
     .camera-section {
       height: 100% !important;
@@ -1179,7 +1168,6 @@
     line-height: 1.6;
   }
 
-  /* Mobile Layout Anpassungen */
   @media (max-width: 1024px) {
     .camera-section {
       height: 55vh !important;
@@ -1284,7 +1272,6 @@
     }
   }
 
-  /* Overflow protection for mobile devices */
   @media (max-width: 768px) {
     section {
       overflow-x: hidden;

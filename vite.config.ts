@@ -14,6 +14,9 @@ export default defineConfig({
     })
   ],
   
+  // GitHub Pages base path (falls nicht in root)
+  base: './',
+  
   build: {
     // WICHTIG: Älterer JavaScript-Standard
     target: 'es2018',

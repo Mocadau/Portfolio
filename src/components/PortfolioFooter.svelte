@@ -132,7 +132,7 @@
   /* Mobile Links - relative positioning within flex container */
   .mobile-link {
     position: relative !important;
-    padding: 8px 12px; /* Horizontales Padding für bessere Klickbarkeit */
+    padding: 8px 12px;
     font-size: 14px;
     background: rgba(255, 255, 255, 0.9); /* Leicht transparenter Hintergrund */
     border-radius: 4px; /* Abgerundete Ecken */
