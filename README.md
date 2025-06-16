@@ -67,9 +67,36 @@ HMR state preservation comes with a number of gotchas! It has been disabled by d
 
 If you have state that's important to retain within a component, consider creating an external store which would not be replaced by HMR.
 
-```ts
-// store.ts
-// An extremely simple external store
-import { writable } from 'svelte/store'
-export default writable(0)
+## 🛠️ Technical Stack
+
+- **Framework**: Svelte + TypeScript + Vite
+- **Styling**: Tailwind CSS with custom components
+- **Routing**: Svelte Routing
+- **Audio**: Web Audio API for interactive sound
+- **Build**: Optimized Vite build with asset compression
+
+## 🚀 Development
+
+```bash
+# Install dependencies
+npm install
+
+# Development server
+npm run dev
+
+# Build for production
+npm run build
+
+# Preview production build
+npm run preview
 ```
+
+## 📱 Features
+
+- **Interactive Typing Animation** with audio feedback
+- **Polaroid Photo Gallery** with camera simulation
+- **Responsive Design** (16px text on mobile, 32px headings)
+- **Touch-Optimized** interactions for mobile
+- **Performance Optimized** with lazy loading and compressed assets
+
+Built with ❤️ using modern web technologies
