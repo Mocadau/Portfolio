@@ -1,0 +1,9 @@
+<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Simple background -->
+  <rect width="32" height="32" rx="6" fill="#000000"/>
+  
+  <!-- Polaroid camera icon - represents your photography/creative side -->
+  <rect x="6" y="10" width="20" height="12" rx="2" stroke="#ffffff" stroke-width="2" fill="none"/>
+  <circle cx="16" cy="16" r="3" stroke="#ffffff" stroke-width="1.5" fill="none"/>
+  <rect x="18" y="12" width="4" height="2" rx="1" fill="#ffffff"/>
+</svg>

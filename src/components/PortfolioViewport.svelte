@@ -578,7 +578,7 @@
          tabindex="-1"
          aria-label="Close email overlay"></div>
     <div class="email-overlay" 
-         style="left: {walkingFigurePosition + 15}px; bottom: 230px;">
+         style="left: {walkingFigurePosition}px; bottom: 230px;">
       <div class="email-container" role="dialog" aria-label="Email copy dialog">
         <button type="button"
                 class="copy-text"
@@ -955,7 +955,7 @@
   .email-overlay-mobile {
     position: fixed;
     left: 50%; /* Zentriert wie der mobile-footer-container */
-    bottom: 225px; /* Nur 5px über mobile-footer-container (220px) - viel näher */
+    bottom: 25px; /* Nur 5px über mobile-footer-container (220px) - viel näher */
     z-index: 90;
     pointer-events: auto;
     transform: translateX(-50%); /* Zentriert */

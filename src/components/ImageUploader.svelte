@@ -2,9 +2,18 @@
   import { createEventDispatcher } from 'svelte';
   import { isProcessing } from '../stores/photoProcessing';
   import { isFlashing } from '../stores/flash';
+  import { playCameraSound, initializeCameraAudio } from '../lib/cameraSound';
   import camera from '../assets/polaroid-camera.svg';
   const dispatch = createEventDispatcher();
   let fileInput: HTMLInputElement;
+
+  async function handleCameraClick() {
+    if (!$isProcessing && fileInput) {
+      // Play camera sound
+      await playCameraSound();
+      fileInput.click();
+    }
+  }
 
   function handleFileSelect(event: Event) {
     const target = event.target as HTMLInputElement;
@@ -42,11 +51,7 @@
   
   <button
     class="p-2 rounded-full bg-white hover:bg-gray-100 transition-colors shadow-md relative cursor-pointer"
-    on:click|preventDefault={() => {
-      if (!$isProcessing && fileInput) {
-        fileInput.click();
-      }
-    }}
+    on:click|preventDefault={handleCameraClick}
     aria-label="Upload image"
   >
     <img

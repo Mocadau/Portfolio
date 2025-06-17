@@ -1,6 +1,7 @@
 <script lang="ts">
   import { onMount } from 'svelte';
   import { Router, Route } from 'svelte-routing';
+  import { initializeCameraAudio } from './lib/cameraSound';
   import Index from './pages/Index.svelte';
   import NotFound from './pages/NotFound.svelte';
   import PerForm from './pages/PerForm.svelte';
@@ -21,6 +22,26 @@
       isBottomHalf: false,
       mousePosition: { y: 0 }
     };
+
+    // Initialize camera audio in background (non-blocking)
+    initializeCameraAudio().catch(error => {
+      console.warn('Failed to initialize camera audio:', error);
+    });
+
+    // Global event listener to initialize audio on first user interaction
+    const initAudioOnInteraction = () => {
+      initializeCameraAudio().catch(error => {
+        console.warn('Failed to initialize camera audio on interaction:', error);
+      });
+      // Remove listeners after first interaction
+      document.removeEventListener('click', initAudioOnInteraction);
+      document.removeEventListener('touchstart', initAudioOnInteraction);
+      document.removeEventListener('keydown', initAudioOnInteraction);
+    };
+
+    document.addEventListener('click', initAudioOnInteraction, { once: true });
+    document.addEventListener('touchstart', initAudioOnInteraction, { once: true });
+    document.addEventListener('keydown', initAudioOnInteraction, { once: true });
 
     // Optional: Add custom fonts if needed
     // const fonts = [

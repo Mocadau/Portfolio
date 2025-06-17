@@ -24,10 +24,10 @@
   let showScrollIndicator = false;
   let scrollIndicatorTimeout: NodeJS.Timeout;
 
-  // Check if we should skip the animation (use sessionStorage for refresh behavior)
+  // Check if we should skip the animation
   function shouldSkipAnimation() {
-    if (typeof sessionStorage !== 'undefined') {
-      return sessionStorage.getItem('hasPlayedAnimation') === 'true';
+    if (typeof localStorage !== 'undefined') {
+      return localStorage.getItem('hasPlayedAnimation') === 'true';
     }
     return false;
   }
@@ -45,11 +45,11 @@
     isTypingComplete = true;
     dispatch('complete');
     
-    // Markiere Animation als gesehen in sessionStorage (wird bei Browser-Schließung zurückgesetzt)
+    // Markiere Animation als gesehen (für andere Features, aber nicht zum Überspringen)
     try {
-      sessionStorage.setItem('hasPlayedAnimation', 'true');
+      localStorage.setItem('hasPlayedAnimation', 'true');
     } catch (e) {
-      console.error('Could not write to sessionStorage:', e);
+      console.error('Could not write to localStorage:', e);
     }
     
     // Aktiviere Cursor-Effekt nach einer kurzen Verzögerung
@@ -280,7 +280,7 @@
             I AM AN INTERACTION DESIGNER.
           {:else}
             <TypingAnimation 
-              text="I AM AN PRODUCT DESIGNER." 
+              text="I AM AN INTERACTION DESIGNER." 
               speed={50} 
               delayStart={0}
               underline={false}

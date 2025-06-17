@@ -19,18 +19,18 @@
 
   let initTimer: ReturnType<typeof setInterval>;
 
-  // Check if animation has already played (use sessionStorage for refresh behavior)
+  // Check if animation has already played
   function hasAnimationPlayed() {
-    if (typeof sessionStorage !== 'undefined') {
-      return sessionStorage.getItem('hasPlayedAnimation') === 'true';
+    if (typeof localStorage !== 'undefined') {
+      return localStorage.getItem('hasPlayedAnimation') === 'true';
     }
     return false;
   }
 
-  // Mark animation as played (use sessionStorage for refresh behavior)
+  // Mark animation as played
   function markAnimationAsPlayed() {
-    if (typeof sessionStorage !== 'undefined') {
-      sessionStorage.setItem('hasPlayedAnimation', 'true');
+    if (typeof localStorage !== 'undefined') {
+      localStorage.setItem('hasPlayedAnimation', 'true');
     }
   }
 

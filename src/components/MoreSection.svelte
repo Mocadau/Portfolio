@@ -3,6 +3,7 @@
   import { isFlashing } from '../stores/flash';
   import { selectedPhotoIndex } from '../stores/selectedPolaroid';
   import { isProcessing } from '../stores/photoProcessing';
+  import { playCameraSound, initializeCameraAudio } from '../lib/cameraSound';
   import PolaroidCamera from '../assets/polaroid-camera.svg';
   import HeyImage from '../assets/AboutMe.png';
   import AboutMeImage from '../assets/Background.png';
@@ -72,7 +73,6 @@
   let canTakePhoto = false;
   let isComplete = false;
   let hasClickedOnce = false; // Verfolgt ob bereits einmal geklickt wurde
-  let photoAudio: HTMLAudioElement;
   let photos: HTMLImageElement[] = [];
   let isLoading = true;
   let loadError = '';
@@ -146,33 +146,42 @@
   }
 
   onMount(() => {
+    // Make camera available immediately
+    isLoading = false;
+    canTakePhoto = true;
+
     const loadResources = async () => {
       try {
-        // Create audio element with embedded base64 shutter sound
-        photoAudio = new Audio();
-        photoAudio.src = "data:audio/mpeg;base64,SUQzBAAAAAAAI1RTU0UAAAAPAAADTGF2ZjU4Ljc2LjEwMAAAAAAAAAAAAAAA/+M4wAAAAAAAAAAAAEluZm8AAAAPAAAAAwAAABQAFBQUFBQUFBQUFBQUFBQUFBQUFBQUFBQUAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAAA/+MYxAAAAANIAAAAAExBTUUzLjEwMFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV/+MYxDsAAANIAAAAAFVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVVV";
+        // Initialize camera audio in background - don't wait
+        initializeCameraAudio().catch(error => {
+          console.warn('Audio initialization failed, camera will work without sound:', error);
+        });
 
-        await Promise.all(
+        // Load images in background without blocking camera
+        Promise.all(
           images.map(
             (image) =>
               new Promise((resolve, reject) => {
                 const img = new Image();
                 img.onload = resolve;
-                img.onerror = () => reject(`Failed to load image: ${image.alt}`);
+                img.onerror = () => {
+                  console.warn(`Failed to load image: ${image.alt}`);
+                  resolve(null); // Don't block on individual image failures
+                };
                 img.src = image.src;
               })
           )
-        );
+        ).catch(error => {
+          console.warn('Some images failed to load:', error);
+        });
 
-        isLoading = false;
-        canTakePhoto = true;
       } catch (error) {
-        console.error('Failed to load resources:', error);
-        loadError = error instanceof Error ? error.message : String(error);
-        isLoading = false;
+        console.error('Failed to initialize resources:', error);
+        // Camera remains available even if some resources fail
       }
     };
 
+    // Run in background
     loadResources();
   });
 
@@ -199,10 +208,8 @@
     }, 100);
     
     try {
-      // Try to play the sound, but don't wait for it
-      photoAudio?.play().catch(() => {
-        console.log('Audio playback blocked');
-      });
+      // Play camera sound using the unified system
+      await playCameraSound();
 
       // Wait a moment for the flash effect
       await new Promise(resolve => setTimeout(resolve, 200));
@@ -326,6 +333,7 @@
                               src={image.src} 
                               alt={image.alt}
                               class="w-full h-full"
+                              loading="lazy"
                               bind:this={photos[i]}
                             />
                           </div>

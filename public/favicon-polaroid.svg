@@ -1,0 +1,14 @@
+<svg width="32" height="32" viewBox="0 0 32 32" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <!-- Background -->
+  <rect width="32" height="32" rx="6" fill="#000000"/>
+  
+  <!-- Polaroid frame design -->
+  <rect x="6" y="8" width="20" height="16" rx="2" fill="#ffffff"/>
+  <rect x="8" y="10" width="16" height="10" fill="#f0f0f0"/>
+  
+  <!-- Letter "M" inside polaroid -->
+  <path d="M10 18V12L12.5 16L15 12L17.5 16L20 12V18" stroke="#000000" stroke-width="1.5" stroke-linecap="round" stroke-linejoin="round" fill="none"/>
+  
+  <!-- Small accent dot -->
+  <circle cx="26" cy="6" r="1.5" fill="#ffffff"/>
+</svg>
