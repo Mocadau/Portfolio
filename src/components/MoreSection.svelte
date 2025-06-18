@@ -783,7 +783,7 @@
     position: absolute;
     left: 50%;
     top: 0;
-    transform: translateX(-50%) translateY(calc(var(--index, 0) * 45px));
+    transform: translateX(-40%) translateY(calc(var(--index, 0) * 60px)); /* Increased from 45px to 60px */
     transform-style: preserve-3d;
     transition: transform 0.5s cubic-bezier(0.34, 1.56, 0.64, 1);
     pointer-events: all;
@@ -907,7 +907,7 @@
   /* Verhindere Animation nach dem ersten Drop */
   .photo-container.dropped {
     animation: none;
-    transform: translateY(calc(var(--index) * 45px)) rotate(0deg) scale(1);
+    transform: translateY(calc(var(--index) * 60px)) rotate(0deg) scale(1); /* Increased from 45px to 60px */
   }
 
   @media (max-width: 768px) {
@@ -1050,7 +1050,7 @@
 
   @keyframes moveToNewPosition {
     0% {
-      transform: translateY(calc(var(--index) * 45px)) scale(1);
+      transform: translateY(calc(var(--index) * 60px)) scale(1); /* Increased from 45px to 60px */
     }
     100% {
       transform: translate(150px, 100px) scale(1);
@@ -1089,11 +1089,11 @@
       opacity: 0.6;
     }
     60% {
-      transform: translateY(calc(var(--index) * 45px - 5px)) scale(1.02);
+      transform: translateY(calc(var(--index) * 60px - 5px)) scale(1.02); /* Increased from 45px to 60px */
       opacity: 0.9;
     }
     100% {
-      transform: translateY(calc(var(--index) * 45px)) scale(1);
+      transform: translateY(calc(var(--index) * 60px)) scale(1); /* Increased from 45px to 60px */
       opacity: 1;
     }
   }

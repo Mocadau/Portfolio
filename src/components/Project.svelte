@@ -63,11 +63,12 @@
                 on:click={navigateToProject}
                 on:keydown={(e) => e.key === 'Enter' && navigateToProject()}
               >
-                <div class="w-full h-full bg-white p-[10px] cursor-pointer">
+                <div class="w-full h-full bg-white cursor-pointer">
                   <img
                     src={index === 1 ? performBanner : index === 2 ? migrantsImage : alignspaceImage}
                     alt={index === 1 ? "PerForm Banner" : index === 2 ? "Global Migrants" : "Alignspace"}
-                    class="w-full h-full object-cover"
+                    class="w-full h-full"
+                    style="object-fit: {index === 2 ? 'contain' : 'cover'}; object-position: center;"
                   />
                 </div>
               </div>
@@ -94,9 +95,9 @@
     width: 584px; /* Feste Breite für alle Projekte */
     height: 334px; /* Feste Höhe für alle Projekte */
     margin: 0;
-    /* Zusätzlicher Padding für die Border */
-    padding: 8px;
-    overflow: visible;
+    /* Entferne Padding für saubere Ränder */
+    padding: 0;
+    overflow: hidden; /* Verhindert Overflow für saubere Kanten */
     /* Sicherstellen, dass das Container seine Größe beibehält */
     flex-shrink: 0;
   }
@@ -112,9 +113,10 @@
     border-style: solid;
     border-width: 4px;
     border-color: #000;
-    /* Kleine Inset-Anpassung, um Overflow zu vermeiden */
-    inset: 4px;
+    /* Border außerhalb des Bildbereichs für keinen weißen Rand */
+    inset: -4px;
     border-radius: 0; /* Eckige Ecken */
+    pointer-events: none; /* Border ist nicht klickbar */
   }
 
   /* Tag-Styles - exakt gleiche Border wie Projekt-Border */
@@ -141,24 +143,23 @@
     }
   }
 
-  /* Sicherstellen, dass alle Bilder die gleiche Größe haben und den Border-Container ausfüllen */
+  /* Sicherstellen, dass alle Bilder die gleiche Größe haben und den Container vollständig ausfüllen */
   .project-image img {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    object-fit: cover; /* Bilder füllen den Container vollständig aus */
     border-radius: 0; /* Eckige Ecken */
   }
 
-  /* Sicherstellen, dass der innere Container den Border-Bereich vollständig ausfüllt */
+  /* Sicherstellen, dass der innere Container den gesamten Bildbereich ausfüllt */
   .project-image > div > div {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    padding: 0; /* Entferne das padding damit das Bild den Border ausfüllt */
+    padding: 0; /* Kein Padding für vollständige Abdeckung */
   }
 </style>
