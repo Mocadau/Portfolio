@@ -2,7 +2,8 @@
   import { navigate } from "svelte-routing";
   import performBanner from '../assets/PerformBanner.png';
   import migrantsImage from '../assets/Migrants/GlobeOverview.png';
-  import alignspaceImage from '../assets/Alignspace/Ubersicht.jpg';
+  import alignspaceImage from '../assets/Alignspace/Ubersicht.png';
+  import aboutMeImage from '../assets/AboutMe.png';
 
   export let currentProject: 'PerForm' | 'GlobalMigrants' | 'Alignspace';
 
@@ -31,6 +32,14 @@
     }
   ];
 
+  // About Me data
+  const aboutMe = {
+    title: 'More',
+    image: aboutMeImage,
+    route: '/#more',
+    description: 'Learn more about me'
+  };
+
   // Get current project index
   const currentIndex = projects.findIndex(p => p.name === currentProject);
   
@@ -38,8 +47,18 @@
   const prevProject = currentIndex > 0 ? projects[currentIndex - 1] : null;
   const nextProject = currentIndex < projects.length - 1 ? projects[currentIndex + 1] : null;
 
+  // Show About Me button if current project is Alignspace
+  const showAboutMeButton = currentProject === 'Alignspace';
+
   function navigateToProject(route: string) {
-    navigate(route);
+    if (route.startsWith('/#')) {
+      // Navigate to home page and scroll to specific section
+      const section = route.split('#')[1];
+      sessionStorage.setItem(`scrollTo${section.charAt(0).toUpperCase() + section.slice(1)}`, 'true');
+      window.location.href = '/';
+    } else {
+      navigate(route);
+    }
   }
 </script>
 
@@ -82,6 +101,24 @@
           </button>
         </div>
       {/if}
+
+      <!-- About Me Button (only shown when current project is Global Migrants) -->
+      {#if showAboutMeButton}
+        <div class="project-nav-item about-me-project">
+          <button 
+            class="nav-button"
+            on:click={() => navigateToProject(aboutMe.route)}
+          >
+            <div class="project-thumbnail">
+              <img src={aboutMe.image} alt={aboutMe.title} />
+            </div>
+            <div class="project-info">
+              <h4 class="project-title hand-drawn-text">{aboutMe.title}</h4>
+              <p class="project-desc hand-drawn-text">{aboutMe.description}</p>
+            </div>
+          </button>
+        </div>
+      {/if}
     </div>
   </div>
 </section>
@@ -116,6 +153,19 @@
   .project-nav-item {
     flex: 0 1 400px;
     max-width: 400px;
+    background: white;
+  }
+
+  .project-nav-item:hover {
+    background: white;
+  }
+
+  .project-nav-item:active {
+    background: white !important;
+  }
+
+  .project-nav-item:focus {
+    background: white !important;
   }
 
   .nav-button {
@@ -133,9 +183,22 @@
   }
 
   .nav-button:hover {
-    transform: translateY(-4px);
-    box-shadow: 0 8px 20px rgba(0, 0, 0, 0.15);
+    transform: scale(1.01);
     background: #f5f5f5;
+  }
+
+  .nav-button:active {
+    background: white !important;
+    transform: scale(1.01);
+  }
+
+  .nav-button:focus {
+    background: white !important;
+    outline: none;
+  }
+
+  .nav-button:focus:not(:hover) {
+    background: white !important;
   }
 
   .project-thumbnail {
@@ -165,6 +228,37 @@
     font-size: 1rem;
     margin: 0;
     color: #666;
+  }
+
+  /* Explicit white background for prev/next project items */
+  .prev-project {
+    background: white !important;
+  }
+
+  .next-project {
+    background: white !important;
+  }
+
+  .about-me-project {
+    background: white !important;
+  }
+
+  .prev-project:hover,
+  .next-project:hover,
+  .about-me-project:hover {
+    background: white !important;
+  }
+
+  .prev-project:active,
+  .next-project:active,
+  .about-me-project:active {
+    background: white !important;
+  }
+
+  .prev-project:focus,
+  .next-project:focus,
+  .about-me-project:focus {
+    background: white !important;
   }
 
   /* Responsive Design */

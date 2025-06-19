@@ -26,8 +26,8 @@
 
   // Check if we should skip the animation
   function shouldSkipAnimation() {
-    if (typeof localStorage !== 'undefined') {
-      return localStorage.getItem('hasPlayedAnimation') === 'true';
+    if (typeof sessionStorage !== 'undefined') {
+      return sessionStorage.getItem('animationCompleted') === 'true';
     }
     return false;
   }
@@ -45,14 +45,14 @@
     isTypingComplete = true;
     dispatch('complete');
     
-    // Markiere Animation als gesehen (für andere Features, aber nicht zum Überspringen)
+    // Markiere Animation als abgeschlossen für diese Session
     try {
-      localStorage.setItem('hasPlayedAnimation', 'true');
+      sessionStorage.setItem('animationCompleted', 'true');
     } catch (e) {
-      console.error('Could not write to localStorage:', e);
+      console.error('Could not access sessionStorage:', e);
     }
     
-    // Aktiviere Cursor-Effekt nach einer kurzen Verzögerung
+    // Aktiviere Cursor-Effekt nach einer kurzen Verzögerung ich
     setTimeout(() => {
       if (isMobile) {
         showMobilePeek = true;

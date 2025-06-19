@@ -1,8 +1,8 @@
 <script lang="ts">
-  import { navigate } from 'svelte-routing';
+  import { navigate } from "svelte-routing";
   import performBanner from '../assets/PerformBanner.png';
   import migrantsImage from '../assets/Migrants/GlobeOverview.png';
-  import alignspaceImage from '../assets/Alignspace/Ubersicht.jpg';
+  import alignspaceImage from '../assets/Alignspace/Ubersicht.png';
 
   export let title: string;
   export let description: string;
@@ -51,7 +51,7 @@
         <div class="flex flex-col md:flex-row justify-start md:gap-12 px-4 md:px-0">
           <div class="flex flex-col w-full md:w-auto items-start">
             <!-- Title -->
-            <h2 class="text-2xl md:text-5xl mb-4 md:mb-8 hand-drawn-title text-left">{title}</h2>
+            <h2 class="text-3xl md:text-5xl mb-4 md:mb-8 hand-drawn-title text-left">{title}</h2>
             
             <!-- Image -->
             <div class="project-image relative w-full md:w-[584px] ml-0">
@@ -67,8 +67,7 @@
                   <img
                     src={index === 1 ? performBanner : index === 2 ? migrantsImage : alignspaceImage}
                     alt={index === 1 ? "PerForm Banner" : index === 2 ? "Global Migrants" : "Alignspace"}
-                    class="w-full h-full"
-                    style="object-fit: {index === 2 ? 'contain' : 'cover'}; object-position: center;"
+                    class="w-full h-full object-cover"
                   />
                 </div>
               </div>
@@ -78,10 +77,10 @@
           <!-- Tags and description -->
           <div class="flex flex-col items-start mt-12 md:mt-[5rem] w-full md:w-auto">
             <div class="flex flex-wrap justify-start gap-4 md:gap-6 mb-6 md:mb-8">
-              <span class="project-tag hand-drawn-text text-base md:text-xl">{field}</span>
-              <span class="project-tag hand-drawn-text text-base md:text-xl">{category}</span>
+              <span class="project-tag hand-drawn-text text-lg md:text-xl">{field}</span>
+              <span class="project-tag hand-drawn-text text-lg md:text-xl">{category}</span>
             </div>
-            <p class="hand-drawn-text text-base md:text-2xl max-w-full md:max-w-md text-left">{description}</p>
+            <p class="hand-drawn-text text-xl md:text-2xl max-w-full md:max-w-md text-left">{description}</p>
           </div>
         </div>
       </div>
@@ -95,9 +94,9 @@
     width: 584px; /* Feste Breite für alle Projekte */
     height: 334px; /* Feste Höhe für alle Projekte */
     margin: 0;
-    /* Entferne Padding für saubere Ränder */
+    /* Entferne padding für direkten Kontakt zwischen Bild und Border */
     padding: 0;
-    overflow: hidden; /* Verhindert Overflow für saubere Kanten */
+    overflow: visible;
     /* Sicherstellen, dass das Container seine Größe beibehält */
     flex-shrink: 0;
   }
@@ -113,10 +112,9 @@
     border-style: solid;
     border-width: 4px;
     border-color: #000;
-    /* Border außerhalb des Bildbereichs für keinen weißen Rand */
+    /* Border außerhalb des Bildes positionieren */
     inset: -4px;
     border-radius: 0; /* Eckige Ecken */
-    pointer-events: none; /* Border ist nicht klickbar */
   }
 
   /* Tag-Styles - exakt gleiche Border wie Projekt-Border */
@@ -125,41 +123,65 @@
     border-width: 4px;
     border-color: #000;
     border-radius: 0; /* Eckige Ecken */
-    padding: 0.25rem 0.75rem;
+    padding: 0.25rem 0.75rem; /* px-3 py-1 equivalent für Desktop */
     display: inline-block;
   }
 
   /* Responsive Padding für Tags */
   @media (min-width: 768px) {
     .project-tag {
-      padding: 0.25rem 1rem;
+      padding: 0.25rem 1rem; /* px-4 py-1 equivalent für Desktop */
     }
   }
 
+  /* Mobile Anpassungen für Projekt-Bilder */
   @media (max-width: 768px) {
     .project-image {
-      width: 350px;
-      height: 200px;
+      width: 350px; /* Feste Breite für Mobile */
+      height: 200px; /* Feste Höhe für Mobile */
     }
   }
 
-  /* Sicherstellen, dass alle Bilder die gleiche Größe haben und den Container vollständig ausfüllen */
+  /* Sicherstellen, dass alle Bilder die gleiche Größe haben und den Border-Container ausfüllen */
   .project-image img {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
+    object-fit: cover; /* Bilder füllen den Container vollständig aus */
     border-radius: 0; /* Eckige Ecken */
   }
 
-  /* Sicherstellen, dass der innere Container den gesamten Bildbereich ausfüllt */
+  /* Sicherstellen, dass der innere Container den Border-Bereich vollständig ausfüllt */
   .project-image > div > div {
     position: absolute;
     top: 0;
     left: 0;
     width: 100%;
     height: 100%;
-    padding: 0; /* Kein Padding für vollständige Abdeckung */
+    padding: 0; /* Entferne das padding damit das Bild den Border ausfüllt */
   }
-</style>
+
+  /* Projektinformationen für alle Projekte 1px nach unten verschieben */
+  .flex.flex-col.items-start.mt-12 {
+    transform: translateY(-4px);
+  }
+
+  /* Global Migrants (zweites Projekt) - seitliche Ränder entfernen */
+  .project-item:nth-child(2) .project-image {
+    background-color: black;
+  }
+
+  .project-item:nth-child(2) .project-image img {
+    object-fit: cover;
+    object-position: center;
+    transform: scale(1.05);
+  }
+
+  /* Alignspace (drittes Projekt) - weiße Flächen entfernen */
+  .project-item:nth-child(3) .project-image img {
+    object-fit: cover;
+    object-position: center;
+  }
+</style>^

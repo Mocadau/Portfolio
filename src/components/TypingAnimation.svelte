@@ -21,8 +21,8 @@
 
   // Check if animation has already played
   function hasAnimationPlayed() {
-    if (typeof localStorage !== 'undefined') {
-      return localStorage.getItem('hasPlayedAnimation') === 'true';
+    if (typeof sessionStorage !== 'undefined') {
+      return sessionStorage.getItem('animationCompleted') === 'true';
     }
     return false;
   }

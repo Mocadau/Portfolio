@@ -578,7 +578,7 @@
          tabindex="-1"
          aria-label="Close email overlay"></div>
     <div class="email-overlay" 
-         style="left: {walkingFigurePosition}px; bottom: 230px;">
+         style="left: {walkingFigurePosition - 20}px; bottom: 230px;">
       <div class="email-container" role="dialog" aria-label="Email copy dialog">
         <button type="button"
                 class="copy-text"

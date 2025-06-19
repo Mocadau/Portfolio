@@ -123,10 +123,16 @@
       scrollToSection('works');
     }
 
+    // Check if we should scroll to more section
+    if (sessionStorage.getItem('scrollToMore')) {
+      sessionStorage.removeItem('scrollToMore');
+      scrollToSection('more');
+    }
+
     // Check if this is the first visit in this session
-    // Use sessionStorage instead of localStorage for within-app navigation
+    // Use sessionStorage instead of localStorage for within-session navigation
     try {
-      const hasSeenAnimationThisSession = sessionStorage.getItem('hasSeenAnimation') === 'true';
+      const hasSeenAnimationThisSession = sessionStorage.getItem('animationCompleted') === 'true';
       if (hasSeenAnimationThisSession) {
         showNavigation = true;
       }

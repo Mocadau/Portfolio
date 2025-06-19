@@ -104,6 +104,7 @@
             <ImageBlock
               src={Bild1}
               alt="VR Fitness Concept"
+              enableLightbox={false}
             />
           </div>
           <div class="intro-text-right">
@@ -129,12 +130,14 @@
             <ImageBlock
               src={Bild3}
               alt="Process Steps"
+              enableLightbox={false}
             />
           </div>
           <div class="process-image">
             <ImageBlock
               src={Bild2}
               alt="Process Visualization"
+              enableLightbox={false}
             />
           </div>
         </div>
@@ -266,45 +269,75 @@
         <div class="section-divider"></div>
         <div class="section-content">
         <div class="left-column">
+          <TextBlock
+            title="Home"
+            description=""
+          />
           <ImageBlock
             src={Bild9}
             alt="Result Visual 1"
+            enableLightbox={true}
           />
         </div>
         
         <div class="right-column">
+          <TextBlock
+            title="Choose exercise"
+            description=""
+          />
           <ImageBlock
             src={Bild10}
             alt="Result Visual 2"
+            enableLightbox={true}
           />
         </div>
         
         <div class="left-column">
+          <TextBlock
+            title="Video-based-training"
+            description=""
+          />
           <ImageBlock
             src={Bild11}
             alt="Result Visual 3"
+            enableLightbox={true}
           />
         </div>
         
         <div class="right-column">
+          <TextBlock
+            title="During video-based-training"
+            description=""
+          />
           <ImageBlock
             src={Bild12}
             alt="Result Visual 4"
+            enableLightbox={true}
           />
         </div>
         
-        <div class="left-column">
-          <ImageBlock
-            src={Bild13}
-            alt="Result Visual 5"
+        <!-- POV Section - beide Bilder nebeneinander -->
+        <div class="pov-section">
+          <TextBlock
+            title="POV"
+            description=""
           />
-        </div>
-        
-        <div class="right-column">
-          <ImageBlock
-            src={Bild14}
-            alt="Result Visual 6"
-          />
+          <div class="pov-images">
+            <div class="pov-image-left">
+              <ImageBlock
+                src={Bild13}
+                alt="Result Visual 5"
+                enableLightbox={true}
+              />
+            </div>
+            <div class="pov-image-right">
+              <ImageBlock
+                src={Bild14}
+                alt="Result Visual 6"
+                enableLightbox={true}
+              />
+            </div>
+          </div>
         </div>
         </div>
       </div>
@@ -1026,23 +1059,44 @@
     transform-origin: center;
   }
 
-  /* Results Section - letztes Bild bekommt Abstand zur Analysis Section */
-  .content-section:nth-child(8) .section-content .right-column:last-child :global(.image-block) {
+  /* POV Section - Bilder nebeneinander */
+  .pov-section {
+    width: 100%;
+    margin-top: 2rem;
     margin-bottom: 4rem;
   }
-  
-  .content-section:nth-child(8) .section-content .right-column:last-child :global(.image-block img) {
-    margin-bottom: 2rem;
+
+  .pov-images {
+    display: flex;
+    gap: 2rem;
+    width: 100%;
+    justify-content: space-between;
+  }
+
+  .pov-image-left,
+  .pov-image-right {
+    flex: 1;
+    max-width: calc(50% - 1rem);
   }
 
   @media (max-width: 768px) {
-    .content-section:nth-child(8) .section-content .right-column:last-child :global(.image-block) {
+    .pov-images {
+      flex-direction: column;
+      gap: 1.5rem;
+    }
+
+    .pov-image-left,
+    .pov-image-right {
+      max-width: 100%;
+    }
+
+    .pov-section {
       margin-bottom: 3rem;
     }
   }
 
   @media (max-width: 480px) {
-    .content-section:nth-child(8) .section-content .right-column:last-child :global(.image-block) {
+    .pov-section {
       margin-bottom: 2rem;
     }
   }

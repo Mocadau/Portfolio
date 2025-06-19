@@ -69,6 +69,7 @@
       <ImageBlock
         src={Bild1}
         alt="Alignspace Concept"
+        enableLightbox={false}
       />
     </section>
 
@@ -131,6 +132,7 @@
           <ImageBlock
             src={Bild3}
             alt="Design System"
+            enableLightbox={false}
           />
         </div>
       </div>
