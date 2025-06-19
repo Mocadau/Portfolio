@@ -496,5 +496,17 @@
     .header {
       margin: 100px 0 60px;
     }
+
+    /* Features Section Titles - smaller on mobile */
+    .content-section:nth-child(7) :global(.text-block .title) {
+      font-size: 16px !important;
+    }
+  }
+
+  @media (max-width: 480px) {
+    /* Features Section Titles - even smaller on small mobile */
+    .content-section:nth-child(7) :global(.text-block .title) {
+      font-size: 14px !important;
+    }
   }
 </style>

@@ -8,10 +8,10 @@
   {#if title}
     <h3 class="title">{title}</h3>
   {/if}
-  {#if subtitle}
+  {#if subtitle && subtitle.trim()}
     <p class="subtitle">{subtitle}</p>
   {/if}
-  {#if description}
+  {#if description && description.trim()}
     <p class="description">{description}</p>
   {/if}
   <slot />
@@ -21,6 +21,7 @@
   .text-block {
     width: 100%;
     text-align: left;
+    margin-bottom: 0;
   }
 
   .title {
@@ -28,7 +29,7 @@
     font-family: var(--font-family);
     font-size: 24px;
     font-weight: 700;
-    margin: 0 0 16px 0;
+    margin: 0 0 12px 0;
     text-align: left;
   }
 
@@ -54,20 +55,37 @@
 
   @media (max-width: 768px) {
     .title {
-      font-size: 32px; 
+      font-size: 18px; 
       font-family: var(--font-family);
       font-weight: 700;
     }
 
     .subtitle {
-      font-size: 16px;
-      margin-bottom: 16px;
-      line-height: 1.7;
+      font-size: 14px;
+      margin-bottom: 12px;
+      line-height: 1.6;
     }
 
     .description {
-      font-size: 16px;
-      line-height: 1.7;
+      font-size: 14px;
+      line-height: 1.6;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .title {
+      font-size: 16px; 
+      margin: 0 0 12px 0;
+    }
+
+    .subtitle {
+      font-size: 13px;
+      margin-bottom: 10px;
+    }
+
+    .description {
+      font-size: 13px;
+      line-height: 1.5;
     }
   }
 </style>

@@ -271,7 +271,6 @@
         <div class="left-column">
           <TextBlock
             title="Home"
-            description=""
           />
           <ImageBlock
             src={Bild9}
@@ -283,7 +282,6 @@
         <div class="right-column">
           <TextBlock
             title="Choose exercise"
-            description=""
           />
           <ImageBlock
             src={Bild10}
@@ -295,7 +293,6 @@
         <div class="left-column">
           <TextBlock
             title="Video-based-training"
-            description=""
           />
           <ImageBlock
             src={Bild11}
@@ -307,7 +304,6 @@
         <div class="right-column">
           <TextBlock
             title="During video-based-training"
-            description=""
           />
           <ImageBlock
             src={Bild12}
@@ -320,7 +316,6 @@
         <div class="pov-section">
           <TextBlock
             title="POV"
-            description=""
           />
           <div class="pov-images">
             <div class="pov-image-left">
@@ -575,6 +570,12 @@
     display: flex;
     flex-direction: column;
     gap: 32px;
+  }
+
+  /* Results Section - Remove gap between title and image */
+  .content-section:nth-child(8) .section-content .right-column,
+  .content-section:nth-child(8) .section-content .left-column {
+    gap: 0;
   }
 
   .section-content .right-column {
@@ -1098,6 +1099,36 @@
   @media (max-width: 480px) {
     .pov-section {
       margin-bottom: 2rem;
+    }
+  }
+
+  /* POV Section Title - smaller on mobile */
+  .pov-section :global(.text-block .title) {
+    font-size: 24px;
+  }
+
+  /* All Results Section Titles - smaller on mobile */
+  .content-section:nth-child(8) :global(.text-block .title) {
+    font-size: 24px;
+  }
+
+  @media (max-width: 768px) {
+    .pov-section :global(.text-block .title) {
+      font-size: 16px;
+    }
+
+    .content-section:nth-child(8) :global(.text-block .title) {
+      font-size: 16px;
+    }
+  }
+
+  @media (max-width: 480px) {
+    .pov-section :global(.text-block .title) {
+      font-size: 14px;
+    }
+
+    .content-section:nth-child(8) :global(.text-block .title) {
+      font-size: 14px;
     }
   }
 
