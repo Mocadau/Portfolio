@@ -117,6 +117,15 @@
     border-radius: 0; /* Eckige Ecken */
   }
 
+  /* Für Global Migrants - Border komplett schwarz ausfüllen */
+  .project-item:nth-child(2) .project-border {
+    background-color: black;
+    border-color: black;
+    /* Border bis zum äußersten Rand erweitern */
+    inset: -8px;
+    z-index: 0;
+  }
+
   /* Tag-Styles - exakt gleiche Border wie Projekt-Border */
   .project-tag {
     border-style: solid;
@@ -177,6 +186,33 @@
     object-fit: cover;
     object-position: center;
     transform: scale(1.05);
+  }
+
+  /* Alle Container-Elemente im Global Migrants Projekt schwarz machen */
+  .project-item:nth-child(2) .project-image .bg-white,
+  .project-item:nth-child(2) .project-image .w-full.h-full,
+  .project-item:nth-child(2) .project-image > div,
+  .project-item:nth-child(2) .project-image > div > div {
+    background-color: black !important;
+  }
+
+  /* Border-Bereich ebenfalls schwarz mit vollständiger Füllung */
+  .project-item:nth-child(2) .project-image {
+    background-color: black !important;
+    /* Entferne jeglichen Abstand */
+    margin: 0;
+    padding: 0;
+    /* Border-Box für präzise Kontrolle */
+    box-sizing: border-box;
+  }
+
+  /* Relativer Container ebenfalls schwarz */
+  .project-item:nth-child(2) .project-image .relative {
+    background-color: black !important;
+    /* Komplett bis zum Rand füllen */
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
   }
 
   /* Alignspace (drittes Projekt) - weiße Flächen entfernen */
