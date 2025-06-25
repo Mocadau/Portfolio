@@ -13,6 +13,14 @@
   let sectionElement: HTMLElement;
   let globalMouseHandler: ((event: MouseEvent) => void) | null = null;
   
+  // Mouse velocity tracking
+  let lastMouseX = 0;
+  let lastMouseY = 0;
+  let lastMouseTime = 0;
+  let mouseVelocity = 0;
+  let velocityDecayTimeout: NodeJS.Timeout;
+  let intensityLevel = 1; // 1 = normal, höhere Werte = stärkere Animation
+  
   // Mobile peek effect variables
   let showMobilePeek = false;
   let peekX = 0;
@@ -85,6 +93,13 @@
       globalMouseHandler = null;
     }
     showCursorEffect = false;
+    
+    // Reset velocity tracking
+    mouseVelocity = 0;
+    intensityLevel = 1;
+    if (velocityDecayTimeout) {
+      clearTimeout(velocityDecayTimeout);
+    }
   }
 
   function setupMobileTouchHandler() {
@@ -164,11 +179,52 @@
   
   function handleMouseMove(event: MouseEvent) {
     if (showCursorEffect) {
+      const currentTime = performance.now();
+      
+      // Berechne Mausgeschwindigkeit
+      if (lastMouseTime > 0) {
+        const deltaX = event.clientX - lastMouseX;
+        const deltaY = event.clientY - lastMouseY;
+        const deltaTime = currentTime - lastMouseTime;
+        
+        if (deltaTime > 0) {
+          const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
+          const velocity = distance / deltaTime;
+          
+          // Glatte Geschwindigkeitsanpassung
+          mouseVelocity = mouseVelocity * 0.8 + velocity * 0.2;
+          
+          // Intensitätslevel basierend auf Geschwindigkeit (1-4x)
+          // Schnelle Bewegungen (> 2.0) = maximale Intensität
+          // Normale Bewegungen (0.5-2.0) = moderate Intensität
+          // Langsame Bewegungen (< 0.5) = normale Intensität
+          if (mouseVelocity > 2.0) {
+            intensityLevel = Math.min(4, 1 + mouseVelocity * 1.5);
+          } else if (mouseVelocity > 0.5) {
+            intensityLevel = Math.min(2.5, 1 + mouseVelocity * 0.75);
+          } else {
+            intensityLevel = Math.max(1, intensityLevel * 0.95);
+          }
+        }
+      }
+      
+      // Aktualisiere letzte Position und Zeit
+      lastMouseX = event.clientX;
+      lastMouseY = event.clientY;
+      lastMouseTime = currentTime;
+      
       // Use requestAnimationFrame for smoother performance
       requestAnimationFrame(() => {
         cursorX = event.clientX;
         cursorY = event.clientY;
       });
+      
+      // Velocity Decay - reduziere Intensität wenn Maus stillsteht
+      clearTimeout(velocityDecayTimeout);
+      velocityDecayTimeout = setTimeout(() => {
+        mouseVelocity *= 0.8;
+        intensityLevel = Math.max(1, intensityLevel * 0.9);
+      }, 50);
     }
   }
   
@@ -208,6 +264,9 @@
       if (scrollIndicatorTimeout) {
         clearTimeout(scrollIndicatorTimeout);
       }
+      if (velocityDecayTimeout) {
+        clearTimeout(velocityDecayTimeout);
+      }
     };
   });
 </script>
@@ -220,7 +279,7 @@
   {#if showCursorEffect}
     <div 
       class="cursor-glow global-cursor" 
-      style="left: {cursorX}px; top: {cursorY}px;"
+      style="left: {cursorX}px; top: {cursorY}px; --intensity: {intensityLevel}; --velocity: {mouseVelocity};"
     ></div>
   {/if}
 
@@ -401,27 +460,79 @@
 
   .cursor-glow {
     position: absolute;
-    width: 120px;
-    height: 120px;
+    width: 140px;
+    height: 140px;
     pointer-events: none;
     transform: translate(-50%, -50%);
-    background: linear-gradient(
-      135deg,
-      rgba(255, 255, 255, 0.15) 0%,
-      rgba(255, 255, 255, 0.08) 50%,
-      rgba(255, 255, 255, 0.04) 100%
-    );
-    backdrop-filter: blur(8px);
-    -webkit-backdrop-filter: blur(8px);
-    border: 1px solid rgba(255, 255, 255, 0.2);
+    background: 
+      radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.3) 0%, transparent 50%),
+      radial-gradient(circle at 70% 70%, rgba(129, 140, 248, 0.2) 0%, transparent 50%),
+      linear-gradient(135deg, 
+        rgba(255, 255, 255, 0.1) 0%,
+        rgba(199, 210, 254, 0.15) 30%,
+        rgba(165, 180, 252, 0.1) 70%,
+        rgba(255, 255, 255, 0.05) 100%
+      );
+    backdrop-filter: blur(15px) saturate(1.8);
+    -webkit-backdrop-filter: blur(15px) saturate(1.8);
+    border: 1px solid rgba(255, 255, 255, 0.3);
     border-radius: 50%;
     box-shadow: 
-      0 4px 15px rgba(0, 0, 0, 0.05),
-      inset 0 1px 0 rgba(255, 255, 255, 0.3);
+      0 8px 25px rgba(0, 0, 0, 0.1),
+      0 2px 8px rgba(129, 140, 248, 0.2),
+      inset 0 1px 0 rgba(255, 255, 255, 0.4),
+      inset 0 -1px 0 rgba(255, 255, 255, 0.1);
     z-index: 100;
-    opacity: 0.8;
-    will-change: transform;
+    opacity: 0.9;
+    will-change: transform, border-radius;
     transform: translate3d(-50%, -50%, 0);
+    
+    /* Dynamische Animation basierend auf Mausgeschwindigkeit */
+    animation: 
+      liquid-morph calc(4s / var(--intensity, 1)) ease-in-out infinite,
+      velocity-pulse calc(0.8s / var(--intensity, 1)) ease-out infinite;
+    animation-play-state: running;
+    
+    /* Verstärkte Verzerrung bei schneller Bewegung */
+    filter: blur(calc(1px * var(--velocity, 0))) saturate(calc(1.2 + var(--velocity, 0) * 0.3));
+  }
+
+  @keyframes liquid-morph {
+    0%, 100% {
+      border-radius: 50%;
+      transform: translate3d(-50%, -50%, 0) scale(1) rotate(0deg);
+    }
+    25% {
+      border-radius: calc(45% * var(--intensity, 1)) calc(55% * var(--intensity, 1)) calc(60% * var(--intensity, 1)) calc(40% * var(--intensity, 1));
+      transform: translate3d(-50%, -50%, 0) scale(calc(1.05 + var(--intensity, 1) * 0.05)) rotate(90deg);
+    }
+    50% {
+      border-radius: calc(60% * var(--intensity, 1)) calc(40% * var(--intensity, 1)) calc(45% * var(--intensity, 1)) calc(55% * var(--intensity, 1));
+      transform: translate3d(-50%, -50%, 0) scale(calc(0.95 - var(--intensity, 1) * 0.05)) rotate(180deg);
+    }
+    75% {
+      border-radius: calc(40% * var(--intensity, 1)) calc(60% * var(--intensity, 1)) calc(55% * var(--intensity, 1)) calc(45% * var(--intensity, 1));
+      transform: translate3d(-50%, -50%, 0) scale(calc(1.02 + var(--intensity, 1) * 0.08)) rotate(270deg);
+    }
+  }
+
+  @keyframes velocity-pulse {
+    0%, 100% {
+      box-shadow: 
+        0 8px 25px rgba(0, 0, 0, 0.1),
+        0 2px 8px rgba(129, 140, 248, 0.2),
+        inset 0 1px 0 rgba(255, 255, 255, 0.4),
+        inset 0 -1px 0 rgba(255, 255, 255, 0.1);
+      opacity: 0.9;
+    }
+    50% {
+      box-shadow: 
+        0 calc(8px + var(--intensity, 1) * 4px) calc(25px + var(--intensity, 1) * 10px) rgba(0, 0, 0, calc(0.1 + var(--velocity, 0) * 0.05)),
+        0 calc(2px + var(--intensity, 1) * 2px) calc(8px + var(--intensity, 1) * 4px) rgba(129, 140, 248, calc(0.2 + var(--velocity, 0) * 0.1)),
+        inset 0 1px 0 rgba(255, 255, 255, calc(0.4 + var(--velocity, 0) * 0.2)),
+        inset 0 -1px 0 rgba(255, 255, 255, calc(0.1 + var(--velocity, 0) * 0.1));
+      opacity: calc(0.9 + var(--velocity, 0) * 0.1);
+    }
   }
 
   /* Global Cursor positioning */
@@ -433,14 +544,18 @@
   /* Alternative für Browser ohne backdrop-filter Support */
   @supports not (backdrop-filter: blur(15px)) {
     .cursor-glow {
-      background: radial-gradient(
-        circle,
-        rgba(200, 200, 200, 0.4) 0%,
-        rgba(180, 180, 180, 0.25) 40%,
-        rgba(160, 160, 160, 0.15) 70%,
-        transparent 100%
-      );
-      filter: blur(8px);
+      background: 
+        radial-gradient(circle at 30% 30%, rgba(255, 255, 255, 0.4) 0%, transparent 50%),
+        radial-gradient(circle at 70% 70%, rgba(129, 140, 248, 0.3) 0%, transparent 50%),
+        radial-gradient(
+          circle,
+          rgba(220, 230, 255, 0.6) 0%,
+          rgba(199, 210, 254, 0.4) 30%,
+          rgba(165, 180, 252, 0.3) 60%,
+          rgba(255, 255, 255, 0.2) 80%,
+          transparent 100%
+        );
+      filter: blur(12px) saturate(1.5);
     }
   }
 
