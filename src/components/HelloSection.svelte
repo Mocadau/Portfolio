@@ -13,7 +13,7 @@
   let sectionElement: HTMLElement;
   let globalMouseHandler: ((event: MouseEvent) => void) | null = null;
   
-  // Mouse velocity tracking
+  // Mouse velocity tracking für Liquid Glass Effekt
   let lastMouseX = 0;
   let lastMouseY = 0;
   let lastMouseTime = 0;
@@ -31,14 +31,6 @@
   // Scroll indicator variables
   let showScrollIndicator = false;
   let scrollIndicatorTimeout: NodeJS.Timeout;
-
-  // Check if we should skip the animation
-  function shouldSkipAnimation() {
-    if (typeof sessionStorage !== 'undefined') {
-      return sessionStorage.getItem('animationCompleted') === 'true';
-    }
-    return false;
-  }
   
   function handleHelloComplete() {
     helloComplete = true;
@@ -53,19 +45,12 @@
     isTypingComplete = true;
     dispatch('complete');
     
-    // Markiere Animation als abgeschlossen für diese Session
-    try {
-      sessionStorage.setItem('animationCompleted', 'true');
-    } catch (e) {
-      console.error('Could not access sessionStorage:', e);
-    }
-    
-    // Aktiviere Cursor-Effekt nach einer kurzen Verzögerung ich
+    // Aktiviere Cursor-Effekt nach einer kurzen Verzögerung
     setTimeout(() => {
       if (isMobile) {
         showMobilePeek = true;
         setupMobileTouchHandler();
-        // Show scroll indicator for mobile devices
+        // Zeige Scroll-Indicator für mobile Geräte
         showScrollIndicator = true;
         startScrollIndicatorTimer();
       } else {
@@ -181,37 +166,37 @@
     if (showCursorEffect) {
       const currentTime = performance.now();
       
-      // Berechne Mausgeschwindigkeit
+      // Berechne Mausgeschwindigkeit für Apple-Style Liquid Morphing
       if (lastMouseTime > 0) {
         const deltaX = event.clientX - lastMouseX;
         const deltaY = event.clientY - lastMouseY;
         const deltaTime = currentTime - lastMouseTime;
         
-        if (deltaTime > 0) {
+        if (deltaTime > 16) { // Limit to ~60fps updates
           const distance = Math.sqrt(deltaX * deltaX + deltaY * deltaY);
           const velocity = distance / deltaTime;
           
-          // Glatte Geschwindigkeitsanpassung
-          mouseVelocity = mouseVelocity * 0.8 + velocity * 0.2;
+          // Viel glattere Geschwindigkeitsanpassung mit weniger Flackern
+          mouseVelocity = mouseVelocity * 0.9 + velocity * 0.1;
           
-          // Intensitätslevel basierend auf Geschwindigkeit (1-4x)
-          // Schnelle Bewegungen (> 2.0) = maximale Intensität
-          // Normale Bewegungen (0.5-2.0) = moderate Intensität
-          // Langsame Bewegungen (< 0.5) = normale Intensität
-          if (mouseVelocity > 2.0) {
-            intensityLevel = Math.min(4, 1 + mouseVelocity * 1.5);
-          } else if (mouseVelocity > 0.5) {
-            intensityLevel = Math.min(2.5, 1 + mouseVelocity * 0.75);
-          } else {
-            intensityLevel = Math.max(1, intensityLevel * 0.95);
-          }
+          // Sanftere Intensitätslevel-Übergänge (1-2.5x statt 1-4x)
+          const targetIntensity = mouseVelocity > 1.5 ? 
+            Math.min(2.5, 1 + mouseVelocity * 0.5) : 
+            Math.max(1, 1 + mouseVelocity * 0.3);
+          
+          // Sanfte Interpolation zur Ziel-Intensität
+          intensityLevel = intensityLevel * 0.85 + targetIntensity * 0.15;
+          
+          // Aktualisiere letzte Position und Zeit nur bei tatsächlichen Updates
+          lastMouseX = event.clientX;
+          lastMouseY = event.clientY;
+          lastMouseTime = currentTime;
         }
+      } else {
+        lastMouseX = event.clientX;
+        lastMouseY = event.clientY;
+        lastMouseTime = currentTime;
       }
-      
-      // Aktualisiere letzte Position und Zeit
-      lastMouseX = event.clientX;
-      lastMouseY = event.clientY;
-      lastMouseTime = currentTime;
       
       // Use requestAnimationFrame for smoother performance
       requestAnimationFrame(() => {
@@ -219,12 +204,12 @@
         cursorY = event.clientY;
       });
       
-      // Velocity Decay - reduziere Intensität wenn Maus stillsteht
+      // Sanfterer Velocity Decay
       clearTimeout(velocityDecayTimeout);
       velocityDecayTimeout = setTimeout(() => {
-        mouseVelocity *= 0.8;
-        intensityLevel = Math.max(1, intensityLevel * 0.9);
-      }, 50);
+        mouseVelocity *= 0.95;
+        intensityLevel = intensityLevel * 0.98 + 1 * 0.02; // Sanft zurück zu 1
+      }, 100);
     }
   }
   
@@ -232,27 +217,37 @@
     // Check if device is mobile
     isMobile = window.innerWidth <= 768 || 'ontouchstart' in window;
     
-    // Check if animation should be skipped
-    skipAnimation = shouldSkipAnimation();
-
-    if (skipAnimation) {
-      // If skipping animation, show content immediately
-      helloComplete = true;
-      showRestContent = true;
-      isTypingComplete = true;
-      
-      // Show cursor effect after a short delay
-      setTimeout(() => {
+    // Check if animation has been seen in this session
+    try {
+      skipAnimation = sessionStorage.getItem('hasSeenAnimation') === 'true';
+      if (skipAnimation) {
+        // Skip animation and show everything immediately
+        helloComplete = true;
+        showRestContent = true;
+        isTypingComplete = true;
+        
         if (isMobile) {
           showMobilePeek = true;
-          setupMobileTouchHandler();
+          showScrollIndicator = true;
         } else {
           showCursorEffect = true;
-          setupGlobalMouseHandler();
         }
-      }, 100);
+        
+        // Dispatch complete immediately for skip case
+        setTimeout(() => {
+          dispatch('complete');
+          if (isMobile) {
+            setupMobileTouchHandler();
+            startScrollIndicatorTimer();
+          } else {
+            setupGlobalMouseHandler();
+          }
+        }, 100);
+      }
+    } catch (e) {
+      console.error('Could not read from sessionStorage:', e);
     }
-    
+
     return () => {
       if (globalMouseHandler) {
         document.removeEventListener('mousemove', globalMouseHandler);
@@ -311,11 +306,11 @@
     </div>
   {/if}
 
-  <div class="w-full md:w-auto flex justify-center items-center h-screen md:mt-16 min-h-[350px] scale-75 md:scale-100 origin-center md:mx-auto px-4 md:px-4">
-    <div class="px-2 md:px-6 max-w-[100%] sm:max-w-[95%] md:max-w-none text-left w-full md:w-auto md:flex md:flex-col md:justify-center md:items-start">
+  <div class="w-full md:w-auto flex justify-center md:justify-start items-center h-screen md:mt-32 min-h-[350px] scale-75 md:scale-100 origin-center md:mx-auto px-4 md:px-4">
+    <div class="px-2 md:px-6 max-w-[100%] sm:max-w-[95%] md:max-w-none text-left w-full md:w-auto">
       
       <!-- HELLO als getippter Text oder statischer Text -->
-      <h1 class="text-2xl sm:text-5xl font-bold mb-8 sm:mb-12 hand-drawn-title relative text-left">
+      <h1 class="text-4xl sm:text-5xl font-bold mb-8 sm:mb-12 hand-drawn-title relative">
         <span class="relative inline-block">
           {#if skipAnimation}
             HELLO
@@ -324,7 +319,7 @@
             <TypingAnimation 
               text="HELLO"
               speed={100} 
-              delayStart={0}
+              delayStart={500}
               underline={true}
               on:complete={handleHelloComplete}
             />
@@ -334,7 +329,7 @@
       
       <!-- Rest des Inhalts wird nur angezeigt wenn Hello fertig ist -->
       {#if showRestContent}
-        <div class="text-2xl sm:text-3xl md:text-4xl mb-3 sm:mb-4 md:mb-8 leading-relaxed hand-drawn-text pl-0 text-left">
+        <div class="text-2xl sm:text-3xl md:text-4xl mb-3 sm:mb-4 md:mb-8 leading-relaxed hand-drawn-text pl-0">
           {#if skipAnimation}
             I AM AN INTERACTION DESIGNER.
           {:else}
@@ -347,8 +342,8 @@
           {/if}
         </div>
         
-        <div class="text-2xl sm:text-3xl md:text-4xl mb-3 sm:mb-4 md:mb-8 leading-relaxed hand-drawn-text relative text-left">
-          <div class="flex flex-wrap items-start md:flex-nowrap md:items-center gap-1 md:gap-4 mx-0 w-full justify-start">
+        <div class="text-2xl sm:text-3xl md:text-4xl mb-3 sm:mb-4 md:mb-8 leading-relaxed hand-drawn-text relative">
+          <div class="flex flex-wrap items-start md:flex-nowrap md:items-center gap-1 md:gap-4 mx-0 w-full">
             <span class="inline-block">
               {#if skipAnimation}
                 STUDYING
@@ -408,7 +403,7 @@
           </div>
         </div>
         
-        <div class="text-2xl sm:text-3xl md:text-4xl leading-relaxed hand-drawn-text pl-0 text-left">
+        <div class="text-2xl sm:text-3xl md:text-4xl leading-relaxed hand-drawn-text pl-0">
           {#if skipAnimation}
             LOOKING 4 AN INTERNSHIP!
           {:else}
@@ -487,51 +482,33 @@
     will-change: transform, border-radius;
     transform: translate3d(-50%, -50%, 0);
     
-    /* Dynamische Animation basierend auf Mausgeschwindigkeit */
-    animation: 
-      liquid-morph calc(4s / var(--intensity, 1)) ease-in-out infinite,
-      velocity-pulse calc(0.8s / var(--intensity, 1)) ease-out infinite;
-    animation-play-state: running;
+    /* Sanftere Animation mit weniger Flackern */
+    animation: liquid-morph calc(6s / var(--intensity, 1)) ease-in-out infinite;
     
-    /* Verstärkte Verzerrung bei schneller Bewegung */
-    filter: blur(calc(1px * var(--velocity, 0))) saturate(calc(1.2 + var(--velocity, 0) * 0.3));
+    /* Reduzierte Verzerrung für weniger Flackern */
+    filter: blur(calc(0.5px * var(--velocity, 0))) saturate(calc(1.1 + var(--velocity, 0) * 0.1));
+    
+    /* Sanfte Übergänge */
+    transition: filter 0.3s ease-out;
   }
 
+  /* Sanftere Apple-Style Liquid Glass Morphing Keyframes */
   @keyframes liquid-morph {
     0%, 100% {
       border-radius: 50%;
       transform: translate3d(-50%, -50%, 0) scale(1) rotate(0deg);
     }
     25% {
-      border-radius: calc(45% * var(--intensity, 1)) calc(55% * var(--intensity, 1)) calc(60% * var(--intensity, 1)) calc(40% * var(--intensity, 1));
-      transform: translate3d(-50%, -50%, 0) scale(calc(1.05 + var(--intensity, 1) * 0.05)) rotate(90deg);
+      border-radius: calc(42% + 8% * var(--intensity, 1)) calc(48% + 10% * var(--intensity, 1)) calc(52% + 12% * var(--intensity, 1)) calc(48% + 8% * var(--intensity, 1));
+      transform: translate3d(-50%, -50%, 0) scale(calc(1.02 + var(--intensity, 1) * 0.02)) rotate(calc(90deg * var(--intensity, 1)));
     }
     50% {
-      border-radius: calc(60% * var(--intensity, 1)) calc(40% * var(--intensity, 1)) calc(45% * var(--intensity, 1)) calc(55% * var(--intensity, 1));
-      transform: translate3d(-50%, -50%, 0) scale(calc(0.95 - var(--intensity, 1) * 0.05)) rotate(180deg);
+      border-radius: calc(48% + 12% * var(--intensity, 1)) calc(42% + 8% * var(--intensity, 1)) calc(48% + 8% * var(--intensity, 1)) calc(52% + 10% * var(--intensity, 1));
+      transform: translate3d(-50%, -50%, 0) scale(calc(0.98 - var(--intensity, 1) * 0.02)) rotate(calc(180deg * var(--intensity, 1)));
     }
     75% {
-      border-radius: calc(40% * var(--intensity, 1)) calc(60% * var(--intensity, 1)) calc(55% * var(--intensity, 1)) calc(45% * var(--intensity, 1));
-      transform: translate3d(-50%, -50%, 0) scale(calc(1.02 + var(--intensity, 1) * 0.08)) rotate(270deg);
-    }
-  }
-
-  @keyframes velocity-pulse {
-    0%, 100% {
-      box-shadow: 
-        0 8px 25px rgba(0, 0, 0, 0.1),
-        0 2px 8px rgba(129, 140, 248, 0.2),
-        inset 0 1px 0 rgba(255, 255, 255, 0.4),
-        inset 0 -1px 0 rgba(255, 255, 255, 0.1);
-      opacity: 0.9;
-    }
-    50% {
-      box-shadow: 
-        0 calc(8px + var(--intensity, 1) * 4px) calc(25px + var(--intensity, 1) * 10px) rgba(0, 0, 0, calc(0.1 + var(--velocity, 0) * 0.05)),
-        0 calc(2px + var(--intensity, 1) * 2px) calc(8px + var(--intensity, 1) * 4px) rgba(129, 140, 248, calc(0.2 + var(--velocity, 0) * 0.1)),
-        inset 0 1px 0 rgba(255, 255, 255, calc(0.4 + var(--velocity, 0) * 0.2)),
-        inset 0 -1px 0 rgba(255, 255, 255, calc(0.1 + var(--velocity, 0) * 0.1));
-      opacity: calc(0.9 + var(--velocity, 0) * 0.1);
+      border-radius: calc(46% + 6% * var(--intensity, 1)) calc(54% + 8% * var(--intensity, 1)) calc(52% + 6% * var(--intensity, 1)) calc(48% + 4% * var(--intensity, 1));
+      transform: translate3d(-50%, -50%, 0) scale(calc(1.01 + var(--intensity, 1) * 0.03)) rotate(calc(270deg * var(--intensity, 1)));
     }
   }
 
