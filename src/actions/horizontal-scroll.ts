@@ -67,7 +67,7 @@ export const horizontalScroll: Action<HTMLElement, ScrollOptions> = (node, optio
     }
     
     const now = Date.now();
-    if (scrollLocked || now - lastWheelTimestamp < 100) {
+    if (scrollLocked || now - lastWheelTimestamp < 150) { // Etwas entspannteres Timing
       return;
     }
     
@@ -81,10 +81,37 @@ export const horizontalScroll: Action<HTMLElement, ScrollOptions> = (node, optio
     
     if (direction === 0) return;
     
-    // Get current section and calculate target section
-    const currentSection = Math.round(currentScroll / viewportWidth);
+    // EXAKTE LOGIK: Berechne die aktuelle Position und stelle sicher, dass wir niemals überspringen
+    const tolerance = 10; // Toleranz für Rundungsfehler
+    let currentSection = Math.round(currentScroll / viewportWidth);
+    
+    // Korrekturberekning falls wir zwischen Sektionen sind
+    const remainder = currentScroll % viewportWidth;
+    if (remainder > tolerance && remainder < viewportWidth - tolerance) {
+      // Wir sind zwischen zwei Sektionen - korrigiere basierend auf Scroll-Richtung
+      if (direction > 0) {
+        currentSection = Math.floor(currentScroll / viewportWidth);
+      } else {
+        currentSection = Math.ceil(currentScroll / viewportWidth);
+      }
+    }
+    
     const maxSections = Math.floor(scrollWidth / viewportWidth);
-    const targetSection = Math.max(0, Math.min(maxSections, currentSection + direction));
+    
+    // GARANTIERTE SINGLE-STEP-LOGIK: Immer nur eine Sektion vor/zurück
+    let targetSection;
+    if (direction > 0) {
+      // Nach rechts: nächste Sektion (aber nie über Maximum)
+      targetSection = Math.min(maxSections, currentSection + 1);
+    } else {
+      // Nach links: vorherige Sektion (aber nie unter 0)
+      targetSection = Math.max(0, currentSection - 1);
+    }
+    
+    // Doppelte Sicherheitscheck: Stelle sicher, dass wir nicht an derselben Position sind
+    if (targetSection === currentSection) {
+      return; // Bereits an der gewünschten Position oder an den Grenzen
+    }
     
     // Don't proceed if we're already at the bounds
     if ((direction < 0 && currentScroll === 0) || 
@@ -128,20 +155,37 @@ export const horizontalScroll: Action<HTMLElement, ScrollOptions> = (node, optio
       event.preventDefault(); // Verhindere vertikales Scrollen
       
       const now = Date.now();
-      if (now - lastTouchTime < 500) return; // Debounce
+      if (now - lastTouchTime < 300) return; // Reduziertes Debouncing für bessere Responsivität
       
       const viewportWidth = window.innerWidth;
       const currentScroll = node.scrollLeft;
       const scrollWidth = node.scrollWidth;
       const maxScroll = scrollWidth - viewportWidth;
       
-      // Bestimme Richtung: positive deltaX = nach rechts wischen = vorherige Sektion
+      // Bestimme Richtung: positive deltaX = nach rechts wischen = nächste Sektion
       const direction = deltaX > 0 ? 1 : -1;
       
-      // Berechne Ziel-Sektion
-      const currentSection = Math.round(currentScroll / viewportWidth);
+      // EXAKTE TOUCH-LOGIK: Präzise Sektions-Berechnung
+      const tolerance = 10;
+      let currentSection = Math.round(currentScroll / viewportWidth);
+      
+      // Korrekturberenung falls wir zwischen Sektionen sind
+      const remainder = currentScroll % viewportWidth;
+      if (remainder > tolerance && remainder < viewportWidth - tolerance) {
+        if (direction > 0) {
+          currentSection = Math.floor(currentScroll / viewportWidth);
+        } else {
+          currentSection = Math.ceil(currentScroll / viewportWidth);
+        }
+      }
+      
       const maxSections = Math.floor(scrollWidth / viewportWidth);
       const targetSection = Math.max(0, Math.min(maxSections, currentSection + direction));
+      
+      // Verhindere unnötige Scrolls
+      if (targetSection === currentSection) {
+        return;
+      }
       
       // Verhindere Scrollen über die Grenzen hinaus
       if ((direction < 0 && currentScroll === 0) || 
